@@ -32,14 +32,15 @@ $(function () {
         order: [[2, "asc"]],
         columns: [
             { data: "DT_RowIndex", orderable: false, searchable: false },
-            { data: "image", orderable: false, searchable: false },
+            // { data: "image", orderable: false, searchable: false },
             { data: "title", name: "title" },
-            { data: "custom_company_name", name: "custom_company_name", defaultContent: "<em>Not Assigned</em>" },
-            // { data: "vacancy", name: "vacancy.title", defaultContent: "<em>No Vacancy</em>" },
-         { data: "our_country", name: "our_country", defaultContent: "<em>Not Set</em>" },
+            { data: "vacancy_title", name: "vacancy_title", defaultContent: "<em>No Vacancy</em>" },
 
+            { data: "vacancy_company", name: "vacancy_company", defaultContent: "<em>Not Assigned</em>" },
 
-            { data: "categories", name: "categories.name", orderable: false, searchable: false, defaultContent: "<em>No Categories</em>" },
+            { data: "vacancy_country", name: "vacancy_country", defaultContent: "<em>Not Set</em>" },
+
+            // { data: "categories", name: "categories.name", orderable: false, searchable: false, defaultContent: "<em>No Categories</em>" },
             { data: "salary", name: "salary" },
             { data: "status", name: "status", orderable: false, searchable: false },
             { data: "action", name: "action", orderable: false, searchable: false },
@@ -103,22 +104,22 @@ $(function () {
         $('#link').val(job.link);
         $('#icon_class').val(job.icon_class);
         $('#requirements').val(job.requirements);
-         if (job.image != null) {
-                    $("#previewImage").html(
-                        `<img src="/${job.image}"
+        if (job.image != null) {
+            $("#previewImage").html(
+                `<img src="/${job.image}"
                                   alt="User Image"
                                   width="100"
                                   height="100"
                                   onerror="this.onerror=404; this.src='/user.png';">`
-                    );
-                } else {
-                    $("#previewImage").html(
-                        `<img src="user.png"
+            );
+        } else {
+            $("#previewImage").html(
+                `<img src="user.png"
                                   alt="Default Image"
                                   width="100"
                                   height="100">`
-                    );
-                }
+            );
+        }
 
         const mode = (job.male_opening > 0 || job.female_opening > 0) ? 'male-female' : 'total';
         $('#openingsMode').val(mode).trigger('change');

@@ -27,7 +27,7 @@
         <a class="nav-link" data-bs-toggle="collapse" href="#jobMenu" role="button" aria-expanded="false"
             aria-controls="jobMenu">
             <i class="mdi mdi-map-marker-path menu-icon"></i>
-            <span class="menu-title">Jobs</span>
+            <span class="menu-title">Vacancies & Jobs</span>
             <i class="menu-arrow"></i>
         </a>
         <div class="collapse" id="jobMenu">
@@ -35,6 +35,9 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.job-categories.index') }}"><i
                             class="mdi mdi-briefcase-outline"></i> Manage
                         Categories</a></li>
+
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.vacancies.index') }}"><i
+                            class="mdi mdi-briefcase-outline"></i> Vacancies</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('admin.jobs.index') }}"><i
                             class="mdi mdi-briefcase-outline"></i> Manage
                         Jobs</a></li>

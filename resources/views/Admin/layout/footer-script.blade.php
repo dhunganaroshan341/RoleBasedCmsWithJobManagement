@@ -12,9 +12,9 @@
 {{-- Select 2 --}}
 
 @isset($extraJs)
-    @foreach ($extraJs as $js)
-        <script src="{{ $js }}"></script>
-    @endforeach
+@foreach ($extraJs as $js)
+<script src="{{ $js }}"></script>
+@endforeach
 @endisset
 
 
@@ -37,7 +37,7 @@
     };
 
     // Place this at the top of your main JS file (or in a separate helpers.js included globally)
-    window.previewImage = function(url, width = 100, height = 100, fallback = '/user.png') {
+    window.previewImage = function (url, width = 100, height = 100, fallback = '/user.png') {
         return `<img src="${url}" alt="Image Preview" width="${width}" height="${height}" onerror="this.src='${fallback}';">`;
     };
 </script>
@@ -45,20 +45,21 @@
 
 
 @php
-    $path = Request::path();
-    $dir_path = public_path() . '/js/' . $path;
-    if (is_dir($dir_path)) {
-        $directory = new DirectoryIterator($dir_path);
-        // Loop runs while directory is valid
-        while ($directory->valid()) {
-            if (!$directory->isDir()) {
-                $filename = url('js/' . $path . '/' . $directory->getFilename());
-                echo '<script src="' . $filename . '?v=0.3.1"></script>';
-            }
-            // Move to the next element
-            $directory->next();
-            // dd($directory->next());
-        }
-    }
+$path = Request::path();
+$dir_path = public_path() . '/js/' . $path;
+if (is_dir($dir_path)) {
+$directory = new DirectoryIterator($dir_path);
+// Loop runs while directory is valid
+while ($directory->valid()) {
+if (!$directory->isDir()) {
+$filename = url('js/' . $path . '/' . $directory->getFilename());
+echo '
+<script src="' . $filename . '?v=0.3.1"></script>';
+}
+// Move to the next element
+$directory->next();
+
+}
+}
 @endphp
-{{-- @stack('scripts') --}}
+@stack('scripts')

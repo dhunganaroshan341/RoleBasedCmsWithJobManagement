@@ -29,7 +29,15 @@ class Vacancy extends Model
     {
         return $this->hasMany(Job::class);
     }
-
+    public function categories()
+    {
+        return $this->belongsToMany(
+            JobCategory::class,
+            'job_category_vacancy',
+            'vacancy_id',
+            'job_category_id'
+        );
+    }
     /**
      * Optional: Get the company info, whether existing or custom.
      */

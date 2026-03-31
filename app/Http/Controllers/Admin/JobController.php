@@ -15,172 +15,193 @@ class JobController extends Controller
     /**
      * Display a listing of jobs under a specific vacancy.
      */
-public function index(Request $request)
-{
-    if ($request->ajax()) {
-        $jobs = Job::with(['employer', 'categories', 'ourCountry'])->latest();
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $jobs = Job::with(['employer', 'categories', 'ourCountry'])->latest();
 
-        return datatables()->eloquent($jobs)
-            ->addIndexColumn()
-            ->addColumn('action', function ($job) {
-                return view('Admin.Button.button', ['data' => $job])->render();
-            })
-            ->addColumn('image', function ($job) {
-                $image = $job->image_url ?? asset('uploads/' . $job->image);
-                $defaultImage = asset('user.png');
-                return '<img src="' . $image . '" width="50" height="50"
+            return datatables()->eloquent($jobs)
+                ->addIndexColumn()
+                ->addColumn('action', function ($job) {
+                    return view('Admin.Button.button', ['data' => $job])->render();
+                })
+                ->addColumn('image', function ($job) {
+                    $image = $job->image_url ?? asset('uploads/' . $job->image);
+                    $defaultImage = asset('user.png');
+                    return '<img src="' . $image . '" width="50" height="50"
                          class="rounded" style="object-fit:cover"
                          onerror="this.src=\'' . $defaultImage . '\'"/>';
-            })
-            ->addColumn('status', function ($job) {
-                $checked = strtolower($job->status) === 'active' ? 'checked' : '';
-                return '<div class="form-check form-switch text-center">
+                })
+                ->addColumn('status', function ($job) {
+                    $checked = strtolower($job->status) === 'active' ? 'checked' : '';
+                    return '
                     <input class="form-check-input statusIdData"
                            type="checkbox" data-id="' . $job->id . '" role="switch" ' . $checked . '>
-                </div>';
-            })
-            ->addColumn('employer', function ($job) {
-                return optional($job->employer)->name ?? '<em>Not Assigned</em>';
-            })
-            ->addColumn('our_country', function ($job) {
-                // Send country name directly
-                return optional($job->ourCountry)->name ?? '<em>Not Set</em>';
-            })
-            ->addColumn('categories', function ($job) {
-                if ($job->categories->isEmpty()) {
-                    return '<em>No Categories</em>';
-                }
-                return $job->categories->pluck('name')->map(function ($name) {
-                    return '<span class="badge bg-primary me-1">' . e($name) . '</span>';
-                })->implode(' ');
-            })
-            ->rawColumns(['action', 'image', 'status', 'employer', 'our_country', 'categories'])
-            ->orderColumns(['title', 'employer.name', 'salary', 'status'], ':column $1')
-            ->make(true);
+               ';
+                }) // 🔥 VACANCY TITLE ONLY
+                ->addColumn('vacancy_title', function ($job) {
+                    return optional($job->vacancy)->title ?? '<em>No Vacancy</em>';
+                })
+
+                ->addColumn('vacancy_company', function ($job) {
+                    return optional($job->vacancy)->custom_company_name ?? '<em>Not Assigned</em>';
+                })
+
+                ->addColumn('vacancy_country', function ($job) {
+                    return optional($job->vacancy)->custom_company_country ?? '<em>Not Set</em>';
+                })
+                ->addColumn('employer', function ($job) {
+                    return optional($job->employer)->name ?? '<em>Not Assigned</em>';
+                })
+                ->addColumn('our_country', function ($job) {
+                    // Send country name directly
+                    return optional($job->ourCountry)->name ?? '<em>Not Set</em>';
+                })
+                ->addColumn('categories', function ($job) {
+                    if ($job->categories->isEmpty()) {
+                        return '<em>No Categories</em>';
+                    }
+                    return $job->categories->pluck('name')->map(function ($name) {
+                        return '<span class="badge bg-primary me-1">' . e($name) . '</span>';
+                    })->implode(' ');
+                })
+                ->rawColumns([
+                    'action',
+                    'image',
+                    'status',
+                    'employer',
+                    'our_country',
+                    'categories',
+                    'vacancy_title',
+                    'vacancy_company',
+                    'vacancy_country'
+                ])
+                ->orderColumns(['title', 'employer.name', 'salary', 'status'], ':column $1')
+                ->make(true);
+        }
+
+        $extraJs = array_merge(
+            config('js-map.admin.datatable.script'),
+            config('js-map.admin.summernote.script'),
+            config('js-map.admin.select2.script'),
+            config('js-map.admin.buttons.script')
+        );
+
+        $extraCs = array_merge(
+            config('js-map.admin.datatable.style'),
+            config('js-map.admin.summernote.style'),
+            config('js-map.admin.select2.style'),
+            config('js-map.admin.buttons.style')
+        );
+
+        return view('Admin.pages.Job.jobIndex', [
+            'extraJs' => $extraJs,
+            'extraCs' => $extraCs
+        ]);
     }
-
-    $extraJs = array_merge(
-        config('js-map.admin.datatable.script'),
-        config('js-map.admin.summernote.script'),
-        config('js-map.admin.select2.script'),
-        config('js-map.admin.buttons.script')
-    );
-
-    $extraCs = array_merge(
-        config('js-map.admin.datatable.style'),
-        config('js-map.admin.summernote.style'),
-        config('js-map.admin.select2.style'),
-        config('js-map.admin.buttons.style')
-    );
-
-    return view('Admin.pages.Job.jobIndex', [
-        'extraJs' => $extraJs,
-        'extraCs' => $extraCs
-    ]);
-}
 
 
     /**
      * Store a newly created job under a specific vacancy.
      */
-  // Store a newly created job
-public function store(JobRequest $request, Vacancy $vacancy)
-{
-    DB::beginTransaction();
-    try {
-        $data = $request->validated();
+    // Store a newly created job
+    public function store(JobRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
+            // dd($data);
+            // Assign vacancy
+            // $data['vacancy_id'] = $vacancy->id;
 
-        // Assign vacancy
-        $data['vacancy_id'] = $vacancy->id;
+            // Openings logic
+            if ($request->input('openings_mode') === 'male-female') {
+                $data['male_opening'] = (int) $request->input('male_opening', 0);
+                $data['female_opening'] = (int) $request->input('female_opening', 0);
+                $data['total_openings'] = $data['male_opening'] + $data['female_opening'];
+            } else {
+                $data['total_openings'] = (int) $request->input('total_openings', 0);
+                $data['male_opening'] = 0;
+                $data['female_opening'] = 0;
+            }
 
-        // Openings logic
-        if ($request->input('openings_mode') === 'male-female') {
-            $data['male_opening'] = (int) $request->input('male_opening', 0);
-            $data['female_opening'] = (int) $request->input('female_opening', 0);
-            $data['total_openings'] = $data['male_opening'] + $data['female_opening'];
-        } else {
-            $data['total_openings'] = (int) $request->input('total_openings', 0);
-            $data['male_opening'] = 0;
-            $data['female_opening'] = 0;
+            // Image upload
+            $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/jobs');
+
+            // Create job
+            $job = Job::create($data);
+
+            // Sync categories (many-to-many)
+            $job->categories()->sync($request->input('category_ids', []));
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Job created successfully!',
+                'data' => $job,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
 
-        // Image upload
-        $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/jobs');
+    // Show a specific job
+    public function show(Vacancy $vacancy, Job $job)
+    {
+        abort_if($job->vacancy_id !== $vacancy->id, 404);
 
-        // Create job
-        $job = Job::create($data);
-
-        // Sync categories (many-to-many)
-        $job->categories()->sync($request->input('category_ids', []));
-
-        DB::commit();
+        // Load related models for edit form
+        $job->load(['categories', 'ourCountry', 'employer']);
 
         return response()->json([
             'success' => true,
-            'message' => 'Job created successfully!',
             'data' => $job,
         ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
-}
 
-// Show a specific job
-public function show(Vacancy $vacancy, Job $job)
-{
-    abort_if($job->vacancy_id !== $vacancy->id, 404);
+    // Update a specific job
+    public function update(JobRequest $request, Vacancy $vacancy, Job $job)
+    {
+        abort_if($job->vacancy_id !== $vacancy->id, 404);
 
-    // Load related models for edit form
-    $job->load(['categories', 'ourCountry', 'employer']);
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
 
-    return response()->json([
-        'success' => true,
-        'data' => $job,
-    ]);
-}
+            // Openings logic
+            if ($request->input('openings_mode') === 'male-female') {
+                $data['male_opening'] = (int) $request->input('male_opening', 0);
+                $data['female_opening'] = (int) $request->input('female_opening', 0);
+                $data['total_openings'] = $data['male_opening'] + $data['female_opening'];
+            } else {
+                $data['total_openings'] = (int) $request->input('total_openings', 0);
+                $data['male_opening'] = 0;
+                $data['female_opening'] = 0;
+            }
 
-// Update a specific job
-public function update(JobRequest $request, Vacancy $vacancy, Job $job)
-{
-    abort_if($job->vacancy_id !== $vacancy->id, 404);
+            // Image upload
+            $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/jobs', $job);
 
-    DB::beginTransaction();
-    try {
-        $data = $request->validated();
+            // Update job
+            $job->update($data);
 
-        // Openings logic
-        if ($request->input('openings_mode') === 'male-female') {
-            $data['male_opening'] = (int) $request->input('male_opening', 0);
-            $data['female_opening'] = (int) $request->input('female_opening', 0);
-            $data['total_openings'] = $data['male_opening'] + $data['female_opening'];
-        } else {
-            $data['total_openings'] = (int) $request->input('total_openings', 0);
-            $data['male_opening'] = 0;
-            $data['female_opening'] = 0;
+            // Sync categories
+            $job->categories()->sync($request->input('category_ids', []));
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Job updated successfully!',
+                'data' => $job,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-
-        // Image upload
-        $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/jobs', $job);
-
-        // Update job
-        $job->update($data);
-
-        // Sync categories
-        $job->categories()->sync($request->input('category_ids', []));
-
-        DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Job updated successfully!',
-            'data' => $job,
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
-}
 
 
     /**

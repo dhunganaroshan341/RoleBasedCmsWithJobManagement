@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\NewsLetterController as AdminSideNewsLetterController;
 use App\Http\Controllers\Admin\PageBannerController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\VacancyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Frontend\TourPackageController;
 use App\Http\Controllers\FrontGalleryController;
@@ -82,26 +83,26 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard.index');
-// pages management
-    Route::apiResource('pages',PageController::class);
+    // pages management
+    Route::apiResource('pages', PageController::class);
     Route::get('/pages/status/{id}', [HomeSliderController::class, 'statusToggle'])->name('pages.status');
 
-// Section Category resource routes
-Route::apiResource('/section-category', AdminSectionCategoryController::class);
+    // Section Category resource routes
+    Route::apiResource('/section-category', AdminSectionCategoryController::class);
     Route::get('/section-categoy/status/{id}', [HomeSliderController::class, 'statusToggle'])->name('section-category.status');
     Route::post('/section-category/images/upload', [SectionCategoryController::class, 'uploadImages'])
-     ->name('sectionCategory.images.upload');
+        ->name('sectionCategory.images.upload');
 
-Route::delete('/section-category/images/delete/{id}', [SectionCategoryController::class, 'deleteImage'])
-     ->name('sectionCategory.images.delete');
-// Section Content resource routes
+    Route::delete('/section-category/images/delete/{id}', [SectionCategoryController::class, 'deleteImage'])
+        ->name('sectionCategory.images.delete');
+    // Section Content resource routes
     Route::apiResource('/section-content', AdminSectionContentController::class);
     Route::get('/section-content/status/{id}', [AdminSectionContentController::class, 'statusToggle'])->name('section-content.status');
     Route::get('/section-content/category/{id}', [AdminSectionContentController::class, 'category'])->name('section-content.category');
     Route::get('/section-content/category/{slug}', [AdminSectionContentController::class, 'categoryBySlug'])->name('section-content.category');
-// Route
-Route::get('/section-content/{categoryId}/list', [AdminSectionContentController::class, 'list']);
-Route::post('/section-content/reorder', [AdminSectionContentController::class, 'reorder']);
+    // Route
+    Route::get('/section-content/{categoryId}/list', [AdminSectionContentController::class, 'list']);
+    Route::post('/section-content/reorder', [AdminSectionContentController::class, 'reorder']);
 
     // Users
     Route::get('/user', [UserController::class, 'index'])->name('user');
@@ -123,7 +124,7 @@ Route::post('/section-content/reorder', [AdminSectionContentController::class, '
 
 
     Route::get('/banner/video', [BannerSliderVideoController::class, 'index'])->name('banner.video.index');
-Route::post('/banner/video', [BannerSliderVideoController::class, 'store'])->name('banner.video.store');
+    Route::post('/banner/video', [BannerSliderVideoController::class, 'store'])->name('banner.video.store');
 
     // Frontend
     Route::get('/front-end', [AdminFrontendController::class, 'index'])->name('frontend');
@@ -147,8 +148,8 @@ Route::post('/banner/video', [BannerSliderVideoController::class, 'store'])->nam
     Route::get('/testimonial/delete/{id}', [TestimonialController::class, 'destroy'])->name('testimonial.destroy');
     Route::get('/testimonial/status/{id}', [TestimonialController::class, 'statusToggle'])->name('testimonial.status');
 
-    Route::resource('achievements',AchievementController::class);
-    Route::get('achievements/status/toggle/{id}',[AchievementController::class,'statusToggle']);
+    Route::resource('achievements', AchievementController::class);
+    Route::get('achievements/status/toggle/{id}', [AchievementController::class, 'statusToggle']);
 
     // Category
     Route::get('/category', [CategoryController::class, 'index'])->name('category');
@@ -224,7 +225,7 @@ Route::post('/banner/video', [BannerSliderVideoController::class, 'store'])->nam
     // Client
     Route::resource('client', ClientController::class);
     Route::get('/client/status/{id}', [ClientController::class, 'toggleStatus'])->name('client.status');
- Route::resource('page-banner', PageBannerController::class);
+    Route::resource('page-banner', PageBannerController::class);
     Route::put('/page-banner/{id}/status', [PageBannerController::class, 'statusToggle'])->name('page-banner.status');
     // Admin Logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -233,33 +234,33 @@ Route::post('/banner/video', [BannerSliderVideoController::class, 'store'])->nam
 
 
 
-// Contact messages
-// Contact messages
-Route::prefix('contact')->name('contact.')->group(function () {
-    Route::get('/', [ContactController::class, 'index'])->name('index');
-    Route::get('/get-data', [ContactController::class, 'getContact'])->name('get-data');
-    Route::get('/detail/{id}', [ContactController::class, 'showDetail'])->name('detail');
-    Route::get('/delete/{id}', [ContactController::class, 'destroy'])->name('delete');
-});
-Route::resource('/newsletters', AdminSideNewsLetterController::class);
+    // Contact messages
+    // Contact messages
+    Route::prefix('contact')->name('contact.')->group(function () {
+        Route::get('/', [ContactController::class, 'index'])->name('index');
+        Route::get('/get-data', [ContactController::class, 'getContact'])->name('get-data');
+        Route::get('/detail/{id}', [ContactController::class, 'showDetail'])->name('detail');
+        Route::get('/delete/{id}', [ContactController::class, 'destroy'])->name('delete');
+    });
+    Route::resource('/newsletters', AdminSideNewsLetterController::class);
 
 
-// Settings
-Route::prefix('setting')->name('setting.')->group(function () {
-    Route::get('/', [SettingController::class, 'index'])->name('index');
-    Route::post('/', [SettingController::class, 'store'])->name('store');
-});
+    // Settings
+    Route::prefix('setting')->name('setting.')->group(function () {
+        Route::get('/', [SettingController::class, 'index'])->name('index');
+        Route::post('/', [SettingController::class, 'store'])->name('store');
+    });
 
-    Route::apiResource('jobs',JobController::class);
+    Route::apiResource('jobs', JobController::class);
+    Route::resource('vacancies', VacancyController::class);
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('client.status');
- Route::apiResource('job-categories',JobCategoryController::class);
+    Route::apiResource('job-categories', JobCategoryController::class);
     Route::get('/job-categories/status/{id}', [JobCategoryController::class, 'toggleStatus'])->name('client.status');
 
 
 
-// Logout route for normal users
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
+    // Logout route for normal users
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 
@@ -268,5 +269,4 @@ Route::post('/newsletter/subscribe', [NewsLetterController::class, 'subscribe'])
 
 // frontend routes includes
 
-    require base_path('routes/frontend_routes.php');
-
+require base_path('routes/frontend_routes.php');

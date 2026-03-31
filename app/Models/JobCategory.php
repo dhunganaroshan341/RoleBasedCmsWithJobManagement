@@ -11,18 +11,18 @@ use Illuminate\Support\Str;
 class JobCategory extends Model
 {
     use HasFactory;
-     use HasImageUrl;
-     use FallbackIcon;
+    use HasImageUrl;
+    use FallbackIcon;
 
     // Optional: if you want multiple image fields dynamically
     protected $imageFields = ['image'];
 
-    protected $fillable = ['name', 'description','slug','image','icon_class']; // adjust fields
+    protected $fillable = ['name', 'description', 'slug', 'image', 'icon_class']; // adjust fields
 
     /**
      * The jobs that belong to this category.
      */
-      public function __construct(array $attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
@@ -32,9 +32,18 @@ class JobCategory extends Model
     public function jobs()
     {
         return $this->belongsToMany(Job::class, 'job_category_job', 'job_category_id', 'job_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
-      protected static function booted()
+    public function vacancies()
+    {
+        return $this->belongsToMany(
+            Vacancy::class,
+            'job_category_vacancy',
+            'job_category_id',
+            'vacancy_id'
+        );
+    }
+    protected static function booted()
     {
         static::creating(function ($category) {
             $category->slug = Str::slug($category->name);

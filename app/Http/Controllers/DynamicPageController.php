@@ -14,7 +14,7 @@ class DynamicPageController extends Controller
         $content = "hello";
         return view('frontend.home.company-overview', compact('content'));
     }
- public function categories()
+    public function categories()
     {
         $content = Page::where('slug', 'categories')->firstOrFail();
         return view('frontend.dynamic-page', compact('content'));
@@ -27,24 +27,23 @@ class DynamicPageController extends Controller
     }
 
     public function licenseCertificates()
-{
-    // Fetch the album
-    $album = \App\Models\GalleryAlbum::where('title', 'License and Certificates')->firstOrFail();
+    {
+        $album = \App\Models\GalleryAlbum::where('title', 'License and Certificates')->firstOrFail();
 
-    // Get all media items under this album
-    $mediaItems = $album->media; // Assuming GalleryAlbum has 'media()' relationship
-
-    // Pass the album and its media to the view
-    return view('frontend.home.lisence-certificates', compact('album', 'mediaItems'));
-}
-
+        $mediaItems = $album->galleryMedia;
+        // dd($mediaItems);
+        return view('frontend.home.lisence-certificates', compact('album', 'mediaItems'));
+    }
 
     public function organizationalChart()
     {
         // $content = Page::where('slug', 'organizational-chart')->firstOrFail();
-        $page = "hello";
+        $album = \App\Models\GalleryAlbum::where('title', 'Organizational Chart')->firstOrFail();
 
-        return view('frontend.home.organizational-chart', compact('page'));
+        $mediaItems = $album->galleryMedia;
+        // dd($mediaItems);
+
+        return view('frontend.home.organizational-chart', compact('album', 'mediaItems'));
     }
 
     public function requiredDocuments()

@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Itinerary::observe(ItineraryObserver::class);
+        // Itinerary::observe(ItineraryObserver::class);
         $this->composeFrontendViews([
             'frontend.layout.main',
             'frontend.layout.footer',
@@ -72,5 +72,4 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
     }
-
 }

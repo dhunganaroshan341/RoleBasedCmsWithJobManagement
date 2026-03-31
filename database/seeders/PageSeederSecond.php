@@ -18,12 +18,12 @@ class PageSeederSecond extends Seeder
         // $pages = [
         //     'home_blog_section','home_section_1','home_section_2','gallery','blog','contact','about','services','packages','why_us','mission_vision','mission','vision','testimonial','counter'
         // ]; these were already in PageSeeder
-         //
+        //
         $pages = [
             // 'home_blog_section','home_section_1','home_section_2','gallery','blog','contact','about','services','packages','why_us','mission_vision','mission','vision','testimonial','counter'
         ];
-        foreach($pages as $page){
-            Page::updateOrCreate(['title'=>$page,'slug'=>$page]);
+        foreach ($pages as $page) {
+            Page::updateOrCreate(['title' => $page, 'slug' => $page]);
         }
     }
 }
