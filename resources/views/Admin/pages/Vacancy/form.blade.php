@@ -19,6 +19,7 @@
             ⬅ Back
         </a>
     </div>
+    <x-session-message />
 
     <form method="POST"
         action="{{ $vacancy ? route('admin.vacancies.update', $vacancy->id) : route('admin.vacancies.store') }}"

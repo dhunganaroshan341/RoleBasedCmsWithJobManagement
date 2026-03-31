@@ -21,10 +21,10 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{ asset('front/images/logo.png') }}" />
+    <link rel="shortcut icon" href="{{ !empty($logo) ? $logo : asset('front/images/logo.png') }}">
 </head>
 @php
-    logger(Route::currentRouteName());
+logger(Route::currentRouteName());
 @endphp
 
 <body>
@@ -42,20 +42,20 @@
                             <h6 class="fw-light">Sign in to continue.</h6>
                             <form class="pt-3" action="{{ route('login.store') }}" method="post">
                                 @if (session()->has('message'))
-                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
 
-                                        <strong>{{ session()->get('message') }}</strong>
-                                    </div>
+                                    <strong>{{ session()->get('message') }}</strong>
+                                </div>
                                 @endif
                                 @if (session()->has('error'))
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
 
-                                        <strong>{{ session()->get('error') }}</strong>
-                                    </div>
+                                    <strong>{{ session()->get('error') }}</strong>
+                                </div>
                                 @endif
                                 <div class="form-group">
                                     @csrf
@@ -64,7 +64,7 @@
                                         name="email" id="exampleInputEmail1" placeholder="Email"
                                         value="{{ old('email') }}">
                                     @error('email')
-                                        <small class="text-danger">{{ $message }}</small>
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="form-group">
@@ -72,7 +72,7 @@
                                         class="form-control form-control-lg @error('password') is-invalid @enderror"
                                         name="password" id="exampleInputPassword1" placeholder="Password">
                                     @error('password')
-                                        <small class="text-danger">{{ $message }}</small>
+                                    <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="mt-3 d-grid gap-2">

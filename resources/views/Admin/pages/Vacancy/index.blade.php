@@ -32,7 +32,7 @@ $query->where('title', 'like', '%' . request('search') . '%');
 
                 <button class="btn btn-dark">Search</button>
 
-                <a href="{{ route('admin.vacancies.index') }}" class="btn btn-secondary">Reset</a>
+                <a href="{{ route('admin.vacancies.index') }}" class="btn btn-light">Reset</a>
 
             </form>
 
@@ -92,19 +92,37 @@ $query->where('title', 'like', '%' . request('search') . '%');
                         <td>{{ $item->jobs_count }}</td>
 
                         <td class="d-flex gap-1">
-                            <a href="{{ route('admin.vacancies.edit', $item->id) }}" class="btn btn-sm btn-warning">
-                                Edit
+
+                            {{-- View Jobs --}}
+                            <a href="{{ route('admin.vacancies.jobs.index', ['vacancy' => $item->id]) }}"
+                                class="btn btn-sm btn-light" title="View Jobs">
+                                <i class="bi bi-briefcase"></i>
                             </a>
 
+                            {{-- Add Job --}}
+                            <a href="{{ route('admin.vacancies.jobs.create', ['vacancy' => $item->id]) }}"
+                                class="btn btn-sm btn-info" title="Add Job">
+                                <i class="bi bi-plus-circle"></i>
+                            </a>
+
+                            {{-- Edit --}}
+                            <a href="{{ route('admin.vacancies.edit', $item->id) }}" class="btn btn-sm btn-dark"
+                                title="Edit Vacancy">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+
+                            {{-- Delete --}}
                             <form action="{{ route('admin.vacancies.destroy', $item->id) }}" method="POST"
                                 onsubmit="return confirm('Delete this vacancy?')">
+
                                 @csrf
                                 @method('DELETE')
 
-                                <button class="btn btn-sm btn-danger">
-                                    Delete
+                                <button class="btn btn-sm btn-danger" title="Delete Vacancy">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </form>
+
                         </td>
                     </tr>
                     @empty
@@ -124,3 +142,6 @@ $query->where('title', 'like', '%' . request('search') . '%');
 </div>
 
 @endsection
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+@endpush

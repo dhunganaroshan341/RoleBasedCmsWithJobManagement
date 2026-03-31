@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\NewsLetterController as AdminSideNewsLetterContro
 use App\Http\Controllers\Admin\PageBannerController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\VacancyController;
+use App\Http\Controllers\Admin\VacancyJobController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Frontend\TourPackageController;
 use App\Http\Controllers\FrontGalleryController;
@@ -255,6 +256,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::apiResource('jobs', JobController::class);
     // Route::apiResource('jobs', JobControllerV2::class);
     Route::resource('vacancies', VacancyController::class);
+    Route::resource('vacancies.jobs', VacancyJobController::class);
+
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');
     Route::apiResource('job-categories', JobCategoryController::class);
     Route::get('/job-categories/status/{id}', [JobCategoryController::class, 'toggleStatus'])->name('job-categories.status');

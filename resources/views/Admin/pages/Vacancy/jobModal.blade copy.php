@@ -1,74 +1,143 @@
-<div class="modal fade" id="JobFormModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="jobModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form id="jobForm" class="form">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="jobModalTitle">Add Job</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="validationErrors" class="alert alert-danger d-none"></p>
+@extends('Admin.layout.master')
 
-                    <div class="row">
+@section('content')
 
-                        {{-- Custom Company (default open) --}}
-                        <div class="col-md-6">
-                            <label class="form-label">Custom Company Name</label>
-                            <input type="text" name="custom_company_name" id="custom_company_name" class="form-control" placeholder="Enter company name">
-                        </div>
+<div class="container mt-4">
 
-                        {{-- Country --}}
-                        <div class="col-md-6">
-                            <label class="form-label">Country</label>
-                            <select name="our_country_id" id="our_country_id" class="form-control">
-                                <option value="" selected>-- Select Country --</option>
-                                @foreach(\App\Models\Country::all() as $country)
-                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>{{ $job ? 'Edit Job' : 'Create Job' }}</h4>
+
+        <a href="{{ route('admin.jobs.index') }}" class="btn btn-secondary">
+            ⬅ Back
+        </a>
+    </div>
+
+    <form method="POST" action="{{ $job ? route('admin.jobs.update', $job->id) : route('admin.jobs.store') }}">
+
+        @csrf
+        @if($job) @method('PUT') @endif
+
+        <div class="row mt-3">
+
+            {{-- LEFT --}}
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Job Info</h5>
+
+                        {{-- Vacancy --}}
+                        <div class="mb-3">
+                            <label class="form-label">Vacancy *</label>
+                            <select name="vacancy_id" class="form-select" required>
+                                <option value="">Select Vacancy</option>
+                                @foreach($vacancies as $vacancy)
+                                <option value="{{ $vacancy->id }}" {{ old('vacancy_id', $job->vacancy_id ?? '') ==
+                                    $vacancy->id ? 'selected' : '' }}>
+                                    {{ $vacancy->title }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Job Title --}}
-                        <div class="col-md-6 mt-3">
-                            <label class="form-label">Job Title <span class="text-danger">*</span></label>
-                            <input type="text" name="title" id="title" class="form-control" placeholder="Enter job title" required>
+                        <div class="mb-3">
+                            <label class="form-label">Job Title *</label>
+                            <input type="text" name="title" class="form-control"
+                                value="{{ old('title', $job->title ?? '') }}" required>
                         </div>
 
-                        {{-- Multiple Categories --}}
-                        <div class="col-md-6 mt-3">
-                            <label class="form-label">Categories</label>
-                            <select name="category_ids[]" id="category_ids" class="form-control" multiple>
-                                @foreach(\App\Models\Category::all() as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                        {{-- Salary --}}
+                        <div class="mb-3">
+                            <label class="form-label">Salary</label>
+                            <input type="number" name="salary" class="form-control"
+                                value="{{ old('salary', $job->salary ?? '') }}">
                         </div>
 
-                        {{-- Interview Date --}}
-                        <div class="col-md-6 mt-3">
-                            <label class="form-label">Interview Date</label>
-                            <input type="date" name="interview_date" id="interview_date" class="form-control">
-                        </div>
-
-                        {{-- Status --}}
-                        <div class="col-md-6 mt-3">
-                            <label class="form-label">Status</label>
-                            <select name="status" id="status" class="form-control">
-                                <option value="active" selected>Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
+                        {{-- Total Positions --}}
+                        <div class="mb-3">
+                            <label class="form-label">Total Positions</label>
+                            <input type="number" name="total_positions" class="form-control"
+                                value="{{ old('total_positions', $job->total_positions ?? '') }}">
                         </div>
 
                     </div>
                 </div>
+            </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success submitBtn">Save Job</button>
+            {{-- RIGHT --}}
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+
+                        <h5 class="mb-3">Gender Positions</h5>
+
+                        {{-- Toggle --}}
+                        <div class="mb-3">
+                            <label class="form-label">Gender Type</label>
+                            <select id="gender_type" class="form-select">
+                                <option value="both">Both</option>
+                                <option value="male">Male Only</option>
+                                <option value="female">Female Only</option>
+                            </select>
+                        </div>
+
+                        {{-- Male Positions --}}
+                        <div class="mb-3 gender-field" id="male_field">
+                            <label class="form-label">Male Positions</label>
+                            <input type="number" name="male_positions" class="form-control"
+                                value="{{ old('male_positions', $job->male_positions ?? '') }}">
+                        </div>
+
+                        {{-- Female Positions --}}
+                        <div class="mb-3 gender-field" id="female_field">
+                            <label class="form-label">Female Positions</label>
+                            <input type="number" name="female_positions" class="form-control"
+                                value="{{ old('female_positions', $job->female_positions ?? '') }}">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success">
+                                {{ $job ? 'Update' : 'Save' }}
+                            </button>
+
+                            <a href="{{ route('admin.jobs.index') }}" class="btn btn-light">
+                                Cancel
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
-            </form>
+            </div>
+
         </div>
-    </div>
+
+    </form>
+
 </div>
+
+@endsection
+@push('scripts')
+<script>
+    function toggleGenderFields() {
+        let type = document.getElementById('gender_type').value;
+
+        if (type === 'male') {
+            document.getElementById('male_field').style.display = 'block';
+            document.getElementById('female_field').style.display = 'none';
+        } else if (type === 'female') {
+            document.getElementById('male_field').style.display = 'none';
+            document.getElementById('female_field').style.display = 'block';
+        } else {
+            document.getElementById('male_field').style.display = 'block';
+            document.getElementById('female_field').style.display = 'block';
+        }
+    }
+
+    document.getElementById('gender_type').addEventListener('change', toggleGenderFields);
+
+    // run on load
+    toggleGenderFields();
+</script>
+@endpush

@@ -93,7 +93,7 @@ class VacancyController extends Controller
         $vacancy->categories()->sync($request->category_ids ?? []);
 
         return redirect()
-            ->route('admin.vacancies.index')
+            ->back()
             ->with('success', 'Vacancy created successfully!');
     }
     /**
