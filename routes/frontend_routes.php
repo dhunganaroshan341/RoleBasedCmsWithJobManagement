@@ -80,7 +80,7 @@ Route::post('/hire', [EmployerJobRequestController::class, 'store'])->name('hire
 Route::prefix('pages')->group(function () {
     Route::prefix('portfoliyo')->group(function () {
         Route::controller(PagesController::class)->group(function () {
-            Route::get('/portfolio', 'portfolio')->name('portfolio');
+            Route::get('/portfolio', 'portfolio')->name('portfolio1');
             Route::get('/portfolio-2', 'portfolio2')->name('portfolio2');
             Route::get('/portfolio-3', 'portfolio3')->name('portfolio3');
         });
@@ -93,7 +93,7 @@ Route::prefix('pages')->group(function () {
         Route::get('/portfolio', 'portfolio')->name('portfolio');
         Route::get('/page-error', 'pageError')->name('pageError');
         Route::get('/faq', 'faq')->name('faq');
-        Route::get('/login', 'login')->name('login');
+        Route::get('/login', 'login')->name('front.login');
         Route::get('/signup', 'signup')->name('signup');
         Route::get('/team', 'team')->name('team');
         Route::get('/testimonial', 'testimonial')->name('testimonial');

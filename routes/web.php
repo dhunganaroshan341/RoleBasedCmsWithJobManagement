@@ -99,7 +99,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::apiResource('/section-content', AdminSectionContentController::class);
     Route::get('/section-content/status/{id}', [AdminSectionContentController::class, 'statusToggle'])->name('section-content.status');
     Route::get('/section-content/category/{id}', [AdminSectionContentController::class, 'category'])->name('section-content.category');
-    Route::get('/section-content/category/{slug}', [AdminSectionContentController::class, 'categoryBySlug'])->name('section-content.category');
+    Route::get('/section-content/category/{slug}', [AdminSectionContentController::class, 'categoryBySlug'])->name('section-content.categoryBySlug');
     // Route
     Route::get('/section-content/{categoryId}/list', [AdminSectionContentController::class, 'list']);
     Route::post('/section-content/reorder', [AdminSectionContentController::class, 'reorder']);
@@ -253,9 +253,9 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
     Route::apiResource('jobs', JobController::class);
     Route::resource('vacancies', VacancyController::class);
-    Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('client.status');
+    Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');
     Route::apiResource('job-categories', JobCategoryController::class);
-    Route::get('/job-categories/status/{id}', [JobCategoryController::class, 'toggleStatus'])->name('client.status');
+    Route::get('/job-categories/status/{id}', [JobCategoryController::class, 'toggleStatus'])->name('job-categories.status');
 
 
 
