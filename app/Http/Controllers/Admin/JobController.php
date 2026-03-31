@@ -18,64 +18,94 @@ class JobController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $jobs = Job::with(['employer', 'categories', 'ourCountry'])->latest();
+
+            $jobs = Job::with([
+                'employer:id,name',
+                'ourCountry:id,name',
+                'vacancy:id,title,custom_company_name,custom_company_country',
+                'vacancy.categories:id,name'
+            ])->latest();
 
             return datatables()->eloquent($jobs)
                 ->addIndexColumn()
+
+                // ACTION BUTTONS
                 ->addColumn('action', function ($job) {
                     return view('Admin.Button.button', ['data' => $job])->render();
                 })
+
+                // IMAGE
                 ->addColumn('image', function ($job) {
                     $image = $job->image_url ?? asset('uploads/' . $job->image);
-                    $defaultImage = asset('user.png');
-                    return '<img src="' . $image . '" width="50" height="50"
-                         class="rounded" style="object-fit:cover"
-                         onerror="this.src=\'' . $defaultImage . '\'"/>';
+                    $default = asset('user.png');
+
+                    return '<img src="' . $image . '"
+                    width="50" height="50"
+                    class="rounded"
+                    style="object-fit:cover"
+                    onerror="this.src=\'' . $default . '\'">';
                 })
+
+                // STATUS TOGGLE
                 ->addColumn('status', function ($job) {
-                    $checked = strtolower($job->status) === 'active' ? 'checked' : '';
                     return '
                     <input class="form-check-input statusIdData"
-                           type="checkbox" data-id="' . $job->id . '" role="switch" ' . $checked . '>
-               ';
-                }) // 🔥 VACANCY TITLE ONLY
+                        type="checkbox"
+                        data-id="' . $job->id . '"
+                        role="switch"
+                        ' . (strtolower($job->status) === 'active' ? 'checked' : '') . '>
+                ';
+                })
+
+                // VACANCY FIELDS
                 ->addColumn('vacancy_title', function ($job) {
-                    return optional($job->vacancy)->title ?? '<em>No Vacancy</em>';
+                    return $job->vacancy->title ?? '<em>No Vacancy</em>';
                 })
 
                 ->addColumn('vacancy_company', function ($job) {
-                    return optional($job->vacancy)->custom_company_name ?? '<em>Not Assigned</em>';
+                    return $job->vacancy->custom_company_name ?? '<em>Not Assigned</em>';
                 })
 
                 ->addColumn('vacancy_country', function ($job) {
-                    return optional($job->vacancy)->custom_company_country ?? '<em>Not Set</em>';
+                    return $job->vacancy->custom_company_country ?? '<em>Not Set</em>';
                 })
+
+                // EMPLOYER
                 ->addColumn('employer', function ($job) {
-                    return optional($job->employer)->name ?? '<em>Not Assigned</em>';
+                    return $job->employer->name ?? '<em>Not Assigned</em>';
                 })
+
+                // COUNTRY
                 ->addColumn('our_country', function ($job) {
-                    // Send country name directly
-                    return optional($job->ourCountry)->name ?? '<em>Not Set</em>';
+                    return $job->ourCountry->name ?? '<em>Not Set</em>';
                 })
+
+                // VACANCY CATEGORIES (OPTIMIZED)
                 ->addColumn('categories', function ($job) {
-                    if ($job->categories->isEmpty()) {
+                    $categories = $job->vacancy?->categories;
+
+                    if (!$categories || $categories->isEmpty()) {
                         return '<em>No Categories</em>';
                     }
-                    return $job->categories->pluck('name')->map(function ($name) {
-                        return '<span class="badge bg-primary me-1">' . e($name) . '</span>';
+
+                    return $categories->map(function ($cat) {
+                        return '<span class="badge bg-primary me-1">' . e($cat->name) . '</span>';
                     })->implode(' ');
                 })
+
+                // IMPORTANT: allow HTML rendering
                 ->rawColumns([
                     'action',
                     'image',
                     'status',
-                    'employer',
-                    'our_country',
-                    'categories',
                     'vacancy_title',
                     'vacancy_company',
-                    'vacancy_country'
+                    'vacancy_country',
+                    'employer',
+                    'our_country',
+                    'categories'
                 ])
+
                 ->make(true);
         }
 
