@@ -252,8 +252,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/', [SettingController::class, 'store'])->name('store');
     });
 
-    // Route::apiResource('jobs', JobController::class);
-    Route::apiResource('jobs', JobControllerV2::class);
+    Route::apiResource('jobs', JobController::class);
+    // Route::apiResource('jobs', JobControllerV2::class);
     Route::resource('vacancies', VacancyController::class);
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');
     Route::apiResource('job-categories', JobCategoryController::class);
