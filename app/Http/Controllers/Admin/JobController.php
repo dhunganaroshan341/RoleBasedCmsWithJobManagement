@@ -108,13 +108,11 @@ class JobController extends Controller
     public function store(JobRequest $request)
     {
         DB::beginTransaction();
+
         try {
             $data = $request->validated();
-            // dd($data);
-            // Assign vacancy
-            // $data['vacancy_id'] = $vacancy->id;
 
-            // Openings logic
+            // openings logic
             if ($request->input('openings_mode') === 'male-female') {
                 $data['male_opening'] = (int) $request->input('male_opening', 0);
                 $data['female_opening'] = (int) $request->input('female_opening', 0);
@@ -125,25 +123,34 @@ class JobController extends Controller
                 $data['female_opening'] = 0;
             }
 
-            // Image upload
-            $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/jobs');
+            // image upload
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/jobs'), $filename);
+                $data['image'] = 'uploads/jobs/' . $filename;
+            }
 
-            // Create job
             $job = Job::create($data);
 
-            // Sync categories (many-to-many)
             $job->categories()->sync($request->input('category_ids', []));
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Job created successfully!',
-                'data' => $job,
+                'message' => 'Job created successfully',
+                'data' => $job
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+
+            \Log::error($e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -165,7 +172,7 @@ class JobController extends Controller
         try {
             $data = $request->validated();
 
-            // Openings logic
+            // openings logic
             if ($request->input('openings_mode') === 'male-female') {
                 $data['male_opening'] = (int) $request->input('male_opening', 0);
                 $data['female_opening'] = (int) $request->input('female_opening', 0);
@@ -176,24 +183,33 @@ class JobController extends Controller
                 $data['female_opening'] = 0;
             }
 
-            // Image upload
-            $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/jobs', $job);
+            // image update
+            if ($request->hasFile('image')) {
+                if ($job->image && file_exists(public_path($job->image))) {
+                    unlink(public_path($job->image));
+                }
 
-            // Update job
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/jobs'), $filename);
+                $data['image'] = 'uploads/jobs/' . $filename;
+            }
+
             $job->update($data);
 
-            // Sync categories
             $job->categories()->sync($request->input('category_ids', []));
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Job updated successfully!',
-                'data' => $job,
+                'message' => 'Job updated successfully',
+                'data' => $job
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+
+            \Log::error($e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -202,31 +218,23 @@ class JobController extends Controller
         }
     }
 
-    /**
-     * Delete a specific job under a vacancy.
-     */
-    public function destroy(Vacancy $vacancy, Job $job)
+    public function destroy(Job $job)
     {
-        abort_if($job->vacancy_id !== $vacancy->id, 404);
-
-        DB::beginTransaction();
         try {
             if ($job->image && file_exists(public_path($job->image))) {
-                @unlink(public_path($job->image));
+                unlink(public_path($job->image));
             }
 
             $job->delete();
 
-            DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'Job deleted successfully!',
+                'message' => 'Job deleted successfully'
             ]);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $e->getMessage()
             ], 500);
         }
     }
