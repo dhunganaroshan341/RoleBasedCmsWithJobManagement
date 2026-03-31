@@ -19,22 +19,22 @@
                 </thead>
                 <tbody>
                     @foreach ($jobs as $job)
-                        <tr>
-                            <td>{{ $job->ourCountry->name ?? 'N/A' }}</td>
-                            <td>{{ $job->custom_company_name ?? 'Custom Company' }}</td>
-                            <td>
-                                @foreach ($job->categories as $cat)
-                                    <span class="badge bg-info">{{ $cat->name }}</span>
-                                @endforeach
-                            </td>
-                            <td>{{ $job->title }}</td>
-                            <td>{{ $job->total_openings }}</td>
-                            <td>
-                                <a href="{{ route('jobDetails', $job->id) }}" class="btn theme-btn btn-sm">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ $job->ourCountry->name ?? 'N/A' }}</td>
+                        <td>{{ $job->custom_company_name ?? 'Custom Company' }}</td>
+                        <td>
+                            @foreach ($job->vacancy->categories as $cat)
+                            <span class="badge bg-info">{{ $cat->name }}</span>
+                            @endforeach
+                        </td>
+                        <td>{{ $job->title }}</td>
+                        <td>{{ $job->total_openings }}</td>
+                        <td>
+                            <a href="{{ route('jobById', $job->id) }}" class="btn theme-btn btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -43,28 +43,28 @@
 </div>
 
 @push('styles')
-    <style>
-        /* Mobile friendly adjustments */
-        @media (max-width: 768px) {
+<style>
+    /* Mobile friendly adjustments */
+    @media (max-width: 768px) {
 
-            #jobsTable th,
-            #jobsTable td {
-                font-size: 0.85rem;
-                /* smaller text */
-                padding: 0.4rem;
-                /* tighter spacing */
-            }
-
-            #jobsTable .btn {
-                font-size: 0.75rem;
-                /* smaller button text */
-                padding: 0.25rem 0.5rem;
-            }
-
-            #jobsTable .badge {
-                font-size: 0.7rem;
-                padding: 0.3em 0.4em;
-            }
+        #jobsTable th,
+        #jobsTable td {
+            font-size: 0.85rem;
+            /* smaller text */
+            padding: 0.4rem;
+            /* tighter spacing */
         }
-    </style>
+
+        #jobsTable .btn {
+            font-size: 0.75rem;
+            /* smaller button text */
+            padding: 0.25rem 0.5rem;
+        }
+
+        #jobsTable .badge {
+            font-size: 0.7rem;
+            padding: 0.3em 0.4em;
+        }
+    }
+</style>
 @endpush
