@@ -10,93 +10,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
-class JobController extends Controller
+class JobControllerV2 extends Controller
 {
     /**
      * Display a listing of jobs under a specific vacancy.
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $jobs = Job::with(['employer', 'categories', 'ourCountry'])->latest();
+        $vacancies = \App\Models\Vacancy::latest()->pluck('title', 'id');
 
-            return datatables()->eloquent($jobs)
-                ->addIndexColumn()
-                ->addColumn('action', function ($job) {
-                    return view('Admin.Button.button', ['data' => $job])->render();
-                })
-                ->addColumn('image', function ($job) {
-                    $image = $job->image_url ?? asset('uploads/' . $job->image);
-                    $defaultImage = asset('user.png');
-                    return '<img src="' . $image . '" width="50" height="50"
-                         class="rounded" style="object-fit:cover"
-                         onerror="this.src=\'' . $defaultImage . '\'"/>';
-                })
-                ->addColumn('status', function ($job) {
-                    $checked = strtolower($job->status) === 'active' ? 'checked' : '';
-                    return '
-                    <input class="form-check-input statusIdData"
-                           type="checkbox" data-id="' . $job->id . '" role="switch" ' . $checked . '>
-               ';
-                }) // 🔥 VACANCY TITLE ONLY
-                ->addColumn('vacancy_title', function ($job) {
-                    return optional($job->vacancy)->title ?? '<em>No Vacancy</em>';
-                })
+        $jobs = \App\Models\Job::with([
+            'vacancy.company',
+            'vacancy.categories' // 🔥 FIXED (many-to-many)
+        ])
+            ->when($request->vacancy_id, function ($query) use ($request) {
+                $query->where('vacancy_id', $request->vacancy_id);
+            })
+            ->latest()
+            ->paginate(10);
+        dd($jobs->toArray());
 
-                ->addColumn('vacancy_company', function ($job) {
-                    return optional($job->vacancy)->custom_company_name ?? '<em>Not Assigned</em>';
-                })
-
-                ->addColumn('vacancy_country', function ($job) {
-                    return optional($job->vacancy)->custom_company_country ?? '<em>Not Set</em>';
-                })
-                ->addColumn('employer', function ($job) {
-                    return optional($job->employer)->name ?? '<em>Not Assigned</em>';
-                })
-                ->addColumn('our_country', function ($job) {
-                    // Send country name directly
-                    return optional($job->ourCountry)->name ?? '<em>Not Set</em>';
-                })
-                ->addColumn('categories', function ($job) {
-                    if ($job->categories->isEmpty()) {
-                        return '<em>No Categories</em>';
-                    }
-                    return $job->categories->pluck('name')->map(function ($name) {
-                        return '<span class="badge bg-primary me-1">' . e($name) . '</span>';
-                    })->implode(' ');
-                })
-                ->rawColumns([
-                    'action',
-                    'image',
-                    'status',
-                    'employer',
-                    'our_country',
-                    'categories',
-                    'vacancy_title',
-                    'vacancy_company',
-                    'vacancy_country'
-                ])
-                ->make(true);
-        }
-
-        $extraJs = array_merge(
-            config('js-map.admin.datatable.script'),
-            config('js-map.admin.summernote.script'),
-            config('js-map.admin.select2.script'),
-            config('js-map.admin.buttons.script')
-        );
-
-        $extraCs = array_merge(
-            config('js-map.admin.datatable.style'),
-            config('js-map.admin.summernote.style'),
-            config('js-map.admin.select2.style'),
-            config('js-map.admin.buttons.style')
-        );
-
-        return view('Admin.pages.Job.jobIndex', [
-            'extraJs' => $extraJs,
-            'extraCs' => $extraCs
-        ]);
+        return view('Admin.pages.Job.jobIndex', compact('jobs', 'vacancies'));
     }
 
 

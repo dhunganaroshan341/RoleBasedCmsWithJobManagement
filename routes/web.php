@@ -5,6 +5,7 @@ use  App\Http\Controllers\Admin\BannerSliderVideoController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CallToActionController;
 use App\Http\Controllers\Admin\ItineraryController;
+use App\Http\Controllers\Admin\JobControllerV2;
 use App\Http\Controllers\Admin\PriceIncludesController;
 use App\Http\Controllers\Admin\SectionCategoryController;
 use App\Http\Controllers\Admin\ServiceQueryController;
@@ -251,7 +252,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/', [SettingController::class, 'store'])->name('store');
     });
 
-    Route::apiResource('jobs', JobController::class);
+    // Route::apiResource('jobs', JobController::class);
+    Route::apiResource('jobs', JobControllerV2::class);
     Route::resource('vacancies', VacancyController::class);
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');
     Route::apiResource('job-categories', JobCategoryController::class);
