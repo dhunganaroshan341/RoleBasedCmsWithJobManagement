@@ -1,7 +1,7 @@
 <!-- main header -->
 <header class="main-header header-style-two">
     @php
-        $currentRoute = Route::currentRouteName();
+    $currentRoute = Route::currentRouteName();
     @endphp
 
     <!-- header-top -->
@@ -15,12 +15,12 @@
                     </li>
                     <li>
                         <img src="{{ asset('assets/images/icons/icon-7.png') }}" alt="">
-                      
+
                         <a href="mailto:aurorashrpl@gmail.com">aurorashrpl@gmail.com</a> |
                         <a href="mailto:info@auroranepal.com.np">info@auroranepal.com.np</a>
                     </li>
                 </ul>
-                <p><span>Latest News:</span> Fusce neque CEO egestas cursu magna sapien</p>
+                <p><span>Latest News:</span> {{ $latestNewsTitle??'Not available at the moment' }}</p>
                 <div class="right-column">
                     <ul class="social-links">
                         <li><span>Share:</span></li>
@@ -101,13 +101,13 @@
 
                 <div class="menu-right-content">
                     @auth
-                        <div class="link-box mr_20">
-                            Hello, {{ auth()->user()->full_name }}
-                        </div>
+                    <div class="link-box mr_20">
+                        Hello, {{ auth()->user()->full_name }}
+                    </div>
                     @else
-                        <div class="link-box mr_20">
-                            <a href="{{ route('jobseeker.create') }}">Upload CV</a>
-                        </div>
+                    <div class="link-box mr_20">
+                        <a href="{{ route('jobseeker.create') }}">Upload CV</a>
+                    </div>
                     @endauth
 
                     <div class="btn-box"><a href="{{ route('contact') }}" class="theme-btn btn-one">Contact Us</a>

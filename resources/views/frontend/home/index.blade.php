@@ -276,26 +276,28 @@ $subTitle = '';
 
 
 <!-- clients-style-two -->
+@isset($latestVacancies)
 <section class="clients-style-two centred pt_110 pb_120">
     <div class="auto-container">
         <div class="title-text">
-            <h3>Trusted by the next-gen industry leaders</h3>
+            <h3>Latest Vacancies</h3>
         </div>
+
         <div class="clients-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
-            <figure class="clients-logo"><a href="{{ route('index') }}"><img
-                        src="{{ asset('assets/images/clients/clients-6.png') }}" alt=""></a></figure>
-            <figure class="clients-logo"><a href="{{ route('index') }}"><img
-                        src="{{ asset('assets/images/clients/clients-7.png') }}" alt=""></a></figure>
-            <figure class="clients-logo"><a href="{{ route('index') }}"><img
-                        src="{{ asset('assets/images/clients/clients-8.png') }}" alt=""></a></figure>
-            <figure class="clients-logo"><a href="{{ route('index') }}"><img
-                        src="{{ asset('assets/images/clients/clients-9.png') }}" alt=""></a></figure>
-            <figure class="clients-logo"><a href="{{ route('index') }}"><img
-                        src="{{ asset('assets/images/clients/clients-10.png') }}" alt=""></a>
-            </figure>
+
+            @foreach($latestVacancies as $vacancy)
+            <div class="clients-logo">
+                <a href="#">
+                    <h4>{{ $vacancy->country }}</h4>
+                    <p>{{ $vacancy->jobs_count }} Jobs</p>
+                </a>
+            </div>
+            @endforeach
+
         </div>
     </div>
 </section>
+@endisset
 <!-- clients-style-two end -->
 
 <!-- about-style-two -->

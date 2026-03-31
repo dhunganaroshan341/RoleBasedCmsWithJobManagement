@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\frontend;
 use App\Models\Itinerary;
 use App\Models\Service;
+use App\Models\Vacancy;
 use App\Models\WorkingDay;
 use Illuminate\Pagination\Paginator;
 // use Illuminate\Routing\Route;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\ItineraryObserver;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer($views, function ($view) {
             $setting = Setting::first();
             $services = Service::where('status', 1)->latest()->take(4)->get();
-
+            $latestVacancies = Vacancy::withCount('jobs')->latest()->take(5)->get();
             $view->with([
                 'email' => $setting->email ?? '',
                 'title' => $setting->title ?? '',
@@ -68,7 +70,9 @@ class AppServiceProvider extends ServiceProvider
                 'instagram' => $setting->instagram_url ?? '',
                 'github' => $setting->github_url ?? '',
                 'workdesc' => WorkingDay::all(),
-                'services' => $services
+                'services' => $services,
+                'latestVacancies' => $latestVacancies,
+                'latestNewsTitle' => Str::words(frontend::latest()->first()->title ?? '', 4),
             ]);
         });
     }
