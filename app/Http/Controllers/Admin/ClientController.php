@@ -23,10 +23,10 @@ class ClientController extends Controller
                 ->addColumn('image', function ($item) {
                     if ($item->image != null) {
                         $url = $item->image; // Get image URL
-                        $defaultImage = asset('defaultImage/defaultimage.webp');
-                        return ' <td class="py-1"><img src="' . $url . '" width="50" height="50" onerror="this.src=\''.$defaultImage.'\"/></td>';
+                        $defaultImage = asset('user.png');
+                        return ' <td class="py-1"><img src="' . $url . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\"/></td>';
                     } else {
-                        $url = asset('defaultImage/defaultimage.webp');
+                        $url = asset('user.png');
                         return ' <td class="py-1"><img src="' . $url . '" width="50" height="50"/></td>';
                     }
                 })
@@ -39,7 +39,7 @@ class ClientController extends Controller
                 ->addColumn('action', function ($data) {
                     return view('Admin.Button.button', compact('data'));
                 })
-                ->rawColumns(['action', 'image','status'])
+                ->rawColumns(['action', 'image', 'status'])
                 ->make(true);
         }
         $extraJs = array_merge(
@@ -53,7 +53,6 @@ class ClientController extends Controller
         );
 
         return view('Admin.pages.client.client', ['extraJs' => $extraJs, 'extraCs' => $extraCs]);
-
     }
 
     /**

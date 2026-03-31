@@ -72,13 +72,13 @@ $(document).ready(function () {
         var id = $(this).attr("data-id");
         $.ajax({
             type: "get",
-            url: "/admin/call-to-action/"+id,
+            url: "/admin/call-to-action/" + id,
             success: function (response) {
                 console.log(response);
                 $("#title").val(response.message.title);
                 $("#sub_heading").val(response.message.sub_heading);
                 $("#title").val(response.message.iframe);
-                $("#formModalLabel").val(response.message.page+' CTA');
+                $("#formModalLabel").val(response.message.page + ' CTA');
 
                 $("#description").summernote('code', response.message
                     .description);
@@ -88,11 +88,11 @@ $(document).ready(function () {
                                   alt="User Image"
                                   width="100"
                                   height="100"
-                                  onerror="this.onerror=404; this.src='/defaultimage/defaultimage.webp';">`
+                                  onerror="this.onerror=404; this.src='/user.png';">`
                     );
                 } else {
                     $("#callToActionImage").html(
-                        `<img src="/defaultimage/defaultimage.webp"
+                        `<img src="/user.png"
                                   alt="Default Image"
                                   width="100"
                                   height="100">`
@@ -167,7 +167,7 @@ $(document).ready(function () {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "post",
-                    url: "/admin/call-to-action/"+ id+"/status" ,
+                    url: "/admin/call-to-action/" + id + "/status",
                     headers: { 'X-HTTP-Method-Override': 'PUT' },
                     success: function () {
                         // console.log(response);

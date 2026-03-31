@@ -55,7 +55,7 @@ class PageBannerController extends Controller
                 })
                 ->addColumn('image', function ($item) {
                     $dataImage = asset('uploads/' . $item->image);
-                    $defaultImage = asset('defaultImage/defaultimage.webp');
+                    $defaultImage = asset('user.png');
                     return '<img src="' . $dataImage . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\'" />';
                 })
                 ->addColumn('description', function ($item) {
@@ -108,56 +108,55 @@ class PageBannerController extends Controller
      */
 
 
-public function store(PageBannerRequest $request)
-{
-    DB::beginTransaction();
+    public function store(PageBannerRequest $request)
+    {
+        DB::beginTransaction();
 
-    try {
-        $data = $request->only(['title', 'description', 'page', 'section', 'status']); // Add other fields if needed
+        try {
+            $data = $request->only(['title', 'description', 'page', 'section', 'status']); // Add other fields if needed
 
-        if ($request->hasFile('image')) {
-            $path = 'images/page-banner/';
-            $imageName = time() . '.' . $request->image->extension();
-            $storedPath = $request->file('image')->storeAs($path, $imageName, 'public');
-            $data['image'] = $path.$imageName;
+            if ($request->hasFile('image')) {
+                $path = 'images/page-banner/';
+                $imageName = time() . '.' . $request->image->extension();
+                $storedPath = $request->file('image')->storeAs($path, $imageName, 'public');
+                $data['image'] = $path . $imageName;
+            }
+
+            PageBanner::create($data);
+
+            DB::commit();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        PageBanner::create($data);
-
-        DB::commit();
-
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 500);
     }
-}
-public function all(){
-
-}
+    public function all() {}
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-{
-    try {
-        $banner = PageBanner::findOrFail($id);
+    {
+        try {
+            $banner = PageBanner::findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'message' => $banner
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 404);
-    }}
+            return response()->json([
+                'success' => true,
+                'message' => $banner
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 404);
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -183,42 +182,42 @@ public function all(){
      * Update the specified resource in storage.
      */
     public function update(PageBannerRequest $request, string $id)
-{
-    DB::beginTransaction();
+    {
+        DB::beginTransaction();
 
-    try {
-        $banner = PageBanner::findOrFail($id);
+        try {
+            $banner = PageBanner::findOrFail($id);
 
-        $data = $request->only(['title', 'description', 'page', 'section', 'status']); // Include other fields if needed
+            $data = $request->only(['title', 'description', 'page', 'section', 'status']); // Include other fields if needed
 
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($banner->image && Storage::disk('public')->exists($banner->image)) {
-                Storage::disk('public')->delete($banner->image);
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($banner->image && Storage::disk('public')->exists($banner->image)) {
+                    Storage::disk('public')->delete($banner->image);
+                }
+
+                // Store new image
+                $path = 'images/page-banner/';
+                $imageName = time() . '.' . $request->image->extension();
+                $storedPath = $request->file('image')->storeAs($path, $imageName, 'public');
+                $data['image'] = $path . $imageName;
             }
 
-            // Store new image
-            $path = 'images/page-banner/';
-            $imageName = time() . '.' . $request->image->extension();
-            $storedPath = $request->file('image')->storeAs($path, $imageName, 'public');
-            $data['image'] = $path.$imageName;
+            $banner->update($data);
+
+            DB::commit();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        $banner->update($data);
-
-        DB::commit();
-
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 500);
     }
-}
-public function statusToggle($id)
+    public function statusToggle($id)
     {
         try {
             $data = PageBanner::find($id);
@@ -255,5 +254,6 @@ public function statusToggle($id)
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
-        }}
+        }
+    }
 }

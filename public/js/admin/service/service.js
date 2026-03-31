@@ -135,7 +135,7 @@ $(document).ready(function () {
     })
 
     // Edit and Update
-    $(document).off("click",".editUserButton").on("click", ".editUserButton", function () {
+    $(document).off("click", ".editUserButton").on("click", ".editUserButton", function () {
         clearModal();
         $("#formModal").modal("show");
         $(".submitBtn").hide();
@@ -153,18 +153,18 @@ $(document).ready(function () {
                 $("#short_desc").val(response.message.short_desc);
                 $("#description").summernote('code', response.message
                     .description);
-                    $("#id").val(response.message.id);
+                $("#id").val(response.message.id);
                 if (response.message.image != null) {
                     $("#testimonialImage").html(
                         `<img src="/uploads/${response.message.image}"
                                   alt="User Image"
                                   width="100"
                                   height="100"
-                                  onerror="this.onerror=404; this.src='/defaultimage/defaultimage.webp';">`
+                                  onerror="this.onerror=404; this.src='/user.png';">`
                     );
                 } else {
                     $("#testimonialImage").html(
-                        `<img src="/defaultimage/defaultimage.webp"
+                        `<img src="/user.png"
                                   alt="Default Image"
                                   width="100"
                                   height="100">`
@@ -177,12 +177,12 @@ $(document).ready(function () {
 
     })
 
-    $(document).off("submit","#updateForm").on("submit","#updateForm", function (event) {
+    $(document).off("submit", "#updateForm").on("submit", "#updateForm", function (event) {
         event.preventDefault();
         $(".updateBtn").prop("disabled", true);
         let id = $("#id").val();
         let formdata = new FormData(this);
-        formdata.append("_method","PUT");
+        formdata.append("_method", "PUT");
         $.ajax({
             type: "post",
             url: "/admin/service/" + id,
@@ -275,7 +275,7 @@ $(document).ready(function () {
                 $.ajax({
                     type: "delete",
                     headers:
-                    { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                     url: "/admin/service/" + id,
                     success: function (response) {
                         if (response.success == true) {

@@ -71,69 +71,69 @@ $(document).ready(function () {
 
                 let img = response.message.image
                     ? `/uploads/${response.message.image}`
-                    : '/defaultimage/defaultimage.webp';
+                    : '/user.png';
 
                 $("#bannerImage").html(`
                     <img src="${img}" alt="Image" width="100" height="100"
-                         onerror="this.onerror=null; this.src='/defaultimage/defaultimage.webp';">
+                         onerror="this.onerror=null; this.src='/user.png';">
                 `);
             }
 
         });
 
         // Submit update
-       // Submit update
-$(document).off("submit", "#updateForm").on("submit", "#updateForm", function (event) {
-    event.preventDefault();
-    $(".updateBtn").prop("disabled", true);
+        // Submit update
+        $(document).off("submit", "#updateForm").on("submit", "#updateForm", function (event) {
+            event.preventDefault();
+            $(".updateBtn").prop("disabled", true);
 
-    let formdata = new FormData(this);
-    formdata.append('_method', 'PUT'); // Spoofing method for Laravel
+            let formdata = new FormData(this);
+            formdata.append('_method', 'PUT'); // Spoofing method for Laravel
 
-    $.ajax({
-        type: "POST", // Must be POST to support PUT spoofing
-        url: "/admin/page-banner/" + id,
+            $.ajax({
+                type: "POST", // Must be POST to support PUT spoofing
+                url: "/admin/page-banner/" + id,
 
-        data: formdata,
-        contentType: false,
-        processData: false,
-        // headers: {
-        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // in case token isn't in form
-        // },
-        success: function (response) {
-            if (response.success) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    text: "Page Banner Updated Successfully",
-                    timer: 1000,
-                    showConfirmButton: false
-                });
-                table.draw(); // Assuming you're using DataTables or similar
-                $("#formModal").modal("hide");
-            } else {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Warning",
-                    text: "Please try again!"
-                });
-            }
-        },
-        error: function (xhr) {
-            console.error(xhr.responseText);
-            Swal.fire({
-                icon: "warning",
-                title: "Error",
-                text: "Something went wrong!",
-                timer: 1500,
-                showConfirmButton: false
+                data: formdata,
+                contentType: false,
+                processData: false,
+                // headers: {
+                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // in case token isn't in form
+                // },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: "Page Banner Updated Successfully",
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
+                        table.draw(); // Assuming you're using DataTables or similar
+                        $("#formModal").modal("hide");
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Warning",
+                            text: "Please try again!"
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Error",
+                        text: "Something went wrong!",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                },
+                complete: function () {
+                    $(".updateBtn").prop("disabled", false);
+                }
             });
-        },
-        complete: function () {
-            $(".updateBtn").prop("disabled", false);
-        }
-    });
-});
+        });
 
     });
 

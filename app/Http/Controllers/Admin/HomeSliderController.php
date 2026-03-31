@@ -48,8 +48,8 @@ class HomeSliderController extends Controller
                     return view('Admin.Button.button', compact('data'))->render();
                 })
                 ->addColumn('image', function ($item) {
-                    $url = $item->image ? asset('uploads/' . $item->image) : asset('defaultImage/defaultimage.webp');
-                    $defaultImage = asset('defaultImage/defaultimage.webp');
+                    $url = $item->image ? asset('uploads/' . $item->image) : asset('user.png');
+                    $defaultImage = asset('user.png');
                     return '<img src="' . $url . '" width="50" height="50" alt="Image" onerror="this.src=\'' . $defaultImage . '\'" />';
                 })
                 ->addColumn('shortdesc', function ($desc) {
@@ -154,7 +154,7 @@ class HomeSliderController extends Controller
     {
         try {
             $data = HomeSlide::find($id);
-            if ($data->image!=null) {
+            if ($data->image != null) {
                 Storage::disk('public')->delete($data->image);
             }
             $data->delete();

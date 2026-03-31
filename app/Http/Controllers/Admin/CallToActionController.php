@@ -34,8 +34,8 @@ class CallToActionController extends Controller
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'LIKE', "%{$search}%")
-                      ->orWhere('link', 'LIKE', "%{$search}%")
-                      ->orWhere('description', 'LIKE', "%{$search}%");
+                        ->orWhere('link', 'LIKE', "%{$search}%")
+                        ->orWhere('description', 'LIKE', "%{$search}%");
                 });
             }
 
@@ -49,15 +49,15 @@ class CallToActionController extends Controller
 
                 ->addColumn('image', function ($item) {
                     $dataimage = asset('uploads/' . $item->image);
-                    $defaultImage=asset('defaultImage/defaultimage.webp');
+                    $defaultImage = asset('user.png');
                     return ' <td class="py-1">
-                    <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\''.$defaultImage.'\'"/>
+                    <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\'"/>
                     </td>';
                 })
 
                 ->addColumn('description', function ($item) {
                     return Str::limit(strip_tags($item->description), 20);
-                }) ->addColumn('title', function ($item) {
+                })->addColumn('title', function ($item) {
                     return Str::limit(strip_tags($item->title), 20);
                 })
 
@@ -125,7 +125,7 @@ class CallToActionController extends Controller
     {
         DB::beginTransaction();
         try {
-            $data = $request->only(['title', 'image', 'description', 'page','link']);
+            $data = $request->only(['title', 'image', 'description', 'page', 'link']);
             if ($request->hasFile('image')) {
                 $path = '/images/cta/';
                 $imagename = time() . '.' . $request->image->extension();
@@ -172,44 +172,43 @@ class CallToActionController extends Controller
      * Update the specified resource in storage.
      */
     public function update(CallToActionRequest $request, $id)
-{
-    DB::beginTransaction();
+    {
+        DB::beginTransaction();
 
-    try {
-        $callToAction = CallToAction::findOrFail($id); // Use findOrFail for better error handling
+        try {
+            $callToAction = CallToAction::findOrFail($id); // Use findOrFail for better error handling
 
-        // Update fields
-        $callToAction->title = $request->input('title');
-        $callToAction->link = $request->input('link');
-        $callToAction->description = $request->input('description');
+            // Update fields
+            $callToAction->title = $request->input('title');
+            $callToAction->link = $request->input('link');
+            $callToAction->description = $request->input('description');
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $callToAction->image;
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $imagePath = $callToAction->image;
 
-            // Delete old image if it exists
-            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-                Storage::disk('public')->delete($imagePath);
+                // Delete old image if it exists
+                if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                    Storage::disk('public')->delete($imagePath);
+                }
+
+                // Store new image
+                $imageDirectory = 'images/cta';
+                $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+                $storedPath = $request->image->storeAs($imageDirectory, $imageName, 'public');
+
+                $callToAction->image = $storedPath;
             }
 
-            // Store new image
-            $imageDirectory = 'images/cta';
-            $imageName = time() . '.' . $request->image->getClientOriginalExtension();
-            $storedPath = $request->image->storeAs($imageDirectory, $imageName, 'public');
+            $callToAction->save();
+            DB::commit();
 
-            $callToAction->image = $storedPath;
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-
-        $callToAction->save();
-        DB::commit();
-
-        return response()->json(['success' => true]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => $e->getMessage()]);
     }
-}
 
 
     /**
@@ -220,26 +219,25 @@ class CallToActionController extends Controller
         //
     }
     public function destroyImage(Request $request)
-{
-    try {
-        $callToAction = CallToAction::findOrFail($request->id); // expecting 'id' not 'image'
+    {
+        try {
+            $callToAction = CallToAction::findOrFail($request->id); // expecting 'id' not 'image'
 
-        if ($callToAction->image && Storage::disk('public')->exists($callToAction->image)) {
-            Storage::disk('public')->delete($callToAction->image);
-            $callToAction->image = null; // unset the image path in DB
-            $callToAction->save();
+            if ($callToAction->image && Storage::disk('public')->exists($callToAction->image)) {
+                Storage::disk('public')->delete($callToAction->image);
+                $callToAction->image = null; // unset the image path in DB
+                $callToAction->save();
+            }
+
+            return response()->json(['success' => true, 'message' => 'Image deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'trace' => $e->getTrace() // for debugging
+            ]);
         }
-
-        return response()->json(['success' => true, 'message' => 'Image deleted successfully.']);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage(),
-            'trace' => $e->getTrace() // for debugging
-        ]);
     }
-}
 
 
     public function statusToggle($id)

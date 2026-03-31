@@ -68,7 +68,7 @@ $query->where('title', 'like', '%' . request('search') . '%');
 
                         <td>
                             <img src="{{ asset('uploads/' . $item->vacancy_image) }}" width="50" class="rounded"
-                                onerror="this.src='{{ asset('defaultImage/defaultimage.webp') }}'">
+                                onerror="this.src='{{ asset('user.png') }}'">
                         </td>
 
                         <td>{{ $item->title }}</td>

@@ -163,11 +163,11 @@ $(document).ready(function () {
                                   alt="User Image"
                                   width="100"
                                   height="100"
-                                  onerror="this.onerror=404; this.src='/defaultimage/defaultimage.webp';">`
+                                  onerror="this.onerror=404; this.src='/user.png';">`
                     );
                 } else {
                     $("#testimonialImage").html(
-                        `<img src="/defaultimage/defaultimage.webp"
+                        `<img src="/user.png"
                                   alt="Default Image"
                                   width="100"
                                   height="100">`
