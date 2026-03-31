@@ -21,7 +21,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
     <!-- endinject -->
-    <link rel="shortcut icon" href="{{ !empty($logo) ? $logo : asset('front/images/logo.png') }}">
+    <link rel="shortcut icon" href="{{ !empty($logo) ? $logo : asset('assets/images/logo.png') }}">
 </head>
 @php
 logger(Route::currentRouteName());
