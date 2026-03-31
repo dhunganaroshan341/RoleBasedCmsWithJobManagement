@@ -1,7 +1,7 @@
 <div id="search-popup" class="search-popup">
     <div class="popup-inner">
         <div class="upper-box">
-            <figure class="logo-box"><a href="{{ route('index') }}"><img src="{{ asset('assets/images/logo.png') }}"
+            <figure class="logo-box"><a href="{{ route('index') }}"><img src="{{ asset('assets/images/logo-bg.png') }}"
                         alt=""></a></figure>
             <div class="close-search"><span class="icon-27"></span></div>
         </div>
