@@ -179,8 +179,8 @@
                     <button type="button" class="btn btn-outline-secondary rounded-3"
                         data-bs-dismiss="modal">Close</button>
                     <div>
-                        <button type="submit" class="btn btn-success rounded-3 submitBtn">Submit</button>
-                        <button type="submit" class="btn btn-warning rounded-3 updateBtn">Update</button>
+                        <button type="button" class="btn btn-success submitBtn">Submit</button>
+                        <button type="button" class="btn btn-warning updateBtn">Update</button>
                     </div>
                 </div>
             </form>

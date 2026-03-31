@@ -148,11 +148,8 @@ class JobController extends Controller
     }
 
     // Show a specific job
-    public function show(Vacancy $vacancy, Job $job)
+    public function show(Job $job)
     {
-        abort_if($job->vacancy_id !== $vacancy->id, 404);
-
-        // Load related models for edit form
         $job->load(['categories', 'ourCountry', 'employer']);
 
         return response()->json([
@@ -160,13 +157,11 @@ class JobController extends Controller
             'data' => $job,
         ]);
     }
-
     // Update a specific job
-    public function update(JobRequest $request, Vacancy $vacancy, Job $job)
+    public function update(JobRequest $request, Job $job)
     {
-        abort_if($job->vacancy_id !== $vacancy->id, 404);
-
         DB::beginTransaction();
+
         try {
             $data = $request->validated();
 
@@ -199,10 +194,13 @@ class JobController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
-
 
     /**
      * Delete a specific job under a vacancy.
