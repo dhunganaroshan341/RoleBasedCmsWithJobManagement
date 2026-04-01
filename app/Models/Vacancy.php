@@ -47,14 +47,6 @@ class Vacancy extends Model
 
     public function setVacancyImageAttribute($value)
     {
-        if (!$value) {
-            $this->attributes['vacancy_image'] = null;
-            return;
-        }
-
-        // remove any leading "uploads/" if user passes full path
-        $value = str_replace('uploads/', '', $value);
-
-        $this->attributes['vacancy_image'] = $value;
+        $this->attributes['vacancy_image'] = 'uploads/' . $value;
     }
 }
