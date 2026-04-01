@@ -33,7 +33,7 @@ class JobSeekerProfileController extends Controller
         // Validate input, including password confirmation
         $validated = $request->validate([
             // user
-            'name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'phone' => 'required|string|max:20',
             'password' => 'required|string|min:6|confirmed',
