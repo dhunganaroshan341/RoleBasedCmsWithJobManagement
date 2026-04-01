@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Notice extends BaseModel
 {
     use HasFactory;
-    protected $fillable=['title','description','image','status','url'];
+    protected $fillable = ['title', 'description', 'image', 'status', 'url'];
 
 
 
-    public function getImageUrlAttribute(){
-        $url = asset ('uploads/'.$this->image);
+    public function getImageUrlAttribute()
+    {
+        $url = asset($this->image);
         return $url;
     }
 }

@@ -20,20 +20,43 @@
                 <tbody>
                     @foreach ($jobs as $job)
                     <tr>
-                        <td>{{ $job->ourCountry->name ?? 'N/A' }}</td>
-                        <td>{{ $job->custom_company_name ?? 'Custom Company' }}</td>
+
+                        <!-- Country (from vacancy) -->
                         <td>
+                            {{ $job->vacancy?->custom_company_country ?? 'N/A' }}
+                        </td>
+
+                        <!-- Company (from vacancy) -->
+                        <td>
+                            {{ $job->vacancy?->custom_company_name ?? 'N/A' }}
+                        </td>
+
+                        <!-- Categories (from job) -->
+                        <td>
+                            @if ($job->vacancy && $job->vacancy->categories->isNotEmpty())
                             @foreach ($job->vacancy->categories as $cat)
                             <span class="badge bg-info">{{ $cat->name }}</span>
                             @endforeach
+                            @else
+                            <span class="text-muted">N/A</span>
+                            @endif
                         </td>
+
+                        <!-- Job Title -->
                         <td>{{ $job->title }}</td>
-                        <td>{{ $job->total_openings }}</td>
+
+                        <!-- Openings -->
+                        <td>
+                            {{ $job->total_openings ?? (($job->male_opening ?? 0) + ($job->female_opening ?? 0)) }}
+                        </td>
+
+                        <!-- Action -->
                         <td>
                             <a href="{{ route('jobById', $job->id) }}" class="btn theme-btn btn-sm">
                                 <i class="fas fa-eye"></i> View
                             </a>
                         </td>
+
                     </tr>
                     @endforeach
                 </tbody>

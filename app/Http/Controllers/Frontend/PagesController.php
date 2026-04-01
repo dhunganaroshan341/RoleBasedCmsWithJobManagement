@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\JobCategory;
-
+use App\Models\Vacancy;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -31,51 +31,51 @@ class PagesController extends Controller
 
     public function job3(Request $request)
     {
-        // Get search parameter from query string
         $searchTitle = $request->query('search');
-        $vacancyId   = $request->query('vacancy'); // ✅ ADD THIS ONLY
+        $vacancyId   = $request->query('vacancy');
 
-        // Base query for jobs
-        $jobsQuery = Job::with(['ourCountry', 'categories', 'vacancy']);
+        // ================= MAIN JOBS =================
+        $jobsQuery = Job::with(['vacancy.categories']);
 
-        // Apply search if provided
         if ($searchTitle) {
             $jobsQuery->where('title', 'like', '%' . $searchTitle . '%');
         }
 
-        // ✅ APPLY VACANCY FILTER (ONLY ADDITION)
         if ($vacancyId) {
             $jobsQuery->where('vacancy_id', $vacancyId);
         }
 
-        // Get filtered jobs
-        $jobs = $jobsQuery->orderBy('created_at', 'desc')->get();
+        $jobs = $jobsQuery->latest()->get();
 
-        // Latest jobs
-        $latestJobs = Job::with(['vacancy', 'categories'])
-            ->orderBy('created_at', 'desc')
+        // ================= LATEST JOBS =================
+        $latestJobs = Job::with(['vacancy.categories'])
+            ->latest()
             ->get();
 
-        // Top 3 categories with most jobs
-        $topCategories = JobCategory::withCount('jobs')
-            ->orderBy('jobs_count', 'desc')
+        // ================= TOP CATEGORIES =================
+        $topCategories = JobCategory::withCount('vacancies')
+            ->orderByDesc('vacancies_count')
             ->take(3)
             ->get();
 
-        // Category-wise jobs
+        // ================= CATEGORY JOBS =================
         $categoryJobs = [];
+
         foreach ($topCategories as $category) {
             $categoryJobs[] = [
                 'category_name' => $category->name,
-                'jobs' => $category->jobs()->with('vacancy')->get()
+                'jobs' => Job::whereHas('vacancy.categories', function ($q) use ($category) {
+                    $q->where('job_categories.id', $category->id);
+                })
+                    ->with(['vacancy.categories'])
+                    ->latest()
+                    ->get()
             ];
         }
 
         $jobCategories = JobCategory::all();
-
-        // Vacancies
-        $vacancies = \App\Models\Vacancy::all();
-
+        $vacancies     = Vacancy::latest()->get();
+        // dd($jobs->toArray());
         return view('frontend.pages.job.job3', compact(
             'latestJobs',
             'categoryJobs',
