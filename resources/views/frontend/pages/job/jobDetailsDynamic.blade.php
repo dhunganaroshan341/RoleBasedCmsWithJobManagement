@@ -135,7 +135,7 @@ $css =
                         @if ($job->vacancy->vacancy_image)
                         <div class="text-box mb_60">
 
-                            <img src="{{ asset($job->vacancy->vacancy_image) }}">
+                            <img src="{{ asset('uploads/' . $job->vacancy->vacancy_image) }}">
                             <p class="mt_20 text-muted">Scan of the original job posting.</p>
                         </div>
                         @else
