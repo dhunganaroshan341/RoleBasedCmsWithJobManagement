@@ -29,7 +29,7 @@ $css =
             <h2 class="title-animation">Login & Upload Your CV</h2>
             <p class="title-animation">Provide your details and CV so we can match you with suitable opportunities.</p>
         </div>
-
+        <x-session-message />
         <form method="post" action="{{ route('jobseeker.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row g-4">

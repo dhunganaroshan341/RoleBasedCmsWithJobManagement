@@ -83,7 +83,7 @@ class VacancyController extends Controller
         // IMAGE
         if ($request->hasFile('vacancy_image')) {
             $validated['vacancy_image'] =
-                $request->file('vacancy_image')->store('uploads/vacancies', 'public');
+                $request->file('vacancy_image')->store('vacancies', 'public');
         }
 
         // ✅ CREATE FIRST
@@ -129,7 +129,7 @@ class VacancyController extends Controller
             }
 
             $validated['vacancy_image'] =
-                $request->file('vacancy_image')->store('uploads/vacancies', 'public');
+                $request->file('vacancy_image')->store('vacancies', 'public');
         }
 
         $vacancy->update($validated);
