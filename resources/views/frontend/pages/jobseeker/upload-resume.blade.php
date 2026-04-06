@@ -51,13 +51,21 @@ $css =
                                     class="form-control" required>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
-                                <input type="text" name="phone" placeholder="Phone" value="{{ old('phone') }}"
-                                    class="form-control" required>
+
+                                <input type="tel" name="phone" placeholder="Phone (10 digits)"
+                                    value="{{ old('phone') }}" class="form-control" required pattern="[0-9]{10}"
+                                    maxlength="10" inputmode="numeric"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+                                    title="Phone number must be exactly 10 digits">
                             </div>
+
+
                             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
                                 <input type="text" name="address" placeholder="Address" value="{{ old('address') }}"
                                     class="form-control">
                             </div>
+
+
                             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
                                 <input type="password" name="password" placeholder="password"
                                     value="{{ old('password') }}" class="form-control">
@@ -91,19 +99,26 @@ $css =
                                     value="{{ old('experience') }}" class="form-control" required>
                             </div>
                         </div>
+
+
+                    </div>
+                    <div class="row">
+                        <!-- Upload CV (Main Emphasis) -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+
+                            <div
+                                class="upload-box d-flex align-items-center border rounded p-3 bg-theme-secondary text-white">
+                                <i class="fas fa-upload fa-2x me-3"></i>
+                                <input type="file" id="resume_file" name="resume_file" accept=".pdf,.doc,.docx" required
+                                    class="form-control-file flex-grow-1">
+                                <span class="text-light ms-3">Upload CV</span>
+                            </div>
+                            <small class="form-text text-light">Accepted formats: PDF, Word (.doc, .docx)</small>
+
+                        </div>
                     </div>
                 </div>
-                <!-- Upload CV (Main Emphasis) -->
-                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                    <label for="resume_file" class="form-label fw-bold">Upload Your CV</label>
-                    <div class="upload-box d-flex align-items-center border rounded p-3 bg-theme-secondary text-white">
-                        <i class="fas fa-upload fa-2x me-3"></i>
-                        <input type="file" id="resume_file" name="resume_file" accept=".pdf,.doc,.docx" required
-                            class="form-control-file flex-grow-1">
-                        <span class="btn btn-light ms-3">Choose File</span>
-                    </div>
-                    <small class="form-text text-light">Accepted formats: PDF, Word (.doc, .docx)</small>
-                </div>
+
                 <!-- Additional Information -->
                 <div class="col-lg-12 col-md-12 col-sm-12 form-column">
                     <div class="form-inner">
@@ -121,3 +136,26 @@ $css =
 </section>
 <!-- Upload CV Form Section End -->
 @endsection
+
+@push('styles')
+<style>
+    input[type="phone" i],
+    input[type="password" i],
+    input[type="tel" i],
+    .job-form-section .form-inner .form-group input[type='text'],
+    .job-form-section .form-inner .form-group input[type='email'],
+    .job-form-section .form-inner .form-group textarea,
+    .job-form-section .form-inner .form-group .nice-select {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 60px;
+        border: 1px solid #e5e5e5;
+        border-radius: 40px;
+        padding: 10px 25px;
+        font-size: 16px;
+        color: var(--text-color);
+        transition: all 500ms ease;
+    }
+</style>
+@endpush

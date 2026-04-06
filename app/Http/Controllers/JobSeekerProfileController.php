@@ -35,7 +35,7 @@ class JobSeekerProfileController extends Controller
             // user
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|digits:10',
             'password' => 'required|string|min:6|confirmed',
 
             // personal
@@ -90,7 +90,7 @@ class JobSeekerProfileController extends Controller
         ]);
         // Create the user
         $user = User::create([
-            'full_name' => $validated['name'],
+            'full_name' => $validated['full_name'],
             'email'     => $validated['email'],
             'phone'     => $validated['phone'],
             'role'      => 'User',
@@ -105,7 +105,7 @@ class JobSeekerProfileController extends Controller
             'user_id' => $user->id,
 
             // basic
-            'full_name' => $validated['name'],
+            'full_name' => $validated['full_name'],
             'email' => $validated['email'],
             'contact_no' => $validated['phone'],
 
@@ -166,7 +166,7 @@ class JobSeekerProfileController extends Controller
         Auth::login($user);
 
         // Redirect to home/dashboard after login
-        return redirect()->route('home')->with('success', 'User registered and logged in successfully!');
+        return redirect()->route('index')->with('success', 'User registered and logged in successfully!');
     }
 
 
@@ -197,7 +197,7 @@ class JobSeekerProfileController extends Controller
         $user = $profile->user;
 
         $validated = $request->validate([
-            'name'        => 'required|string|max:255',
+            'full_name'        => 'required|string|max:255',
             'email'       => 'required|email|max:255',
             'phone'       => 'required|string|max:20',
             'bio'         => 'nullable|string',
@@ -210,7 +210,7 @@ class JobSeekerProfileController extends Controller
 
         // Update user info
         $user->update([
-            'full_name'  => $validated['name'],
+            'full_name'  => $validated['full_name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
         ]);
