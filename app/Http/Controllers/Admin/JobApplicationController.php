@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobApplicationRequest;
-use App\Models\Application;
 use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
@@ -12,7 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class JobApplicationController extends Controller
 {
-    public function index(Request $request)
+    public function index(Job $job, Request $request)
     {
         if ($request->ajax()) {
             $search = $request->input('search.value');
@@ -21,15 +20,15 @@ class JobApplicationController extends Controller
             $orderColumnIndex = $order['column'];
             $orderBy = $order['dir'];
 
-            $applicationsQuery = Application::with(['job', 'jobSeeker']);
+            // ✅ Scoped to job
+            $applicationsQuery = $job->applications()->with(['jobSeeker']);
 
-            // Filtering search
+            // Filtering
             if ($search) {
                 $applicationsQuery->where(function ($query) use ($search) {
-                    $query->whereHas('job', fn($q) => $q->where('title', 'LIKE', "%$search%"))
-                          ->orWhereHas('jobSeeker', fn($q) => $q->where('name', 'LIKE', "%$search%"))
-                          ->orWhere('cover_letter', 'LIKE', "%$search%")
-                          ->orWhere('status', 'LIKE', "%$search%");
+                    $query->whereHas('jobSeeker', fn($q) => $q->where('name', 'LIKE', "%$search%"))
+                        ->orWhere('cover_letter', 'LIKE', "%$search%")
+                        ->orWhere('status', 'LIKE', "%$search%");
                 });
             }
 
@@ -38,7 +37,7 @@ class JobApplicationController extends Controller
 
             return DataTables::eloquent($applicationsQuery)
                 ->addIndexColumn()
-                ->addColumn('job_title', fn($item) => optional($item->job)->title ?? '-')
+                ->addColumn('job_title', fn() => $job->title ?? '-')
                 ->addColumn('job_seeker', fn($item) => optional($item->jobSeeker)->name ?? '-')
                 ->addColumn('status', function ($item) {
                     return '<select class="form-select application-status" data-id="' . $item->id . '">
@@ -52,12 +51,12 @@ class JobApplicationController extends Controller
                 ->make(true);
         }
 
-        return view('Admin.pages.application.index');
+        return view('Admin.pages.application.index', compact('job'));
     }
 
-    public function store(JobApplicationRequest $request)
+    public function store(Job $job, JobApplicationRequest $request)
     {
-        $application = Application::create($request->validated());
+        $application = $job->applications()->create($request->validated());
 
         return response()->json([
             'success' => true,
@@ -66,9 +65,10 @@ class JobApplicationController extends Controller
         ]);
     }
 
-    public function update(JobApplicationRequest $request, string $id)
+    public function update(Job $job, JobApplicationRequest $request, $id)
     {
-        $application = Application::findOrFail($id);
+        $application = $job->applications()->findOrFail($id);
+
         $application->update($request->validated());
 
         return response()->json([
@@ -78,26 +78,9 @@ class JobApplicationController extends Controller
         ]);
     }
 
-    public function manageStatus(string $id, Request $request)
+    public function destroy(Job $job, $id)
     {
-        $request->validate([
-            'status' => 'required|in:applied,shortlisted,rejected'
-        ]);
-
-        $application = Application::findOrFail($id);
-        $application->status = $request->status;
-        $application->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Status updated successfully!',
-            'data' => $application
-        ]);
-    }
-
-    public function destroy(string $id)
-    {
-        $application = Application::findOrFail($id);
+        $application = $job->applications()->findOrFail($id);
         $application->delete();
 
         return response()->json([
@@ -106,88 +89,95 @@ class JobApplicationController extends Controller
         ]);
     }
 
-public function smartApply($jobId)
-{
-    $user = auth()->user();
+    public function manageStatus(Job $job, $id, Request $request)
+    {
+        $request->validate([
+            'status' => 'required|in:applied,shortlisted,rejected'
+        ]);
 
-    // Ensure job seeker profile exists
-    $profile = $user->jobSeekerProfile;
-    if (!$profile) {
+        $application = $job->applications()->findOrFail($id);
+        $application->update(['status' => $request->status]);
+
         return response()->json([
-            'success' => false,
-            'message' => 'Please complete your job seeker profile before applying.'
-        ], 422);
+            'success' => true,
+            'message' => 'Status updated successfully!',
+            'data' => $application
+        ]);
     }
 
-    // Ensure job exists
-    $job = Job::find($jobId);
-    if (!$job) {
+    /*
+    |--------------------------------------------------------------------------
+    | SMART APPLY (AUTH USER)
+    |--------------------------------------------------------------------------
+    */
+    public function smartApply(Job $job)
+    {
+        $user = auth()->user();
+
+        $profile = $user->jobSeekerProfile;
+        if (!$profile) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please complete your job seeker profile before applying.'
+            ], 422);
+        }
+
+        $alreadyApplied = $job->applications()
+            ->where('job_seeker_profile_id', $profile->id)
+            ->exists();
+
+        if ($alreadyApplied) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already applied for this job.'
+            ], 409);
+        }
+
+        $application = $job->applications()->create([
+            'job_seeker_profile_id' => $profile->id,
+            'status' => 'applied',
+        ]);
+
         return response()->json([
-            'success' => false,
-            'message' => 'Job not found.'
-        ], 404);
+            'success' => true,
+            'message' => 'Your application has been submitted successfully!',
+            'data' => $application,
+        ], 201);
     }
 
-    // Prevent duplicate application
-    $alreadyApplied = JobApplication::where('job_id', $job->id)
-        ->where('job_seeker_profile_id', $profile->id)
-        ->exists();
+    /*
+    |--------------------------------------------------------------------------
+    | MANUAL APPLY (GUEST)
+    |--------------------------------------------------------------------------
+    */
+    public function manualApply(Request $request, Job $job)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'desired_role' => 'required|string|max:255',
+            'resume_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'bio' => 'nullable|string',
+        ]);
 
-    if ($alreadyApplied) {
+        $resumePath = $request->file('resume_file')->store('uploads/resumes', 'public');
+
+        $application = $job->applications()->create([
+            'job_seeker_profile_id' => null,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'desired_role' => $request->desired_role,
+            'bio' => $request->bio,
+            'resume_file' => $resumePath,
+            'status' => 'applied',
+        ]);
+
         return response()->json([
-            'success' => false,
-            'message' => 'You have already applied for this job.'
-        ], 409);
+            'success' => true,
+            'message' => 'Your application has been submitted successfully!',
+            'data' => $application
+        ]);
     }
-
-    // Create the new application
-    $application = JobApplication::create([
-        'job_id' => $job->id,
-        'job_seeker_profile_id' => $profile->id,
-        'status' => 'Pending',
-    ]);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Your application has been submitted successfully!',
-        'data' => $application,
-    ], 201);
-}
-
-
-public function manualApply(Request $request, $id)
-{
-    // Validate the request
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'phone' => 'required|string|max:20',
-        'desired_role' => 'required|string|max:255',
-        'resume_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
-        'bio' => 'nullable|string',
-    ]);
-
-    // Store file
-    $resumePath = $request->file('resume_file')->store('uploads/resumes', 'public');
-
-    // Create JobApplication
-    $application = JobApplication::create([
-        'job_id' => $id,
-        'job_seeker_profile_id' => null, // guest
-        'name' => $request->name,
-        'email' => $request->email,
-        'phone' => $request->phone,
-        'desired_role' => $request->desired_role,
-        'bio' => $request->bio,
-        'resume_file' => $resumePath,
-    ]);
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Your application has been submitted successfully!',
-        'data' => $application
-    ]);
-}
-
-
 }

@@ -9,8 +9,9 @@ use Illuminate\Support\Str;
 
 class Job extends Model
 {
-     use HasImageUrl;protected $imageFields = ['image'];
-   protected $fillable = [
+    use HasImageUrl;
+    protected $imageFields = ['image'];
+    protected $fillable = [
         'employer_id',
         'vacancy_id',
         'custom_company_name',
@@ -32,22 +33,25 @@ class Job extends Model
         'icon_class',
         'our_country_id', // added field
     ];
-    public function employer() {
+    public function employer()
+    {
         return $this->belongsTo(EmployerProfile::class, 'employer_id');
     }
 
-    public function applications() {
+    public function applications()
+    {
         return $this->hasMany(Application::class);
     }
-        public function categories()
+    public function categories()
     {
         return $this->belongsToMany(JobCategory::class, 'job_category_job', 'job_id', 'job_category_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
-    public function ourCountry(){
+    public function ourCountry()
+    {
         return $this->belongsTo(OurCountry::class);
     }
-public function vacancy()
+    public function vacancy()
     {
         return $this->belongsTo(Vacancy::class);
     }

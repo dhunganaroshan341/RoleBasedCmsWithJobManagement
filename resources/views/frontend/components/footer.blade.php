@@ -27,9 +27,11 @@
                             <ul class="links-list clearfix">
                                 <li><strong>Address:</strong> Kupandol-10, Lalitpur, Nepal</li>
                                 <li><strong>Phone:</strong> +977-01-5261063 | 5260810</li>
-                                <li><strong>Email:</strong> <a
-                                        href="mailto:aurorashrpl@gmail.com">aurorashrpl@gmail.com</a> | <a
-                                        href="mailto:info@auroranepal.com.np">info@auroranepal.com.np</a></li>
+                                <li>
+                                    <strong>Email:</strong><br>
+                                    <a href="mailto:aurorashrpl@gmail.com">aurorashrpl@gmail.com</a><br>
+                                    <a href="mailto:info@auroranepal.com.np">info@auroranepal.com.np</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -60,8 +62,8 @@
         <div class="auto-container">
             <div class="bottom-inner d-flex justify-content-between align-items-center">
                 <div class="copyright">
-                    <p>Copyright &copy; 2025 <a href="{{ route('index') }}">Aurora</a>. All rights reserved. | 
-                    developed by <a href = "https://realminfotek.com/">Realminfotech pvt. ltd</a>
+                    <p>Copyright &copy; 2025 <a href="{{ route('index') }}">Aurora</a>. All rights reserved. |
+                        developed by <a href="https://realminfotek.com/">Realminfotech pvt. ltd</a>
                     </p>
                 </div>
                 <ul class="social-links d-flex">

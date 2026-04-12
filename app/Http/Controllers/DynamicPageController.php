@@ -37,11 +37,16 @@ class DynamicPageController extends Controller
 
     public function organizationalChart()
     {
-        // $content = Page::where('slug', 'organizational-chart')->firstOrFail();
-        $album = \App\Models\GalleryAlbum::where('title', 'Organizational Chart')->firstOrFail();
+        $album = \App\Models\GalleryAlbum::where('title', 'Organizational Chart')->first();
 
-        $mediaItems = $album->galleryMedia;
-        // dd($mediaItems);
+        $mediaItems = optional($album)->galleryMedia ?? collect();
+
+        // If no media items → use static
+        if ($mediaItems->isEmpty()) {
+            $static = true;
+
+            return view('frontend.home.organizational-chart', compact('static'));
+        }
 
         return view('frontend.home.organizational-chart', compact('album', 'mediaItems'));
     }

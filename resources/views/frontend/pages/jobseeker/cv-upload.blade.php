@@ -25,9 +25,22 @@ $css =
     <div class="auto-container">
         <!-- Section Title -->
         <div class="sec-title centred pb_70 sec-title-animation animation-style2">
-            <span class="sub-title mb_10 title-animation">SHARE YOUR DETAILS</span>
-            <h2 class="title-animation">Login & Upload Your CV</h2>
-            <p class="title-animation">Provide your details and CV so we can match you with suitable opportunities.</p>
+
+
+
+            <h2 class="title-animation">SIGN UP</h2>
+
+            <p class="title-animation">
+                Provide your details and CV so we can match you with suitable opportunities.
+            </p>
+            <h4>or</h4>
+            <span class="sub-title mt-2 title-animation">
+                <a style="color:var(--theme-color)" href="{{ route('front.login') }}" class="fw-bold">
+                    Login
+                </a>
+            </span>
+
+
         </div>
         <x-session-message />
         <form method="post" action="{{ route('jobseeker.store') }}" enctype="multipart/form-data">
@@ -86,17 +99,57 @@ $css =
                         <h3>Education & Skills</h3>
                         <p class="text-muted">Provide your education, experience, and skills.</p>
                         <div class="row g-3">
-                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <input type="text" name="education" placeholder="Education"
-                                    value="{{ old('education') }}" class="form-control" required>
+                            <div class="col-lg-6 col-md-12 col-sm-12 form-group">
+                                <select class="custom-nice-select" name="education" class="form-control" required>
+                                    <option value="">Select Education</option>
+                                    <option value="secondary" {{ old('education')=='secondary' ? 'selected' : '' }}>
+                                        Secondary School
+                                    </option>
+                                    <option value="High School" {{ old('education')=='High School' ? 'selected' : '' }}>
+                                        High School
+                                    </option>
+
+                                    <option value="Diploma" {{ old('education')=='Diploma' ? 'selected' : '' }}>
+                                        Diploma
+                                    </option>
+
+                                    <option value="Bachelor" {{ old('education')=='Bachelor' ? 'selected' : '' }}>
+                                        Bachelor
+                                    </option>
+
+                                    <option value="Master" {{ old('education')=='Master' ? 'selected' : '' }}>
+                                        Master
+                                    </option>
+
+                                    <option value="PhD" {{ old('education')=='PhD' ? 'selected' : '' }}>
+                                        PhD
+                                    </option>
+                                    <option value="primary" {{ old('education')=='primary' ? 'selected' : '' }}>
+                                        Primary Education
+                                    </option>
+                                    <option value="no_education" {{ old('education')=='no_education' ? 'selected' : ''
+                                        }}>
+                                        No Education
+                                    </option>
+
+                                </select>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
                                 <input type="text" name="skills" placeholder="Skills:IT, Doctor, Carpenter, Engineer"
                                     value="{{ old('skills') }}" class="form-control" required>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12 form-group">
-                                <input type="text" name="experience" placeholder="Experience: 2 years"
+                            <div class="col-lg-5 col-md-6 col-sm-12 form-group">
+                                <!-- <label for="experience" class="pl-2 mb-2">Experience</label> -->
+                                <input min="1" type="number" name="experience" placeholder="Experience (Years)"
                                     value="{{ old('experience') }}" class="form-control" required>
+                            </div>
+                            <!-- Additional Information -->
+                            <div class="col-lg-7 col-md-12 col-sm-12 form-column">
+                                <!-- <div class="form-inner"> -->
+                                <textarea name="bio" placeholder="Additional Information.." rows="3"
+                                    class="form-control">{{ old('bio') }}</textarea>
+
+                                <!-- </div> -->
                             </div>
                         </div>
 
@@ -116,22 +169,26 @@ $css =
                             <small class="form-text text-light">Accepted formats: PDF, Word (.doc, .docx)</small>
 
                         </div>
+
+
                     </div>
                 </div>
-
                 <!-- Additional Information -->
                 <div class="col-lg-12 col-md-12 col-sm-12 form-column">
                     <div class="form-inner">
-                        <textarea name="bio" placeholder="Additional Information.." rows="4"
-                            class="form-control">{{ old('bio') }}</textarea>
+                        <!-- <textarea name="bio" placeholder="Additional Information.." rows="4"
+                            class="form-control">{{ old('bio') }}</textarea> -->
                         <div class="form-group message-btn centred mt-3">
                             <button type="submit" class="theme-btn btn-one w-100">Submit CV</button>
                         </div>
                     </div>
                 </div>
 
+
             </div>
         </form>
+
+
     </div>
 </section>
 <!-- Upload CV Form Section End -->
@@ -156,6 +213,13 @@ $css =
         font-size: 16px;
         color: var(--text-color);
         transition: all 500ms ease;
+    }
+
+    .custom-nice-select {
+
+        /* width: 35% !important; */
+        padding: 0px 25px !important;
+
     }
 </style>
 @endpush

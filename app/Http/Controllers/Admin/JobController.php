@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JobRequest;
+use App\Models\Application;
 use App\Models\Job;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class JobController extends Controller
      */
     public function index(Request $request)
     {
+        dd(Application::all()->toArray());
         if ($request->ajax()) {
 
             $jobs = Job::with([

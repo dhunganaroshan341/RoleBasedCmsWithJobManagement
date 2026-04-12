@@ -266,8 +266,30 @@ $subTitle = '';
             <p>Connecting Nepalese talent with trusted international opportunities while helping employers
                 find the right workforce across Asia, Europe, and the Gulf.</p>
             <div class="btn-box">
-                <a href="{{ route('jobseeker.create') }}" class="theme-btn btn-one mr_20"><span>Upload CV</span></a>
+
+                @auth
+                @cannot('has-profile')
+                <a href="{{ route('jobseeker.create') }}" class="theme-btn btn-one mr_20">
+                    <span>Upload CV</span>
+                </a>
+                @else
+                <form method="POST" action="{{ route('user.logout') }}">
+                    @csrf
+                    <button style="background-color: #a9000b;" type="submit" class="theme-btn banner-btn mr_20">
+                        <span class="text-danger">Logout</span>
+                    </button>
+                </form>
+                @endcannot
+                @endauth
+
+                @guest
+                <a href="{{ route('jobseeker.create') }}" class="theme-btn btn-one mr_20">
+                    <span>Upload CV</span>
+                </a>
+                @endguest
+
                 <a href="{{ route('jobs') }}" class="theme-btn banner-btn">Job Openings</a>
+
             </div>
         </div>
     </div>

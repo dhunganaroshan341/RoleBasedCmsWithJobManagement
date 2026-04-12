@@ -8,7 +8,12 @@ $(document).ready(function () {
     var table = $("#show-user-data").DataTable({
         processing: true,
         serverSide: true,
-        ajax: "/admin/user",
+        ajax: {
+            url: "/admin/user",
+            data: function (d) {
+                d.q = $("#userFilter").val(); // 🔥 send filter
+            }
+        },
         columns: [
             {
                 data: "DT_RowIndex",
@@ -46,6 +51,16 @@ $(document).ready(function () {
             },
         ],
     });
+    // 🔥 Apply filter
+    $("#userFilter").on("change", function () {
+        table.draw();
+    });
+
+    // 🔥 Reset filter
+    $("#resetFilter").on("click", function () {
+        $("#userFilter").val("");
+        table.draw();
+    });
 
     $("#checkbox").on("change", function () {
         if ($("#password").prop("type") == "password") {
@@ -74,51 +89,51 @@ $(document).ready(function () {
 
     // Add and Store User Data
     $(document).off("submit", "#storeForm").on("submit", "#storeForm", function (event) {
-            event.preventDefault();
-            $(".submitBtn").prop("disabled", true);
-            $("#validationErrors").addClass("d-none").html("");
-            let formdata = new FormData(this);
-            $.ajax({
-                type: "post",
-                url: "/admin/user/store/",
-                data: formdata,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if (response.success == true) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: "User Added Successfully",
-                            showConfirmButton: false,
-                            timer: 1000
-                        });
+        event.preventDefault();
+        $(".submitBtn").prop("disabled", true);
+        $("#validationErrors").addClass("d-none").html("");
+        let formdata = new FormData(this);
+        $.ajax({
+            type: "post",
+            url: "/admin/user/store/",
+            data: formdata,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.success == true) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: "User Added Successfully",
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
 
-                        table.draw();
-                        $("#notes_user").summernote("code", "");
-                        $("#formModal").modal("hide");
-                        $("#storeForm")[0].reset();
-                        // $("#storeUserData").trigger("reset");
-                    }
-                },
-                error: function (response) {
-                    if (response.status === 422) {
-                        let errors = response.responseJSON.errors;
-                        let errorMessages = "<ul>";
-                        $.each(errors, function (key, value) {
-                            errorMessages += "<li>" + value[0] + "</li>"; // Display the first error for each field
-                        });
-                        errorMessages += "</ul>";
-                        $("#validationErrors")
-                            .removeClass("d-none")
-                            .html(errorMessages);
-                    }
-                },
-                complete: function () {
-                    $(".submitBtn").prop("disabled", false);
-                },
-            });
+                    table.draw();
+                    $("#notes_user").summernote("code", "");
+                    $("#formModal").modal("hide");
+                    $("#storeForm")[0].reset();
+                    // $("#storeUserData").trigger("reset");
+                }
+            },
+            error: function (response) {
+                if (response.status === 422) {
+                    let errors = response.responseJSON.errors;
+                    let errorMessages = "<ul>";
+                    $.each(errors, function (key, value) {
+                        errorMessages += "<li>" + value[0] + "</li>"; // Display the first error for each field
+                    });
+                    errorMessages += "</ul>";
+                    $("#validationErrors")
+                        .removeClass("d-none")
+                        .html(errorMessages);
+                }
+            },
+            complete: function () {
+                $(".submitBtn").prop("disabled", false);
+            },
         });
+    });
 
     // Click and Edit User
     $(document).on("click", ".editUserButton", function () {

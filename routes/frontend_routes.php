@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\JobApplicationController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\EmployerJobRequestController;
 use App\Http\Controllers\JobSeekerProfileController;
@@ -47,7 +48,7 @@ Route::post('/contact', [UserFrontendController::class, 'storeContactUs'])
     ->name('contact.store');
 
 Route::post('/hire-us', [UserFrontendController::class, 'storeHireUs'])
-    ->middleware('throttle:form-submission')
+    // ->middleware('throttle:form-submission')
     ->name('hire.store');
 //  job
 Route::prefix('pages')->group(function () {
@@ -77,15 +78,8 @@ Route::post('/jobs/{id}/smart-apply', [JobApplicationController::class, 'smartAp
 
 Route::post('/hire', [EmployerJobRequestController::class, 'store'])->name('hire.submit');
 //  portfoliyo
-Route::prefix('pages')->group(function () {
-    Route::prefix('portfoliyo')->group(function () {
-        Route::controller(PagesController::class)->group(function () {
-            Route::get('/portfolio', 'portfolio')->name('portfolio1');
-            Route::get('/portfolio-2', 'portfolio2')->name('portfolio2');
-            Route::get('/portfolio-3', 'portfolio3')->name('portfolio3');
-        });
-    });
-});
+
+
 
 //  portfoliyo
 Route::prefix('pages')->group(function () {
@@ -93,7 +87,6 @@ Route::prefix('pages')->group(function () {
         Route::get('/portfolio', 'portfolio')->name('portfolio');
         Route::get('/page-error', 'pageError')->name('pageError');
         Route::get('/faq', 'faq')->name('faq');
-        Route::get('/login', 'login')->name('front.login');
         Route::get('/signup', 'signup')->name('signup');
         Route::get('/team', 'team')->name('team');
         Route::get('/testimonial', 'testimonial')->name('testimonial');
@@ -133,3 +126,6 @@ Route::get('/required-documents', [DynamicPageController::class, 'requiredDocume
 Route::get('/recruitment-process', [DynamicPageController::class, 'recruitmentProcess'])->name('recruitment-process');
 // Route::get('/categories', [DynamicPageController::class,'categories'])->name('dynamic-categories');
 Route::get('/categories', [PagesController::class, 'categories'])->name('dynamic-categories');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('login', [AuthController::class, 'userLogin'])->name('front.login');
+Route::post('front/login/store', [AuthController::class, 'storeUserLogin'])->name('front.login.store');

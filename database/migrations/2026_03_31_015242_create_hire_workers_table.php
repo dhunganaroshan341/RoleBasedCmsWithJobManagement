@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('position');
             $table->string('openings'); // keep string since it's mixed text (e.g. 10 male, 20 female)
             $table->string('salary_range');
+            $table->string('salary_range_to');
             $table->longText('job_description');
 
             // Optional (VERY useful)

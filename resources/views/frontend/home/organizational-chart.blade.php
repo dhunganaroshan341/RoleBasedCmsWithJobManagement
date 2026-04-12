@@ -7,12 +7,13 @@ $title = 'About Us';
 
 $css = '
 <link href="' . asset(" assets/css/module-css/page-title.css") . '" rel="stylesheet">
-        <link href="' . asset("assets/css/module-css/service-details.css") . '" rel="stylesheet">
-        <link href="' . asset("assets/css/module-css/subscribe.css") . '" rel="stylesheet">
-        <link href="' . asset("assets/css/module-css/footer.css") . '" rel="stylesheet">' ; @endphp @section('content')
+    <link href="' . asset("assets/css/module-css/service-details.css") . '" rel="stylesheet">
+    <link href="' . asset("assets/css/module-css/subscribe.css") . '" rel="stylesheet">
+    <link href="' . asset("assets/css/module-css/footer.css") . '" rel="stylesheet">' ; @endphp @section('content')
     <section class="service-details pt_110 pb_120">
 <div class="auto-container">
     <div class="row align-items-start">
+
         <!-- Sidebar -->
         <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side mb-5 mb-lg-0">
             <div class="service-sidebar mr_40">
@@ -49,29 +50,51 @@ $css = '
 
         <!-- Right Content -->
         <div class="col-lg-8 col-md-12 col-sm-12">
-            @if(isset($page))
+
+            {{-- ================= PAGE CONTENT ================= --}}
+            @if(!empty($page))
             <div class="sec-title">
                 <span class="sub-title mb_10">{{ $page->title ?? '' }}</span>
-                <!-- <h2>{{ $page->sub_title ?? '' }}</h2> -->
                 <p class="mt_20">{!! $page->content ?? '' !!}</p>
             </div>
-            @elseif(isset($mediaItems))
+
+            {{-- ================= MEDIA ITEMS ================= --}}
+            @elseif(!empty($mediaItems))
             <div class="sec-title">
                 <span class="sub-title mb_10">Our Organization</span>
                 <h2>Organizational Chart</h2>
             </div>
+
             <div class="row g-4 mt-4">
                 @forelse($mediaItems as $item)
-                <div class="col-md-8 col-lg-8">
+                <div class="col-md-12">
                     <div class="card border-0 shadow-sm">
-                        <img src="{{ asset($item->media_path) }}" alt="Certificate" class="img-fluid rounded">
+                        <img src="{{ asset($item->media_path) }}" alt="Organizational Chart" class="img-fluid rounded">
                     </div>
                 </div>
                 @empty
                 <p>Not available at the moment.</p>
                 @endforelse
             </div>
+
+            {{-- ================= STATIC IMAGE ================= --}}
+            @elseif(!empty($static))
+            <div class="sec-title">
+                <span class="sub-title mb_10">Our Organization</span>
+                <h2>Organizational Chart</h2>
+            </div>
+
+            <div class="row g-4 mt-4">
+                <div class="col-md-12">
+                    <div class="card border-0 shadow-sm">
+                        <img src="{{ asset('defaultImage/organizational-chart.jpg') }}" alt="Organizational Chart"
+                            class="img-fluid rounded">
+                    </div>
+                </div>
+            </div>
+
             @endif
+
         </div>
     </div>
 </div>

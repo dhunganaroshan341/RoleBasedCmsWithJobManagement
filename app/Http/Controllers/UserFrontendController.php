@@ -180,13 +180,11 @@ class UserFrontendController extends Controller
                 'regex:/^[0-9+\-\s()]+$/'
             ],
 
-            // Company
             'company_name' => 'required|string|min:2|max:150',
             'web_url' => 'nullable|url|max:255',
             'industry' => 'required|string|min:2|max:100',
             'location' => 'required|string|min:2|max:150',
 
-            // Job
             'position' => 'required|string|min:2|max:100',
             'openings' => 'required|string|max:100',
             'salary_range' => 'required|string|max:100',

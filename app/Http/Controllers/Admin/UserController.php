@@ -26,30 +26,45 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::orderBy('order', 'asc')->get();
+
+            // ✅ Start query
+            $query = User::query();
+
+            // ✅ Apply filters
+            if ($request->q === 'admin') {
+                $query->where('role', 'Admin');
+            }
+
+            if ($request->q === 'jobseekers') {
+                $query->whereHas('jobSeekerProfile');
+            }
+
+            // ✅ Get data
+            $data = $query->orderBy('order', 'asc')->get();
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('image', function ($item) {
                     if ($item->image != null && $item->role == 'Admin') {
-                        $url = asset('uploads/' . $item->image); // Get image URL
+                        $url = asset('uploads/' . $item->image);
                         $defaultImage = asset('user.png');
-                        return ' <td class="py-1"><img src="' . $url . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\"/></td>';
-                    } elseif (($item->image != null && $item->role == 'User')) {
+                        return '<img src="' . $url . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\"/>';
+                    } elseif ($item->image != null && $item->role == 'User') {
                         $defaultImage = asset('user.png');
-                        return ' <td class="py-1"><img src="' . $item->image . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\"/></td>';
+                        return '<img src="' . $item->image . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\"/>';
                     } else {
                         $url = asset('user.png');
-                        return ' <td class="py-1"><img src="' . $url . '" width="50" height="50"/></td>';
+                        return '<img src="' . $url . '" width="50" height="50"/>';
                     }
                 })
                 ->addColumn('action', function ($data) {
                     $user = "User";
-                    $latestOrder = $this->latestOrder;
                     return view('Admin.Button.button', compact('data', 'user'));
                 })
                 ->rawColumns(['action', 'image'])
                 ->make(true);
         }
+
         $extraJs = array_merge(
             config('js-map.admin.summernote.script'),
             config('js-map.admin.datatable.script'),
@@ -60,7 +75,10 @@ class UserController extends Controller
             config('js-map.admin.summernote.style'),
         );
 
-        return view('Admin.pages.User.users', ['extraJs' => $extraJs, 'extraCs' => $extraCs]);
+        return view('Admin.pages.User.users', [
+            'extraJs' => $extraJs,
+            'extraCs' => $extraCs
+        ]);
     }
 
     public function store(UserRequest $request)

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AchievementController;
 use  App\Http\Controllers\Admin\BannerSliderVideoController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CallToActionController;
+use App\Http\Controllers\Admin\HireWorkerController;
 use App\Http\Controllers\Admin\ItineraryController;
 use App\Http\Controllers\Admin\JobControllerV2;
 use App\Http\Controllers\Admin\PriceIncludesController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\FrontendController as AdminFrontendController;
 use App\Http\Controllers\Admin\GalleryAlbumController;
 use App\Http\Controllers\Admin\GalleryMediaController;
+use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\NewsLetterController as AdminSideNewsLetterController;
@@ -44,6 +46,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Admin\SectionCategoryController as AdminSectionCategoryController;
 use App\Http\Controllers\Admin\SectionContentController as AdminSectionContentController;
+use App\Http\Controllers\HireRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -178,7 +181,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/contact/get-data', [ContactController::class, 'getContact'])->name('contact.get-data');
     Route::get('/contact/detail/{id}', [ContactController::class, 'showDetail'])->name('contact.detail');
     Route::get('/contact/delete/{id}', [ContactController::class, 'destroy'])->name('contact.delete');
-
+    Route::resource('hire-workers', HireWorkerController::class);
     // Service Query
     Route::get('/service-query', [ServiceQueryController::class, 'index'])->name('service-query');
     Route::get('/service-query/get-data', [ServiceQueryController::class, 'getServiceQuery'])->name('service-query.get-data');
@@ -257,6 +260,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Route::apiResource('jobs', JobControllerV2::class);
     Route::resource('vacancies', VacancyController::class);
     Route::resource('vacancies.jobs', VacancyJobController::class);
+    Route::resource('jobs.applications', JobApplicationController::class)->scoped();
 
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');
     Route::apiResource('job-categories', JobCategoryController::class);

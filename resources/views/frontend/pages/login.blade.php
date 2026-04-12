@@ -17,7 +17,7 @@ $subTitle='Login';
     <div class="pattern-layer" style="background-image: url('{{ asset('assets/images/shape/shape-25.png') }}')"></div>
     <div class="auto-container">
         <div class="form-inner">
-            <form class="pt-3" action="{{ route('login.store') }}" method="post">
+            <form class="pt-3" action="{{ route('front.login.store') }}" method="post">
 
                 <div class="form-group">
                     <label>Email <span>*</span></label>
@@ -40,7 +40,7 @@ $subTitle='Login';
                 <button class="forgot-password">Forget password?</button>
             </div> -->
             <div class="lower-text centred">
-                <p>Not registered yet? <a href="{{ route('signup') }}">Create an Account</a></p>
+                <p>Not registered yet? <a href="{{ route('jobseeker.create') }}">Create an Account/Upload CV</a></p>
             </div>
         </div>
     </div>

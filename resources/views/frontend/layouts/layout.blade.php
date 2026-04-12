@@ -29,6 +29,29 @@
             padding: 16px;
         }
     </style>
+
+    <style>
+        input[type="phone" i],
+        input[type="password" i],
+        input[type="url" i],
+        input[type="number" i],
+        input[type="tel" i],
+        .job-form-section .form-inner .form-group input[type='text'],
+        .job-form-section .form-inner .form-group input[type='email'],
+        .job-form-section .form-inner .form-group textarea,
+        .job-form-section .form-inner .form-group .nice-select {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 60px;
+            border: 1px solid #e5e5e5;
+            border-radius: 40px;
+            padding: 10px 25px;
+            font-size: 16px;
+            color: var(--text-color);
+            transition: all 500ms ease;
+        }
+    </style>
     @stack('styles')
 </head>
 
@@ -55,12 +78,13 @@
 
         {{-- Page Title --}}
         @php
-            $currentRoute = Route::currentRouteName();
-            $currentUrl = url()->current();
+        $currentRoute = Route::currentRouteName();
+        $currentUrl = url()->current();
         @endphp
 
-        @if (!isset($breadcrumb) && !in_array($currentRoute, ['home']) && !in_array($currentUrl, [url('/'), url('/home')]))
-            @include('frontend.components.breadcrumb')
+        @if (!isset($breadcrumb) && !in_array($currentRoute, ['home']) && !in_array($currentUrl, [url('/'),
+        url('/home')]))
+        @include('frontend.components.breadcrumb')
         @endif
 
 
@@ -69,12 +93,12 @@
 
         {{-- Subscribe Style Two --}}
         @if (isset($subscribeStyleTwo))
-            @include('frontend.components.subscribeStyleTwo')
+        @include('frontend.components.subscribeStyleTwo')
         @endif
 
         {{-- Footer --}}
         @if (!isset($footer))
-            @include('frontend.components.footer')
+        @include('frontend.components.footer')
         @endif
 
         {{-- Scroll to Top --}}

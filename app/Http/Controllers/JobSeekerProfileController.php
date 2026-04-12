@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\JobSeekerProfile;
+use Illuminate\Support\Facades\DB;
 
 class JobSeekerProfileController extends Controller
 {
@@ -19,7 +20,7 @@ class JobSeekerProfileController extends Controller
         $jobId = $request->query('job_id'); // optional
         $job = $jobId ? Job::find($jobId) : null;
 
-        return view('frontend.pages.jobseeker.upload-resume', compact('job'));
+        return view('frontend.pages.jobseeker.cv-upload', compact('job'));
     }
 
 
@@ -30,15 +31,12 @@ class JobSeekerProfileController extends Controller
 
     public function store(Request $request, Job $job = null)
     {
-        // Validate input, including password confirmation
         $validated = $request->validate([
-            // user
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'phone' => 'required|digits:10',
             'password' => 'required|string|min:6|confirmed',
 
-            // personal
             'age' => 'nullable|integer|min:0|max:100',
             'dob' => 'nullable|date',
             'address' => 'nullable|string|max:255',
@@ -46,34 +44,28 @@ class JobSeekerProfileController extends Controller
             'gender' => 'nullable|in:Male,Female,Other',
             'marital_status' => 'nullable|in:Married,Unmarried,Divorced',
 
-            // next of kin
             'nok_first' => 'nullable|string|max:100',
             'nok_middle' => 'nullable|string|max:100',
             'nok_last' => 'nullable|string|max:100',
             'nok_relationship' => 'nullable|string|max:100',
 
-            // passport
             'passport_no' => 'nullable|string|max:100',
             'place_of_issue' => 'nullable|string|max:150',
             'passport_issue_date' => 'nullable|date',
             'passport_expiry_date' => 'nullable|date',
 
-            // physical
             'height' => 'nullable|numeric|min:0|max:300',
             'weight' => 'nullable|numeric|min:0|max:500',
             'medical_status' => 'nullable|in:Fit,Unfit,Waiting',
 
-            // education
             'high_school' => 'nullable|string|max:255',
             'college' => 'nullable|string|max:255',
             'university' => 'nullable|string|max:255',
             'institute' => 'nullable|string|max:255',
             'training' => 'nullable|string|max:255',
 
-            // experience
             'experience' => 'nullable|string',
 
-            // languages
             'english' => 'nullable|in:Good,Very Good,Excellent',
             'malay' => 'nullable|in:Good,Very Good,Excellent',
             'japanese' => 'nullable|in:Good,Very Good,Excellent',
@@ -81,94 +73,99 @@ class JobSeekerProfileController extends Controller
             'hindi' => 'nullable|in:Good,Very Good,Excellent',
             'other_language' => 'nullable|string|max:100',
 
-            // interview
             'interview_status' => 'nullable|in:Pass,Fail,Waiting',
             'grade' => 'nullable|string|max:10',
 
-            // file
             'resume_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
         ]);
-        // Create the user
-        $user = User::create([
-            'full_name' => $validated['full_name'],
-            'email'     => $validated['email'],
-            'phone'     => $validated['phone'],
-            'role'      => 'User',
-            'password'  => Hash::make($validated['password']),
-        ]);
 
-        // Handle resume upload
-        $resumePath = $request->file('resume_file')->store('resumes', 'public');
+        DB::beginTransaction();
 
-        // Create job seeker profile
-        JobSeekerProfile::create([
-            'user_id' => $user->id,
+        try {
+            // Create user
+            $user = User::create([
+                'full_name' => $validated['full_name'],
+                'email'     => $validated['email'],
+                'phone'     => $validated['phone'],
+                'role'      => 'User',
+                'password'  => Hash::make($validated['password']),
+            ]);
 
-            // basic
-            'full_name' => $validated['full_name'],
-            'email' => $validated['email'],
-            'contact_no' => $validated['phone'],
+            // Upload once (IMPORTANT: avoid duplicate upload)
+            $resumePath = $request->file('resume_file')->store('resumes', 'public');
 
-            // personal
-            'age' => $request->age,
-            'dob' => $request->dob,
-            'address' => $request->address,
-            'contact_person' => $request->contact_person,
-            'gender' => $request->gender,
-            'marital_status' => $request->marital_status,
+            // Create profile
+            JobSeekerProfile::create([
+                'user_id' => $user->id,
 
-            // JSON fields
-            'next_of_kin' => json_encode([
-                'first' => $request->nok_first,
-                'middle' => $request->nok_middle,
-                'last' => $request->nok_last,
-                'relationship' => $request->nok_relationship,
-            ]),
+                'full_name' => $validated['full_name'],
+                'email' => $validated['email'],
+                'contact_no' => $validated['phone'],
 
-            'passport_detail' => json_encode([
-                'number' => $request->passport_no,
-                'place_of_issue' => $request->place_of_issue,
-                'date_of_issue' => $request->passport_issue_date,
-                'expiry_date' => $request->passport_expiry_date,
-            ]),
+                'age' => $request->age,
+                'dob' => $request->dob,
+                'address' => $request->address,
+                'contact_person' => $request->contact_person,
+                'gender' => $request->gender,
+                'marital_status' => $request->marital_status,
 
-            'height' => $request->height,
-            'weight' => $request->weight,
-            'medical_status' => $request->medical_status,
+                'next_of_kin' => json_encode([
+                    'first' => $request->nok_first,
+                    'middle' => $request->nok_middle,
+                    'last' => $request->nok_last,
+                    'relationship' => $request->nok_relationship,
+                ]),
 
-            'education' => json_encode([
-                'high_school' => $request->high_school,
-                'college' => $request->college,
-                'university' => $request->university,
-                'institute' => $request->institute,
-                'training' => $request->training,
-            ]),
+                'passport_detail' => json_encode([
+                    'number' => $request->passport_no,
+                    'place_of_issue' => $request->place_of_issue,
+                    'date_of_issue' => $request->passport_issue_date,
+                    'expiry_date' => $request->passport_expiry_date,
+                ]),
 
-            'experience' => $request->experience,
+                'height' => $request->height,
+                'weight' => $request->weight,
+                'medical_status' => $request->medical_status,
 
-            'languages' => json_encode([
-                'english' => $request->english,
-                'malay' => $request->malay,
-                'japanese' => $request->japanese,
-                'arabic' => $request->arabic,
-                'hindi' => $request->hindi,
-                'other' => $request->other_language,
-            ]),
+                'education' => json_encode([
+                    'high_school' => $request->high_school,
+                    'college' => $request->college,
+                    'university' => $request->university,
+                    'institute' => $request->institute,
+                    'training' => $request->training,
+                ]),
 
-            'interview_status' => $request->interview_status,
-            'grade' => $request->grade,
+                'experience' => $request->experience,
 
-            // file
-            'resume_file' => $request->file('resume_file')->store('resumes', 'public'),
-        ]);
+                'languages' => json_encode([
+                    'english' => $request->english,
+                    'malay' => $request->malay,
+                    'japanese' => $request->japanese,
+                    'arabic' => $request->arabic,
+                    'hindi' => $request->hindi,
+                    'other' => $request->other_language,
+                ]),
 
-        // Automatically log in the user
-        Auth::login($user);
+                'interview_status' => $request->interview_status,
+                'grade' => $request->grade,
 
-        // Redirect to home/dashboard after login
-        return redirect()->route('index')->with('success', 'User registered and logged in successfully!');
+                'resume_file' => $resumePath,
+            ]);
+
+            DB::commit();
+
+            Auth::login($user);
+
+            return redirect()->route('index')
+                ->with('success', 'User registered and logged in successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Something went wrong. Please try again.'
+            ])->withInput();
+        }
     }
-
 
     /**
      * Show a Job Seeker profile (read).

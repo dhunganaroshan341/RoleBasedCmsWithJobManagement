@@ -34,6 +34,35 @@ $css =
         background-image: none !important;
         padding-right: 2rem;
     }
+
+    .custom-nice-select {
+
+        /* width: 35% !important; */
+        padding: 0px 0.5em !important;
+
+    }
+
+    .nice-select:before {
+        position: absolute;
+        content: '\e914';
+        font-family: 'icomoon';
+        font-size: 7px;
+        top: 1em;
+        right: 25px;
+    }
+
+    .custom-nice-select {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 3em;
+        border: 1px solid #e5e5e5;
+        border-radius: 2em;
+        /* padding: 10px 25px; */
+        font-size: 16px;
+        color: var(--text-color);
+        transition: all 500ms ease;
+    }
 </style>
 @endpush
 
@@ -82,7 +111,7 @@ $css =
             <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
 
                 <form action="{{ route('jobs') }}" method="GET">
-                    <select name="category" class="form-select form-select-sm shadow-sm" style="min-width:200px;">
+                    <select name="category" class="custom-nice-select shadow-sm" style="min-width:200px;">
                         <option value="">Select Category</option>
                         @foreach ($jobCategories as $category)
                         <option value="{{ $category->slug }}">{{ $category->name }}</option>
@@ -91,7 +120,7 @@ $css =
                 </form>
 
                 <form action="{{ route('jobs') }}" method="GET">
-                    <select name="vacancy" class="form-select form-select-sm shadow-sm" style="min-width:200px;"
+                    <select name="vacancy" class="custom-nice-select shadow-sm" style="min-width:200px;"
                         onchange="this.form.submit()">
                         <option value="">Select Vacancy</option>
                         @foreach ($vacancies as $vacancy)

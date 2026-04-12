@@ -160,6 +160,9 @@
         <a class="nav-link" href="{{ route('admin.contact.index') }}">
             <i class="mdi mdi-contacts menu-icon"></i>
             <span class="menu-title">Contact</span>
+        </a> <a class="nav-link" href="{{ route('admin.hire-workers.index') }}">
+            <i class="mdi mdi-contacts menu-icon"></i>
+            <span class="menu-title">Hire Requests</span>
         </a>
     </li>
     <li class="nav-item">
