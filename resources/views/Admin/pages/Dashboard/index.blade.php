@@ -2,77 +2,104 @@
 
 @section('content')
 <div class="container-fluid py-3">
+
     @include('components.admin-bread-crumb-no-button')
+
     {{-- 🔥 KPI CARDS --}}
     <div class="row g-3 mb-4">
 
-        <div class="col-md-3 col-sm-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Users</p>
-                    <h3>{{ $totaluser }}</h3>
-                    <small class="text-primary">Admin: {{ $admin }} | User: {{ $user }}</small>
+        {{-- USERS --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+
+                    <div>
+                        <p class="text-muted mb-1">Users</p>
+                        <h3 class="mb-0">{{ $totaluser }}</h3>
+                    </div>
+
+                    <small class="text-primary mt-2">
+                        Admin: {{ $admin }} | User: {{ $user }}
+                    </small>
+
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 col-sm-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Posts</p>
-                    <h3>{{ $totalpost }}</h3>
-                    <small class="text-muted">Today: {{ $today_post }}</small>
+        {{-- POSTS --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+
+                    <div>
+                        <p class="text-muted mb-1">Posts</p>
+                        <h3 class="mb-0">{{ $totalpost }}</h3>
+                    </div>
+
+                    <small class="text-muted mt-2">
+                        Today: {{ $today_post }}
+                    </small>
+
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 col-sm-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Packages</p>
-                    <h3>{{ $totalPackages }}</h3>
+        {{-- APPLICATIONS --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+
+                    <div>
+                        <p class="text-muted mb-1">Applications</p>
+                        <h3 class="mb-0">{{ $total_applications }}</h3>
+                    </div>
+
+                    <small class="text-muted mt-2">
+                        Today: {{ $today_applications }}
+                    </small>
+
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 col-sm-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted mb-1">Applications</p>
-                    <h3>{{ $total_applications }}</h3>
-                    <small class="text-muted">Today: {{ $today_applications }}</small>
+        {{-- JOB CATEGORIES --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+
+                    <div>
+                        <p class="text-muted mb-1">Job Categories</p>
+                        <h4 class="mb-0">{{ $total_job_categories }}</h4>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-    </div>
+        {{-- VACANCIES --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
 
-    {{-- 🔥 JOB SYSTEM SUMMARY --}}
-    <div class="row g-3 mb-4">
+                    <div>
+                        <p class="text-muted mb-1">Vacancies</p>
+                        <h4 class="mb-0">{{ $total_vacancies }}</h4>
+                    </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted">Job Categories</p>
-                    <h4>{{ $total_job_categories }}</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted">Vacancies</p>
-                    <h4>{{ $total_vacancies }}</h4>
-                </div>
-            </div>
-        </div>
+        {{-- JOBS --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <p class="text-muted">Jobs</p>
-                    <h4>{{ $total_jobs }}</h4>
+                    <div>
+                        <p class="text-muted mb-1">Jobs</p>
+                        <h4 class="mb-0">{{ $total_jobs }}</h4>
+                    </div>
+
                 </div>
             </div>
         </div>

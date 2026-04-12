@@ -1,36 +1,45 @@
 @php
-$route = request()->path();
 $user = Auth::user();
+$route = request()->path();
 @endphp
-
 <div class="card mb-3 shadow-sm">
-    <div class="row justify-around card-body">
+    <div class="row card-body">
 
+        {{-- LEFT: Breadcrumb --}}
         <div class="col-6">
-            <h3 class="mb-3">
-                {{ ucwords(str_replace('/', ' > ', $route)) }}
-            </h3>
-        </div>
+            @if(request()->is('admin/dashboard'))
 
+            <small class="mb-0">
+                {{ ucwords(str_replace('/', ' > ', $route)) }}
+            </small>
+            @else
+            <small class="mb-0">
+                {{ ucwords(str_replace('/', ' > ', $route)) }}
+            </small>
+            @endif
+        </div>
+        @if(request()->is('admin/dashboard'))
+        {{-- RIGHT: Greeting --}}
         <div class="col-6 text-end">
 
-            {{-- 🔥 SMART CONDITIONAL HEADER --}}
-            @if(request()->is('admin/dashboard'))
-            <h5>Welcome back, {{ $user->full_name }} 👋</h5>
-            <small class="text-muted">Here’s your system overview</small>
+            <h5>
+                {{ $greetingService->getEmoji() }}
+                {{ $greetingService->getGreeting() }},
+                {{ $user->full_name }} 👋
+            </h5>
 
-            @elseif(request()->is('admin/user*'))
-            <h5>User Management</h5>
-            <small class="text-muted">Manage system users</small>
+            <small class="text-muted">
+                {{ $greetingService->getTagline() }}
+            </small>
 
-            @elseif(request()->is('jobs*'))
-            <h5>Job Portal</h5>
-            <small class="text-muted">Vacancies, jobs & applications</small>
+            <br>
 
-            @else
-            <h5>Hello, {{ $user->full_name }}</h5>
-            @endif
+            <small class="text-danger">
+                {{ $greetingService->getInternationalLine() }}
+            </small>
 
         </div>
+        @endif
+
     </div>
 </div>

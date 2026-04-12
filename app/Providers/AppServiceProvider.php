@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use App\Observers\ItineraryObserver;
+use App\Services\GreetingService;
 use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        view()->share('greetingService', app(GreetingService::class));
         // Itinerary::observe(ItineraryObserver::class);
         $this->composeFrontendViews([
             'frontend.layout.main',
