@@ -34,7 +34,7 @@ class HireWorkerController extends Controller
 
                 ->addColumn('action', function ($row) {
                     return '
-                        <button class="btn btn-info viewHireBtn" data-id="' . $row->id . '">View</button>
+                        <button class="btn btn-dark viewHireBtn" data-id="' . $row->id . '">View</button>
                         <button class="btn btn-danger deleteHireBtn" data-id="' . $row->id . '">Delete</button>
                     ';
                 })

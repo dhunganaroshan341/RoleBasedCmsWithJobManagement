@@ -19,7 +19,7 @@ $query->where('title', 'like', '%' . request('search') . '%');
         <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
 
             {{-- LEFT --}}
-            <a href="#" class="btn btn-primary">
+            <a href="#" class="btn btn-dark">
                 Job Applications
             </a>
 

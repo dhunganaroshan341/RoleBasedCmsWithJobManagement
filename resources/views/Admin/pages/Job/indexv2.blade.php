@@ -7,7 +7,7 @@
 
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
 
-        <button class="btn btn-primary addJobBtn">+ Add Job</button>
+        <button class="btn btn-dark addJobBtn">+ Add Job</button>
 
         {{-- FILTER BY VACANCY --}}
         <select id="vacancyFilter" class="form-control" style="width: 250px;">

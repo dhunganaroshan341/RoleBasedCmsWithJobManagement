@@ -6,7 +6,7 @@
             </h3>
         </div>
         <div class="col-6 text-end">
-            <button type="button" class="btn btn-dark mb-3 {{ $buttonClass ?? 'addUserButton' }}" data-action="add">
+            <button type="button" class="btn btn-dark mb-3 {{ $buttonClass }}" data-action="add">
                 <i class="fas fa-plus"></i> Create
             </button>
         </div>

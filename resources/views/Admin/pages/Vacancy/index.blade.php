@@ -13,13 +13,14 @@ $query->where('title', 'like', '%' . request('search') . '%');
 @endphp
 
 <div class="container mt-4">
-
+    @include('components.admin-bread-crumb', ['breadCrumbTitle' => 'Job Category', 'buttonClass' =>
+    'addJobCategoryBtn'])
     {{-- HEADER --}}
     <div class="card mb-3">
         <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
 
             {{-- LEFT --}}
-            <a href="{{ route('admin.vacancies.create') }}" class="btn btn-primary">
+            <a href="{{ route('admin.vacancies.create') }}" class="btn btn-dark">
                 + Add Vacancy
             </a>
 

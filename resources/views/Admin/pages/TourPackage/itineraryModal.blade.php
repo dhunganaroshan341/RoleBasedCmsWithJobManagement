@@ -78,7 +78,7 @@
                     <button id="submitItineraryBtn" type="submit" class="btn btn-success w-100">
                         <i class="fas fa-save me-1"></i> Save
                     </button>
-                    <button id="updateItineraryBtn" type="submit" class="btn btn-primary w-100">
+                    <button id="updateItineraryBtn" type="submit" class="btn btn-dark w-100">
                         <i class="fas fa-sync-alt me-1"></i> Update
                     </button>
                 </div>

@@ -18,7 +18,7 @@
         <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-2">
 
             {{-- LEFT --}}
-            <a href="{{ route('admin.vacancies.jobs.create', $vacancy->id) }}" class="btn btn-primary">
+            <a href="{{ route('admin.vacancies.jobs.create', $vacancy->id) }}" class="btn btn-dark">
                 + Add Job
             </a>
 

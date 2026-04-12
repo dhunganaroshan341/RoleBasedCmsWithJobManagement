@@ -4,7 +4,7 @@
 @include('Admin.pages.Job.jobModal')
 
 <div class="container-fluid">
-    <button class="btn btn-primary addJobBtn mb-4 mt-4">Add Job</button>
+    <button class="btn btn-dark addJobBtn mb-4 mt-4">Add Job</button>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle" id="show-job-data" width="100%">

@@ -55,7 +55,7 @@ class GalleryAlbumController extends Controller
                 ->addColumn('type', fn($type) => $type->type ?? '')
                 ->addColumn('action', fn($data) => '<button class="btn btn-secondary editAlbumButton" data-id="' . $data->id . '" type="button">Edit</button>
                                                      <button class="btn btn-danger deleteData" data-id="' . $data->id . '" type="button">Delete</button>')
-                ->addColumn('comment', fn($data) => '<button class="btn btn-info commentinfoBtn" data-id="' . $data->id . '" type="button">View Comments</button>')
+                ->addColumn('comment', fn($data) => '<button class="btn btn-dark commentinfoBtn" data-id="' . $data->id . '" type="button">View Comments</button>')
                 ->addColumn('status', fn($status) => '<div class="form-check form-switch">
                                                         <input class="form-check-input statusIdData d-flex mx-auto" type="checkbox" data-id="' . $status->id . '" role="switch" id="flexSwitchCheckChecked" ' . ($status->status == 'Active' ? 'checked' : '') . '>
                                                       </div>')

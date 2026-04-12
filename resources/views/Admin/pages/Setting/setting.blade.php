@@ -225,7 +225,7 @@
                         <p id="ending_time-error" class="text-danger workingHourAlert"></p>
                     </div>
                     <div class="col-md-3 mt-4">
-                        <button type="submit" class="btn btn-primary mt-1 addWorkingBtn">Add</button>
+                        <button type="submit" class="btn btn-dark mt-1 addWorkingBtn">Add</button>
                     </div>
                 </div>
             </form>

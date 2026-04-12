@@ -2,28 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Post;
-use App\Models\TourPackage;
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\DashboardService;
 use App\Http\Controllers\Controller;
 
 class AdminDashboardController extends Controller
 {
-    public function index(){
-        $users=User::all();
+    protected $dashboardService;
 
-        $admin=$users->where('role','Admin')->count();
-        $user=$users->where('role','User')->count();
-        $totaluser=$users->count();
-        $today_post = Post::whereDate('created_at',today())->count();
+    public function __construct(DashboardService $dashboardService)
+    {
+        $this->dashboardService = $dashboardService;
+    }
 
-        $totalpost=Post::count();
-        $totalPackages=TourPackage::count();
-        // $totalBillNumber = Bill::whereDate('created_at',date('Y-m-d'))->count();
-        $extraJs=array_merge(
-            config('js-map.admin.chartjs')
-        );
-        return view('Admin.pages.Dashboard.index',compact('totalPackages','totaluser','admin','user','today_post','totalpost','extraJs'));
+    public function index()
+    {
+        $stats = $this->dashboardService->getStats();
+        $assets = $this->dashboardService->getAssets();
+        // dd($assets);
+        return view('Admin.pages.Dashboard.index', array_merge($stats, $assets));
     }
 }

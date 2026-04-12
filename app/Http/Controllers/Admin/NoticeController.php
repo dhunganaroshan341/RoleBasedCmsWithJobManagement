@@ -42,7 +42,7 @@ class NoticeController extends Controller
             return DataTables::of($response)
                 ->addIndexColumn()
                 ->addColumn('action', function ($action) {
-                    $btn = '<button class="btn btn-primary editNoticeBtn mr-4" data-id="' . $action->id . '" type="button" >Edit</button>';
+                    $btn = '<button class="btn btn-dark editNoticeBtn mr-4" data-id="' . $action->id . '" type="button" >Edit</button>';
                     $btn .= '<button class="btn btn-danger deleteNoticeBtn" data-id="' . $action->id . '" type="button" >Delete</button>';
                     return $btn;
                 })
@@ -96,7 +96,6 @@ class NoticeController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-
     }
 
     /**

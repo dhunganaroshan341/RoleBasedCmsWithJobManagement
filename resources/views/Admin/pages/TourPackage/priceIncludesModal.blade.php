@@ -25,7 +25,8 @@
 
                     <div class="mb-3">
                         <label for="price_description" class="form-label">Description</label>
-                        <textarea class="form-control" id="price_description" name="description" rows="3" placeholder="Details..."></textarea>
+                        <textarea class="form-control" id="price_description" name="description" rows="3"
+                            placeholder="Details..."></textarea>
                     </div>
 
                     <div class="mb-3">
@@ -41,7 +42,7 @@
                 </div>
 
                 <div class="modal-footer px-4 pb-3">
-                    <button type="submit" class="btn btn-info w-100">
+                    <button type="submit" class="btn btn-dark w-100">
                         <i class="fas fa-save me-1"></i> Save Item
                     </button>
                 </div>

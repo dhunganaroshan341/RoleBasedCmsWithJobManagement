@@ -42,15 +42,15 @@ class ContactController extends Controller
 
             // Searching
             $data->when($search, function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%$search%")
-                        ->orWhere('email', 'LIKE', "%$search%")
-                        ->orWhere('subject', 'LIKE', "%$search%");
-                });
+                $query->where('name', 'LIKE', "%$search%")
+                    ->orWhere('email', 'LIKE', "%$search%")
+                    ->orWhere('subject', 'LIKE', "%$search%");
+            });
 
 
-                // search Count
-              $countFilter  = $data->count();
-              $records = $data
+            // search Count
+            $countFilter  = $data->count();
+            $records = $data
                 ->orderBy($columns[$orderColumnIndex]['data'], $orderBy)
                 ->offset($start)
                 ->limit($pageSize);
@@ -63,14 +63,14 @@ class ContactController extends Controller
                 ->addColumn('action', function ($item) {
                     return '<button class="btn btn-danger newsletterDeleteBtn" type="button" data-id="' . $item->id . '">Delete</button>';
                 })
-                ->addColumn('title',function($tit){
-                    return Str::limit($tit->title,20);
+                ->addColumn('title', function ($tit) {
+                    return Str::limit($tit->title, 20);
                 })
                 ->addColumn('subject', function ($sub) {
                     return Str::limit($sub->subject, 50); // Limit subject length
                 })
                 ->addColumn('message', function ($mess) {
-                    return '<button class="btn btn-info messageBtn" type="button" data-id="' . $mess->id . '">View Message</button>';
+                    return '<button class="btn btn-dark messageBtn" type="button" data-id="' . $mess->id . '">View Message</button>';
                 })
                 ->rawColumns(['action', 'message']) // Ensure HTML is rendered
                 ->make(true);
@@ -96,5 +96,4 @@ class ContactController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
-
 }
