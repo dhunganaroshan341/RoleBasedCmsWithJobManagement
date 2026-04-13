@@ -6,57 +6,43 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\JobApplicationRequest;
 use App\Models\Job;
 use App\Models\JobApplication;
+use App\Services\ApplicationService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class JobApplicationController extends Controller
 {
-    public function index(Job $job, Request $request)
+    protected $applicationService;
+
+    public function __construct(ApplicationService $applicationService)
     {
-        if ($request->ajax()) {
-            $search = $request->input('search.value');
-            $columns = $request->input('columns');
-            $order = $request->input('order')[0];
-            $orderColumnIndex = $order['column'];
-            $orderBy = $order['dir'];
-
-            // ✅ Scoped to job
-            $applicationsQuery = $job->applications()->with(['jobSeeker']);
-
-            // Filtering
-            if ($search) {
-                $applicationsQuery->where(function ($query) use ($search) {
-                    $query->whereHas('jobSeeker', fn($q) => $q->where('name', 'LIKE', "%$search%"))
-                        ->orWhere('cover_letter', 'LIKE', "%$search%")
-                        ->orWhere('status', 'LIKE', "%$search%");
-                });
-            }
-
-            $orderColumnName = $columns[$orderColumnIndex]['data'] ?? 'created_at';
-            $applicationsQuery->orderBy($orderColumnName, $orderBy);
-
-            return DataTables::eloquent($applicationsQuery)
-                ->addIndexColumn()
-                ->addColumn('job_title', fn() => $job->title ?? '-')
-                ->addColumn('job_seeker', fn($item) => optional($item->jobSeeker)->name ?? '-')
-                ->addColumn('status', function ($item) {
-                    return '<select class="form-select application-status" data-id="' . $item->id . '">
-                                <option value="applied" ' . ($item->status == 'applied' ? 'selected' : '') . '>Applied</option>
-                                <option value="shortlisted" ' . ($item->status == 'shortlisted' ? 'selected' : '') . '>Shortlisted</option>
-                                <option value="rejected" ' . ($item->status == 'rejected' ? 'selected' : '') . '>Rejected</option>
-                            </select>';
-                })
-                ->addColumn('action', fn($data) => view('Admin.Button.button', compact('data')))
-                ->rawColumns(['status', 'action'])
-                ->make(true);
-        }
-
-        return view('Admin.pages.application.index', compact('job'));
+        $this->applicationService = $applicationService;
     }
 
-    public function store(Job $job, JobApplicationRequest $request)
+    public function index(Request $request, Job $job = null)
     {
-        $application = $job->applications()->create($request->validated());
+        $applications = $this->applicationService->getApplications($job);
+        dd($applications->toArray());
+        return response()->json([
+            'success' => true,
+            'data' => $applications
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
+    public function store(Request $request, Job $job = null)
+    {
+        $data = $request->validate((new JobApplicationRequest())->rules());
+
+        if ($job) {
+            $application = $job->applications()->create($data);
+        } else {
+            $application = JobApplication::create($data);
+        }
 
         return response()->json([
             'success' => true,
@@ -65,11 +51,20 @@ class JobApplicationController extends Controller
         ]);
     }
 
-    public function update(Job $job, JobApplicationRequest $request, $id)
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
+    public function update(Request $request, Job $job = null, $id)
     {
-        $application = $job->applications()->findOrFail($id);
+        $data = $request->validate((new JobApplicationRequest())->rules());
 
-        $application->update($request->validated());
+        $application = $job
+            ? $job->applications()->findOrFail($id)
+            : JobApplication::findOrFail($id);
+
+        $application->update($data);
 
         return response()->json([
             'success' => true,
@@ -78,9 +73,17 @@ class JobApplicationController extends Controller
         ]);
     }
 
-    public function destroy(Job $job, $id)
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE
+    |--------------------------------------------------------------------------
+    */
+    public function destroy(Job $job = null, $id)
     {
-        $application = $job->applications()->findOrFail($id);
+        $application = $job
+            ? $job->applications()->findOrFail($id)
+            : JobApplication::findOrFail($id);
+
         $application->delete();
 
         return response()->json([
@@ -89,13 +92,21 @@ class JobApplicationController extends Controller
         ]);
     }
 
-    public function manageStatus(Job $job, $id, Request $request)
+    /*
+    |--------------------------------------------------------------------------
+    | STATUS UPDATE
+    |--------------------------------------------------------------------------
+    */
+    public function manageStatus(Request $request, Job $job = null, $id)
     {
         $request->validate([
             'status' => 'required|in:applied,shortlisted,rejected'
         ]);
 
-        $application = $job->applications()->findOrFail($id);
+        $application = $job
+            ? $job->applications()->findOrFail($id)
+            : JobApplication::findOrFail($id);
+
         $application->update(['status' => $request->status]);
 
         return response()->json([
@@ -113,8 +124,8 @@ class JobApplicationController extends Controller
     public function smartApply(Job $job)
     {
         $user = auth()->user();
-
         $profile = $user->jobSeekerProfile;
+        dd($user);
         if (!$profile) {
             return response()->json([
                 'success' => false,
@@ -122,7 +133,7 @@ class JobApplicationController extends Controller
             ], 422);
         }
 
-        $alreadyApplied = $job->applications()
+        $alreadyApplied = JobApplication::where('job_id', $job->id)
             ->where('job_seeker_profile_id', $profile->id)
             ->exists();
 
@@ -133,7 +144,8 @@ class JobApplicationController extends Controller
             ], 409);
         }
 
-        $application = $job->applications()->create([
+        $application = JobApplication::create([
+            'job_id' => $job->id,
             'job_seeker_profile_id' => $profile->id,
             'status' => 'applied',
         ]);
@@ -163,7 +175,8 @@ class JobApplicationController extends Controller
 
         $resumePath = $request->file('resume_file')->store('uploads/resumes', 'public');
 
-        $application = $job->applications()->create([
+        $application = JobApplication::create([
+            'job_id' => $job->id,
             'job_seeker_profile_id' => null,
             'name' => $request->name,
             'email' => $request->email,

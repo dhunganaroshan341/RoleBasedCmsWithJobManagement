@@ -9,9 +9,9 @@
 
     @include('Admin.pages.Gallery.albumModal')
 
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped custom-table" id="data-album-show">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Title</th>

@@ -56,8 +56,8 @@ $css =
                         <p class="text-muted">Enter your personal details below.</p>
                         <div class="row g-3">
                             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
-                                <input type="text" name="full_name" placeholder="Full Name" value="{{ old('name') }}"
-                                    class="form-control" required>
+                                <input type="text" name="full_name" placeholder="Full Name"
+                                    value="{{ old('full_name') }}" class="form-control" required>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
                                 <input type="email" name="email" placeholder="Email" value="{{ old('email') }}"

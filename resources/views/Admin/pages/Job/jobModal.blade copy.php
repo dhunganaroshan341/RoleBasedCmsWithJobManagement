@@ -25,7 +25,7 @@
                             <select name="our_country_id" id="our_country_id" class="form-control">
                                 <option value="" selected>-- Select Country --</option>
                                 @foreach(\App\Models\Country::all() as $country)
-                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                <option value="{{ $country->id }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -41,7 +41,7 @@
                             <label class="form-label">Categories</label>
                             <select name="category_ids[]" id="category_ids" class="form-control" multiple>
                                 @foreach(\App\Models\Category::all() as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success submitBtn">Save Job</button>
                 </div>
             </form>

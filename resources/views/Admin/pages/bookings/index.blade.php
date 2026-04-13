@@ -21,7 +21,7 @@
             <button id="filterBtn" class="btn btn-dark">
                 <i class="mdi mdi-filter-outline"></i> Filter
             </button>
-            <button id="resetBtn" class="btn btn-secondary">
+            <button id="resetBtn" class="btn btn-dark">
                 <i class="mdi mdi-refresh"></i> Reset
             </button>
         </div>
@@ -39,7 +39,7 @@
             <button class="btn btn-danger btn-status-filter" data-status="cancelled">
                 <i class="mdi mdi-cancel"></i> Cancelled
             </button>
-            <button class="btn btn-warning btn-status-filter" data-status="pending">
+            <button class="btn btn-light btn-status-filter" data-status="pending">
                 <i class="mdi mdi-timer-sand"></i> Pending
             </button>
             <button class="btn btn-dark btn-status-filter" data-status="active">
@@ -50,7 +50,7 @@
 
 
     {{-- Booking Table --}}
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped table-hover align-middle" id="show-booking-data">
             <thead class="table-dark">
                 <tr>

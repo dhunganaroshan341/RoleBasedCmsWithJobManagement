@@ -116,7 +116,7 @@ class PostController extends Controller
                 ->addColumn('description', fn($desc) => Str::limit(strip_tags($desc->description), 20))
                 ->addColumn('created_by', fn($creator) => $creator->full_name ?? '')
                 ->addColumn('action', fn($data) => '
-                    <button class="btn btn-secondary editUserButton" data-id="' . $data->post_id . '" type="button">Edit</button>
+                    <button class="btn btn-dark editUserButton" data-id="' . $data->post_id . '" type="button">Edit</button>
                     <button class="btn btn-danger deleteData" data-id="' . $data->post_id . '" type="button">Delete</button>')
                 ->addColumn('comment', fn($data) => '
                     <button class="btn btn-dark commentinfoBtn" data-id="' . $data->post_id . '" type="button">View Comment</button>')

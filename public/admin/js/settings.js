@@ -1,14 +1,14 @@
-(function($) {
+(function ($) {
   'use strict';
-  $(function() {
-    $(".nav-settings").on("click", function() {
+  $(function () {
+    $(".nav-settings").on("click", function () {
       $("#right-sidebar").toggleClass("open");
     });
-    $(".settings-close").on("click", function() {
+    $(".settings-close").on("click", function () {
       $("#right-sidebar,#theme-settings").removeClass("open");
     });
 
-    $("#settings-trigger").on("click" , function(){
+    $("#settings-trigger").on("click", function () {
       $("#theme-settings").toggleClass("open");
     });
 
@@ -19,13 +19,13 @@
     var $body = $("body");
 
     //sidebar backgrounds
-    $("#sidebar-light-theme").on("click" , function(){
+    $("#sidebar-light-theme").on("click", function () {
       $body.removeClass(sidebar_classes);
       $body.addClass("sidebar-light");
       $(".sidebar-bg-options").removeClass("selected");
       $(this).addClass("selected");
     });
-    $("#sidebar-dark-theme").on("click" , function(){
+    $("#sidebar-dark-theme").on("click", function () {
       $body.removeClass(sidebar_classes);
       $body.addClass("sidebar-dark");
       $(".sidebar-bg-options").removeClass("selected");
@@ -34,75 +34,75 @@
 
 
     //Navbar Backgrounds
-    $(".tiles.primary").on("click" , function(){
+    $(".tiles.primary").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-primary");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.success").on("click" , function(){
+    $(".tiles.success").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-success");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.warning").on("click" , function(){
+    $(".tiles.warning").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-warning");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.danger").on("click" , function(){
+    $(".tiles.danger").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-danger");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.light").on("click" , function(){
+    $(".tiles.light").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-light");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.info").on("click" , function(){
+    $(".tiles.info").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-info");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.dark").on("click" , function(){
+    $(".tiles.dark").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".navbar").addClass("navbar-dark");
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.default").on("click" , function(){
+    $(".tiles.default").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
-    $(".tiles.default").on("click" , function(){
+    $(".tiles.default").on("click", function () {
       $(".navbar").removeClass(navbar_classes);
       $(".tiles").removeClass("selected");
       $(this).addClass("selected");
     });
 
-    $(".color-theme.default").click(function(){
+    $(".color-theme.default").click(function () {
       $(".color-theme.default").attr({
-        "href" : "https://www.bootstrapdash.com/demo/star-admin2-pro/template/demo/vertical-default-light/index.html",
-        "title" : "Light"
+        "href": "https://www.bootstrapdash.com/demo/star-admin2-pro/template/demo/vertical-default-light/index.html",
+        "title": "Light"
       });
     });
-    $(".color-theme.dark").click(function(){
+    $(".color-theme.dark").click(function () {
       $(".color-theme.dark").attr({
-        "href" : "https://www.bootstrapdash.com/demo/star-admin2-pro/template/demo/vertical-default-dark/index.html",
-        "title" : "Dark"
+        "href": "https://www.bootstrapdash.com/demo/star-admin2-pro/template/demo/vertical-default-dark/index.html",
+        "title": "Dark"
       });
     });
-    $(".color-theme.brown").click(function(){
+    $(".color-theme.brown").click(function () {
       $(".color-theme.brown").attr({
-        "href" : "https://www.bootstrapdash.com/demo/star-admin2-pro/template/demo/vertical-default-brown/index.html",
-        "title" : "Brown"
+        "href": "https://www.bootstrapdash.com/demo/star-admin2-pro/template/demo/vertical-default-brown/index.html",
+        "title": "Brown"
       });
     });
   });

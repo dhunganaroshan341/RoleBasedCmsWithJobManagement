@@ -4,9 +4,9 @@
     <button class="btn btn-dark addCallToActionBtn mb-4 mt-4">Call To Action</button>
     @include('Admin.pages.CallToAction.callToActionModal')
 
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped" id="show-call-to-action-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Image</th>

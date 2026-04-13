@@ -37,44 +37,12 @@ class JobSeekerProfileController extends Controller
             'phone' => 'required|digits:10',
             'password' => 'required|string|min:6|confirmed',
 
-            'age' => 'nullable|integer|min:0|max:100',
-            'dob' => 'nullable|date',
             'address' => 'nullable|string|max:255',
-            'contact_person' => 'nullable|string|max:255',
-            'gender' => 'nullable|in:Male,Female,Other',
-            'marital_status' => 'nullable|in:Married,Unmarried,Divorced',
 
-            'nok_first' => 'nullable|string|max:100',
-            'nok_middle' => 'nullable|string|max:100',
-            'nok_last' => 'nullable|string|max:100',
-            'nok_relationship' => 'nullable|string|max:100',
-
-            'passport_no' => 'nullable|string|max:100',
-            'place_of_issue' => 'nullable|string|max:150',
-            'passport_issue_date' => 'nullable|date',
-            'passport_expiry_date' => 'nullable|date',
-
-            'height' => 'nullable|numeric|min:0|max:300',
-            'weight' => 'nullable|numeric|min:0|max:500',
-            'medical_status' => 'nullable|in:Fit,Unfit,Waiting',
-
-            'high_school' => 'nullable|string|max:255',
-            'college' => 'nullable|string|max:255',
-            'university' => 'nullable|string|max:255',
-            'institute' => 'nullable|string|max:255',
-            'training' => 'nullable|string|max:255',
-
-            'experience' => 'nullable|string',
-
-            'english' => 'nullable|in:Good,Very Good,Excellent',
-            'malay' => 'nullable|in:Good,Very Good,Excellent',
-            'japanese' => 'nullable|in:Good,Very Good,Excellent',
-            'arabic' => 'nullable|in:Good,Very Good,Excellent',
-            'hindi' => 'nullable|in:Good,Very Good,Excellent',
-            'other_language' => 'nullable|string|max:100',
-
-            'interview_status' => 'nullable|in:Pass,Fail,Waiting',
-            'grade' => 'nullable|string|max:10',
+            'education' => 'required|string',
+            'skills' => 'required|string',
+            'experience' => 'required|integer|min:0|max:50',
+            'bio' => 'nullable|string',
 
             'resume_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
         ]);
@@ -102,53 +70,14 @@ class JobSeekerProfileController extends Controller
                 'email' => $validated['email'],
                 'contact_no' => $validated['phone'],
 
-                'age' => $request->age,
-                'dob' => $request->dob,
-                'address' => $request->address,
-                'contact_person' => $request->contact_person,
-                'gender' => $request->gender,
-                'marital_status' => $request->marital_status,
-
-                'next_of_kin' => json_encode([
-                    'first' => $request->nok_first,
-                    'middle' => $request->nok_middle,
-                    'last' => $request->nok_last,
-                    'relationship' => $request->nok_relationship,
-                ]),
-
-                'passport_detail' => json_encode([
-                    'number' => $request->passport_no,
-                    'place_of_issue' => $request->place_of_issue,
-                    'date_of_issue' => $request->passport_issue_date,
-                    'expiry_date' => $request->passport_expiry_date,
-                ]),
-
-                'height' => $request->height,
-                'weight' => $request->weight,
-                'medical_status' => $request->medical_status,
+                'address' => $validated['address'],
 
                 'education' => json_encode([
-                    'high_school' => $request->high_school,
-                    'college' => $request->college,
-                    'university' => $request->university,
-                    'institute' => $request->institute,
-                    'training' => $request->training,
+                    'level' => $validated['education'],
+                    'skills' => $validated['skills'],
                 ]),
 
-                'experience' => $request->experience,
-
-                'languages' => json_encode([
-                    'english' => $request->english,
-                    'malay' => $request->malay,
-                    'japanese' => $request->japanese,
-                    'arabic' => $request->arabic,
-                    'hindi' => $request->hindi,
-                    'other' => $request->other_language,
-                ]),
-
-                'interview_status' => $request->interview_status,
-                'grade' => $request->grade,
-
+                'experience' => $validated['experience'],
                 'resume_file' => $resumePath,
             ]);
 

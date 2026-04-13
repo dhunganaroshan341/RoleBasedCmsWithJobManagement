@@ -13,57 +13,57 @@ use Yajra\DataTables\Facades\DataTables;
 
 class SectionContentController extends Controller
 {
-     use HandlesImage;
+    use HandlesImage;
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-    $query = SectionContent::with('sectionCategory')
-        ->orderBy('id', 'desc');
+            $query = SectionContent::with('sectionCategory')
+                ->orderBy('id', 'desc');
 
-    if ($request->has('category_id') && !empty($request->category_id)) {
-        $query->where('section_category_id', $request->category_id);
-    }
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $query->where('section_category_id', $request->category_id);
+            }
 
-    return DataTables::of($query)
-        ->addIndexColumn()
-        ->addColumn('category', function ($item) {
-            return $item->sectionCategory ? $item->sectionCategory->title : '-';
-        })
-        ->addColumn('image', function ($item) {
-            $dataimage = $item->image;
-            $defaultImage = asset('user.png');
-            return ' <td class="py-1">
-                <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\''.$defaultImage.'\'"/>
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('category', function ($item) {
+                    return $item->sectionCategory ? $item->sectionCategory->title : '-';
+                })
+                ->addColumn('image', function ($item) {
+                    $dataimage = $item->image;
+                    $defaultImage = asset('user.png');
+                    return ' <td class="py-1">
+                <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\'"/>
                 </td>';
-        })
-        ->addColumn('action', function ($item) {
-            return '
+                })
+                ->addColumn('action', function ($item) {
+                    return '
                 <div class="d-flex gap-1">
-                    <button class="btn btn-sm btn-warning editContentBtn" data-id="' . $item->id . '">
+                    <button class="btn btn-sm btn-lighteditContentBtn" data-id="' . $item->id . '">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger deleteContentBtn" data-id="' . $item->id . '">
+                    <button class="btn btn-sm text-danger deleteContentBtn" data-id="' . $item->id . '">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
             ';
-        })->addColumn('status', function ($status) {
-    $checked = $status->status == 'Active' ? 'checked' : '';
-    return '<div class="form-check form-switch d-flex">
+                })->addColumn('status', function ($status) {
+                    $checked = $status->status == 'Active' ? 'checked' : '';
+                    return '<div class="form-check form-switch d-flex">
                 <input class="form-check-input statusIdData mx-auto" type="checkbox" data-id="' . $status->id . '" role="switch" id="flexSwitchCheckChecked" ' . $checked . '>
             </div>';
-})
+                })
 
                 ->rawColumns(['action', 'image', 'status'])
-        ->make(true);
-}
+                ->make(true);
+        }
 
 
         $categories = SectionCategory::all();
-         $extraJs = array_merge(
+        $extraJs = array_merge(
             config('js-map.admin.datatable.script'),
             config('js-map.admin.summernote.script'),
             config('js-map.admin.buttons.script')
@@ -75,8 +75,7 @@ class SectionContentController extends Controller
             config('js-map.admin.buttons.style')
         );
         //
-        return view('Admin.pages.SectionContent.sectionContentIndex', ['categories'=>$categories,'extraJs' => $extraJs, 'extraCs' => $extraCs]);
-
+        return view('Admin.pages.SectionContent.sectionContentIndex', ['categories' => $categories, 'extraJs' => $extraJs, 'extraCs' => $extraCs]);
     }
 
     /**
@@ -108,10 +107,9 @@ class SectionContentController extends Controller
     {
         $validated = $request->validated();
         $content = SectionContent::findOrFail($id);
-if($validated['image']!=null){
-        $validated['image'] = $this->uploadSingleImage($request, 'image', 'uploads/section-content');
-
-}
+        if ($validated['image'] != null) {
+            $validated['image'] = $this->uploadSingleImage($request, 'image', 'uploads/section-content');
+        }
         $content->update($validated);
 
         return response()->json(['success' => true, 'message' => 'Section Content updated successfully.']);
@@ -130,116 +128,114 @@ if($validated['image']!=null){
 
 
     public function list($categoryId)
-{
-    return SectionContent::where('section_category_id', $categoryId)
-        ->orderBy('order')
-        ->get(['id', 'title']);
-}
-
-public function reorder(Request $request)
-{
-    foreach ($request->order as $item) {
-        SectionContent::where('id', $item['id'])
-            ->update(['order' => $item['position']]);
+    {
+        return SectionContent::where('section_category_id', $categoryId)
+            ->orderBy('order')
+            ->get(['id', 'title']);
     }
 
-    return response()->json(['status' => 'success']);
-}
-
-public function statusToggle($id)
-{
-    try {
-        $data = SectionContent::find($id);
-
-        if (!$data) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Record not found'
-            ], 404);
+    public function reorder(Request $request)
+    {
+        foreach ($request->order as $item) {
+            SectionContent::where('id', $item['id'])
+                ->update(['order' => $item['position']]);
         }
 
-        $data->status = $data->status === 'Active' ? 'Inactive' : 'Active';
-        $data->save();
-
-        return response()->json(['success' => true, 'message' => 'Status changed']);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        return response()->json(['status' => 'success']);
     }
-}
 
+    public function statusToggle($id)
+    {
+        try {
+            $data = SectionContent::find($id);
 
+            if (!$data) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Record not found'
+                ], 404);
+            }
 
+            $data->status = $data->status === 'Active' ? 'Inactive' : 'Active';
+            $data->save();
 
-
-
-
-
-
- public function category(string $id, Request $request)
-{
-    if ($request->ajax()) {
-        $query = SectionContent::with('sectionCategory')
-            ->orderBy('id', 'desc');
-
-        if ($request->has('category_id') && !empty($request->category_id)) {
-            $query->where('section_category_id', $request->category_id);
+            return response()->json(['success' => true, 'message' => 'Status changed']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
+    }
 
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->addColumn('category', function ($item) {
-                return $item->sectionCategory ? $item->sectionCategory->title : '-';
-            })
-            ->addColumn('image', function ($item) {
-                $dataimage = $item->image;
-                $defaultImage = asset('user.png');
-                return '<td class="py-1">
+
+
+
+
+
+
+
+
+    public function category(string $id, Request $request)
+    {
+        if ($request->ajax()) {
+            $query = SectionContent::with('sectionCategory')
+                ->orderBy('id', 'desc');
+
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $query->where('section_category_id', $request->category_id);
+            }
+
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->addColumn('category', function ($item) {
+                    return $item->sectionCategory ? $item->sectionCategory->title : '-';
+                })
+                ->addColumn('image', function ($item) {
+                    $dataimage = $item->image;
+                    $defaultImage = asset('user.png');
+                    return '<td class="py-1">
                     <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\'"/>
                 </td>';
-            })
-            ->addColumn('action', function ($item) {
-                return '
+                })
+                ->addColumn('action', function ($item) {
+                    return '
                     <div class="d-flex gap-1">
-                        <button class="btn btn-sm btn-warning editContentBtn" data-id="' . $item->id . '">
+                        <button class="btn btn-sm btn-lighteditContentBtn" data-id="' . $item->id . '">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger deleteContentBtn" data-id="' . $item->id . '">
+                        <button class="btn btn-sm text-danger deleteContentBtn" data-id="' . $item->id . '">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
                 ';
-            })
-            ->addColumn('status', function ($status) {
-                $checked = $status->status == 'Active' ? 'checked' : '';
-                return '<div class="form-check form-switch d-flex">
+                })
+                ->addColumn('status', function ($status) {
+                    $checked = $status->status == 'Active' ? 'checked' : '';
+                    return '<div class="form-check form-switch d-flex">
                             <input class="form-check-input statusIdData mx-auto" type="checkbox" data-id="' . $status->id . '" role="switch" id="flexSwitchCheckChecked" ' . $checked . '>
                         </div>';
-            })
-            ->rawColumns(['action', 'image', 'status'])
-            ->make(true);
+                })
+                ->rawColumns(['action', 'image', 'status'])
+                ->make(true);
+        }
+
+        // Only fetch the category that matches $id
+        $categories = SectionCategory::where('id', $id)->get();
+
+        $extraJs = array_merge(
+            config('js-map.admin.datatable.script'),
+            config('js-map.admin.summernote.script'),
+            config('js-map.admin.buttons.script')
+        );
+
+        $extraCs = array_merge(
+            config('js-map.admin.datatable.style'),
+            config('js-map.admin.summernote.style'),
+            config('js-map.admin.buttons.style')
+        );
+
+        return view('Admin.pages.SectionContent.sectionContentIndex', [
+            'categories' => $categories,
+            'extraJs' => $extraJs,
+            'extraCs' => $extraCs
+        ]);
     }
-
-    // Only fetch the category that matches $id
-    $categories = SectionCategory::where('id', $id)->get();
-
-    $extraJs = array_merge(
-        config('js-map.admin.datatable.script'),
-        config('js-map.admin.summernote.script'),
-        config('js-map.admin.buttons.script')
-    );
-
-    $extraCs = array_merge(
-        config('js-map.admin.datatable.style'),
-        config('js-map.admin.summernote.style'),
-        config('js-map.admin.buttons.style')
-    );
-
-    return view('Admin.pages.SectionContent.sectionContentIndex', [
-        'categories' => $categories,
-        'extraJs' => $extraJs,
-        'extraCs' => $extraCs
-    ]);
-}
-
-
 }

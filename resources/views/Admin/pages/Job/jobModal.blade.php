@@ -180,7 +180,7 @@
                         data-bs-dismiss="modal">Close</button>
                     <div>
                         <button type="button" class="btn btn-success submitBtn">Submit</button>
-                        <button type="button" class="btn btn-warning updateBtn">Update</button>
+                        <button type="button" class="btn btn-light updateBtn">Update</button>
                     </div>
                 </div>
             </form>

@@ -35,7 +35,7 @@
                             <select name="section_category_id" id="section_category_id" class="form-control" required>
                                 <option value="">Select Category</option>
                                 @foreach ($categories ?? [] as $category)
-                                    <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                <option value="{{ $category->id }}">{{ $category->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -85,8 +85,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Link Title</label>
-                                        <input type="text" name="link_title" id="link_title"
-                                            class="form-control" />
+                                        <input type="text" name="link_title" id="link_title" class="form-control" />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Link URL</label>
@@ -94,7 +93,8 @@
                                     </div>
                                     <div class="col-md-12">
                                         <label class="form-label">Description 2</label>
-                                        <textarea class="form-control" id="description2" name="description2" rows="3"></textarea>
+                                        <textarea class="form-control" id="description2" name="description2"
+                                            rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success submitBtn" data-action="">Submit</button>
                     <button type="submit" class="btn btn-success updateBtn d-none" data-action="edit">
                         Update Section Content

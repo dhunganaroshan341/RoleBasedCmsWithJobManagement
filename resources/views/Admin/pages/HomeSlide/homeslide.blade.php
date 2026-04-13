@@ -4,9 +4,9 @@
     <button class="btn btn-dark addHomeSlideBtn mb-2">Add HomeSlide</button>
     @include('Admin.pages.HomeSlide.homeSlideModal')
 
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped align-middle" id="show-homeSlide-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Image</th>

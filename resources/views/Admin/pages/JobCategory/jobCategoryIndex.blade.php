@@ -10,9 +10,9 @@
     'addJobCategoryBtn'])
     @include('Admin.pages.JobCategory.jobCategoryModal')
 
-    <div class="table-responsive ">
+    <div class="table-responsive card p-2 ">
         <table class="table table-striped" id="show-job-category-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Image</th>

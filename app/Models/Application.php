@@ -7,13 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Application extends Model
 {
-    protected $fillable = ['job_id','job_seeker_id','cover_letter','status'];
+    protected $fillable = ['job_id', 'job_seeker_id', 'cover_letter', 'status'];
 
-    public function job() {
+    public function job()
+    {
         return $this->belongsTo(Job::class);
     }
 
-    public function jobSeeker() {
+    public function jobSeeker()
+    {
         return $this->belongsTo(JobSeekerProfile::class, 'job_seeker_id');
+    }
+
+    public function jobSeekerProfile()
+    {
+        return $this->belongsTo(JobSeekerProfile::class);
     }
 }

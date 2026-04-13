@@ -126,6 +126,6 @@ Route::get('/required-documents', [DynamicPageController::class, 'requiredDocume
 Route::get('/recruitment-process', [DynamicPageController::class, 'recruitmentProcess'])->name('recruitment-process');
 // Route::get('/categories', [DynamicPageController::class,'categories'])->name('dynamic-categories');
 Route::get('/categories', [PagesController::class, 'categories'])->name('dynamic-categories');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+// Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('login', [AuthController::class, 'userLogin'])->name('front.login');
 Route::post('front/login/store', [AuthController::class, 'storeUserLogin'])->name('front.login.store');

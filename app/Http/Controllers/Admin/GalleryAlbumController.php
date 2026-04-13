@@ -53,9 +53,9 @@ class GalleryAlbumController extends Controller
                 // ->addColumn('title', fn($tit) => Str::limit($tit->title, 20) ?? '')
                 ->addColumn('client', fn($client) => $client->client->name ?? '')
                 ->addColumn('type', fn($type) => $type->type ?? '')
-                ->addColumn('action', fn($data) => '<button class="btn btn-secondary editAlbumButton" data-id="' . $data->id . '" type="button">Edit</button>
-                                                     <button class="btn btn-danger deleteData" data-id="' . $data->id . '" type="button">Delete</button>')
-                ->addColumn('comment', fn($data) => '<button class="btn btn-dark commentinfoBtn" data-id="' . $data->id . '" type="button">View Comments</button>')
+                ->addColumn('action', fn($data) => '<button class="btn editAlbumButton" data-id="' . $data->id . '" type="button"><i class="fas fa-pencil text-dark"></i></button>
+                                                     <button class="btn  deleteData" data-id="' . $data->id . '" type="button"><i class="fas fa-trash"></i></button>')
+                ->addColumn('comment', fn($data) => '<button class="btn  commentinfoBtn" data-id="' . $data->id . '" type="button"><i class="mdi mdi-comment"></i></button>')
                 ->addColumn('status', fn($status) => '<div class="form-check form-switch">
                                                         <input class="form-check-input statusIdData d-flex mx-auto" type="checkbox" data-id="' . $status->id . '" role="switch" id="flexSwitchCheckChecked" ' . ($status->status == 'Active' ? 'checked' : '') . '>
                                                       </div>')

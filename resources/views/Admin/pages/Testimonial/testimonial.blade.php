@@ -1,12 +1,18 @@
 @extends('Admin.layout.master')
 @section('content')
 <div class="container-fluid">
-    <button class="btn btn-dark addTestimonialBtn mb-4 mt-4">Add Testimonial</button>
-    @include('Admin.pages.TestiMonial.testimonialModal')
+    @push('button')
+    <button class="btn btn-dark addTestimonialBtn ">
+        Create
+    </button>
+    @endpush
 
-    <div class="table-responsive">
+    @include('components.admin-bread-crumb-custom-button')
+    @include('Admin.pages.Testimonial.testimonialModal')
+
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped" id="show-testimonial-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Image</th>

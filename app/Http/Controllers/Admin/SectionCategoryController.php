@@ -24,32 +24,56 @@ class SectionCategoryController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                 ->addColumn('image', function ($item) {
+                ->addColumn('image', function ($item) {
                     $dataimage =   $item->image;
-                    $defaultImage=asset('user.png');
+                    $defaultImage = asset('user.png');
                     return ' <td class="py-1">
-                    <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\''.$defaultImage.'\'"/>
+                    <img src="' . $dataimage . '" width="50" height="50" onerror="this.src=\'' . $defaultImage . '\'"/>
                     </td>';
                 })
-               ->addColumn('action', function ($item) {
-    $viewUrl = route('admin.section-content.category', $item->id); // generates the URL for this category
+                ->addColumn('action', function ($item) {
 
-    return '
-        <div class="d-flex gap-1">
-            <a href="' . $viewUrl . '" class="btn btn-sm btn-info" title="View this category">
-                <i class="fas fa-eye"></i>
-            </a>
-            <button class="btn btn-sm btn-warning editCategoryBtn" data-id="' . $item->id . '">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger deleteCategoryBtn" data-id="' . $item->id . '">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </div>
+                    $viewUrl = route('admin.section-content.category', $item->id);
+
+                    return '
+    <div class="dropdown d-inline-block">
+
+        <button class="btn p-0 m-0 bg-transparent border-0" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+
+        <ul class="dropdown-menu">
+
+            <li>
+                <a class="dropdown-item" href="' . $viewUrl . '">
+                    <i class="fas fa-eye me-2"></i> View
+                </a>
+            </li>
+
+            <li>
+                <button type="button"
+                    class="dropdown-item editCategoryBtn"
+                    data-id="' . $item->id . '">
+                    <i class="fas fa-edit me-2"></i> Edit
+                </button>
+            </li>
+
+            <li>
+                <button type="button"
+                    class="dropdown-item text-danger deleteCategoryBtn"
+                    data-id="' . $item->id . '">
+                    <i class="fas fa-trash-alt me-2"></i> Delete
+                </button>
+            </li>
+
+        </ul>
+
+    </div>
     ';
-})
+                })
 
-                ->rawColumns(['action','image'])
+                ->rawColumns(['action', 'image'])
                 ->make(true);
         }
 
@@ -57,7 +81,7 @@ class SectionCategoryController extends Controller
             config('js-map.admin.datatable.script'),
             config('js-map.admin.summernote.script'),
             config('js-map.admin.dropzone.script'),
-           [ asset('js/admin/section-content/section-content.js') ], // wrap in array
+            [asset('js/admin/section-content/section-content.js')], // wrap in array
 
             config('js-map.admin.buttons.script')
         );
@@ -78,56 +102,56 @@ class SectionCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
- public function store(SectionCategoryRequest $request)
-{
-    $data = $request->validated();
-    $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/section-category');
+    public function store(SectionCategoryRequest $request)
+    {
+        $data = $request->validated();
+        $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/section-category');
 
-    // First create the category
-    $category = SectionCategory::create($data);
+        // First create the category
+        $category = SectionCategory::create($data);
 
-    // Then handle multiple images if any
-    if ($request->hasFile('images')) {
-        $imagePaths = $this->uploadMultipleImages($request, 'images', 'uploads/section-category-images');
-        foreach ($imagePaths as $path) {
-            $category->images()->create(['image' => $path]);
+        // Then handle multiple images if any
+        if ($request->hasFile('images')) {
+            $imagePaths = $this->uploadMultipleImages($request, 'images', 'uploads/section-category-images');
+            foreach ($imagePaths as $path) {
+                $category->images()->create(['image' => $path]);
+            }
         }
+
+        return response()->json(['success' => true, 'message' => 'Section Category created successfully.']);
     }
 
-    return response()->json(['success' => true, 'message' => 'Section Category created successfully.']);
-}
+    public function update(SectionCategoryRequest $request, string $id)
+    {
+        $category = SectionCategory::findOrFail($id);
+        $data = $request->validated();
+        $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/section-category', $category);
 
-public function update(SectionCategoryRequest $request, string $id)
-{
-    $category = SectionCategory::findOrFail($id);
-    $data = $request->validated();
-    $data['image'] = $this->uploadSingleImage($request, 'image', 'uploads/section-category', $category);
+        $category->update($data);
 
-    $category->update($data);
+        // Handle multiple images
+        if ($request->hasFile('images')) {
+            // Optional: delete old images
+            $category->images()->delete();
 
-    // Handle multiple images
-    if ($request->hasFile('images')) {
-        // Optional: delete old images
-        $category->images()->delete();
-
-        $imagePaths = $this->uploadMultipleImages($request, 'images', 'uploads/section-category-images');
-        foreach ($imagePaths as $path) {
-            $category->images()->create(['image' => $path]);
+            $imagePaths = $this->uploadMultipleImages($request, 'images', 'uploads/section-category-images');
+            foreach ($imagePaths as $path) {
+                $category->images()->create(['image' => $path]);
+            }
         }
-    }
 
-    return response()->json(['success' => true, 'message' => 'Section Category updated successfully.']);
-}
+        return response()->json(['success' => true, 'message' => 'Section Category updated successfully.']);
+    }
 
 
     /**
      * Display the specified resource.
      */
-   public function show(string $id)
-{
-    $category = SectionCategory::with('images')->findOrFail($id);
-    return response()->json($category);
-}
+    public function show(string $id)
+    {
+        $category = SectionCategory::with('images')->findOrFail($id);
+        return response()->json($category);
+    }
 
 
     /**
@@ -138,34 +162,34 @@ public function update(SectionCategoryRequest $request, string $id)
     /**
      * Remove the specified resource from storage.
      */
-public function destroy(string $id)
-{
-    $category = SectionCategory::findOrFail($id);
+    public function destroy(string $id)
+    {
+        $category = SectionCategory::findOrFail($id);
 
-    // Delete single main image
-    if ($category->image && file_exists(public_path($category->image))) {
-        @unlink(public_path($category->image));
-    }
-
-    // Delete multiple images
-    if ($category->images()->exists()) {
-        foreach ($category->images as $image) {
-            if ($image->image && file_exists(public_path($image->image))) {
-                @unlink(public_path($image->image));
-            }
+        // Delete single main image
+        if ($category->image && file_exists(public_path($category->image))) {
+            @unlink(public_path($category->image));
         }
-        // Delete image records from the database
-        $category->images()->delete();
+
+        // Delete multiple images
+        if ($category->images()->exists()) {
+            foreach ($category->images as $image) {
+                if ($image->image && file_exists(public_path($image->image))) {
+                    @unlink(public_path($image->image));
+                }
+            }
+            // Delete image records from the database
+            $category->images()->delete();
+        }
+
+        // Delete the category
+        $category->delete();
+
+        return response()->json(['success' => true, 'message' => 'Section Category deleted successfully.']);
     }
 
-    // Delete the category
-    $category->delete();
 
-    return response()->json(['success' => true, 'message' => 'Section Category deleted successfully.']);
-}
-
-
-// Upload multiple images for a section category
+    // Upload multiple images for a section category
     public function uploadImages(Request $request)
     {
         $request->validate([
@@ -200,5 +224,4 @@ public function destroy(string $id)
 
         return response()->json(['success' => true, 'message' => 'Image deleted successfully.']);
     }
-
 }

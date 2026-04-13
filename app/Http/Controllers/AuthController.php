@@ -56,6 +56,7 @@ class AuthController extends Controller
 
     public function storeUserLogin(AuthRequest $authRequest)
     {
+        // return "OK HIT";
         try {
             if (!Auth::attempt($authRequest->only('email', 'password'))) {
                 return back()->with(['error' => 'Invalid Login Credentials']);
@@ -70,7 +71,7 @@ class AuthController extends Controller
                 return redirect()->route('admin.user');
             }
 
-            return redirect()->route('index')
+            return redirect()->url('/')
                 ->with(['success' => 'Login Successfully']);
         } catch (\Exception $e) {
             return back()->with(['error' => 'Something Went Wrong']);

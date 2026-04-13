@@ -33,7 +33,7 @@ $(document).ready(function () {
             { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false },
             { data: "title", name: "title" },
             { data: "slug", name: "slug" },
-            { data: "status", name: "status", orderable: false, searchable: false },
+            // { data: "status", name: "status", orderable: false, searchable: false },
             { data: "action", name: "action", orderable: false, searchable: false }
         ],
         buttons: [

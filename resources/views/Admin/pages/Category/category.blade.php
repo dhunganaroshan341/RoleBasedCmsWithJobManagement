@@ -9,7 +9,7 @@
 
     <div class="table-responsive mt-3">
         <table class="table table-striped" id="show-category-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Title</th>

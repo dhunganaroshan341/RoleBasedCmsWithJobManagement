@@ -19,7 +19,7 @@
 
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-bordered align-middle" id="show-job-data" width="100%">
             <thead class="table-light">
                 <tr>

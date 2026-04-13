@@ -134,7 +134,7 @@
 
                 <!-- FOOTER -->
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
 
                     <button type="button" class="btn btn-success submitBtn">
                         Save Vacancy

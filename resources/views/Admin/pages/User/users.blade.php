@@ -18,9 +18,9 @@
 
                     <button id="resetFilter" class="btn btn-dark">Reset</button>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive card shadow-sm p-2">
                     <table class="table table-striped" id="show-user-data">
-                        <thead>
+                        <thead class="table-light">
                             <tr>
                                 <th> S.N </th>
                                 <th> Image </th>

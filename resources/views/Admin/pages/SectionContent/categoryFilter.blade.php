@@ -2,12 +2,12 @@
     <select id="categoryFilter" class="form-select">
         <option value="">All Categories</option>
         @foreach ($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->title }}</option>
+        <option value="{{ $category->id }}">{{ $category->title }}</option>
         @endforeach
     </select>
 
     <!-- Hidden reorder button -->
-    <button id="reorderBtn" class="btn btn-secondary" style="display:none;">Reorder</button>
+    <button id="reorderBtn" class="btn btn-dark" style="display:none;">Reorder</button>
 </div>
 </div>
 

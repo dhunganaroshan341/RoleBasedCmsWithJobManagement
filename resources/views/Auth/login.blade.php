@@ -40,7 +40,8 @@ logger(Route::currentRouteName());
                             </div>
 
                             <h6 class="fw-light">Sign in to continue.</h6>
-                            <form class="pt-3" action="{{ route('login.store') }}" method="post">
+                            <form class="pt-3" action="{{ route('front.login.store') }}" method="post">
+                                @csrf
                                 @if (session()->has('message'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"

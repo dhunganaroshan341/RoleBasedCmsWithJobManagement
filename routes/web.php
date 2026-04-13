@@ -260,7 +260,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Route::apiResource('jobs', JobControllerV2::class);
     Route::resource('vacancies', VacancyController::class);
     Route::resource('vacancies.jobs', VacancyJobController::class);
-    Route::resource('jobs.applications', JobApplicationController::class)->scoped();
+    Route::resource('jobs.applications', JobApplicationController::class);
+    Route::resource('applications', JobApplicationController::class);
 
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');
     Route::apiResource('job-categories', JobCategoryController::class);
@@ -271,6 +272,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Logout route for normal users
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+Route::post('/user/logout', [AuthController::class, 'userLogout'])->name('user.logout');
 
 
 Route::post('/newsletter/subscribe', [NewsLetterController::class, 'subscribe'])->name('newsletter.subscribe');

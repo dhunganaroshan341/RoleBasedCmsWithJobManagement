@@ -23,7 +23,7 @@
                                     class="text-danger">*</span></label>
                             <select class="form-select category_ids" name="category_ids[]" id="category_id" multiple>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                <option value="{{ $category->id }}">{{ $category->title }}</option>
                                 @endforeach
                             </select>
                             <small class="text-muted">Hold Ctrl (Cmd on Mac) to select multiple.</small>
@@ -34,7 +34,7 @@
                             <label for="tag_id" class="form-label">Select Tags</label>
                             <select class="form-select tag_ids" name="tag_ids[]" id="tag_id" multiple>
                                 @foreach ($tags as $tag)
-                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                                 @endforeach
                             </select>
                             <small class="text-muted">Hold Ctrl (Cmd on Mac) to select multiple.</small>
@@ -58,13 +58,14 @@
                         <div class="col-md-12 mb-3">
                             <label for="post_description" class="form-label">Description <span
                                     class="text-danger">*</span></label>
-                            <textarea class="form-control summernote" name="post_description" id="post_description" rows="4"></textarea>
+                            <textarea class="form-control summernote" name="post_description" id="post_description"
+                                rows="4"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success submitBtn">Submit</button>
                     <button type="submit" class="btn btn-success updateBtn d-none">Update</button>
                 </div>

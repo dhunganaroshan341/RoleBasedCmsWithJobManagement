@@ -15,8 +15,8 @@
             {{ $vacancy ? 'Edit Vacancy' : 'Create Vacancy' }}
         </h4>
 
-        <a href="{{ route('admin.vacancies.index') }}" class="btn btn-secondary">
-            ⬅ Back
+        <a href="{{ route('admin.vacancies.index') }}" class="btn btn-dark">
+            <i class="fas fa-arrow-left me-1"></i> Back
         </a>
     </div>
     <x-session-message />

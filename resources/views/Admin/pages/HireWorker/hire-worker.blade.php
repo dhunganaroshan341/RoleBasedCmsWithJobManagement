@@ -1,9 +1,9 @@
 @extends('Admin.layout.master')
 @section('content')
 <div class="container-fluid">
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table align-middle table-striped table-bordered table-hover" id="fetch-contact-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th>S.N</th>
                     <th>Name</th>

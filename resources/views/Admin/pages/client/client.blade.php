@@ -10,9 +10,9 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive card shadow-sm p-2">
                     <table class="table table-striped" id="show-client-data">
-                        <thead>
+                        <thead class="table-light">
                             <tr>
                                 <th> S.N </th>
                                 <th> Image </th>

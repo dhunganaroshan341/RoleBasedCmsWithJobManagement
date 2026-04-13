@@ -23,8 +23,8 @@
                                     <label class="form-check-label" for="company_existing">Select Existing</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="company_type"
-                                        id="company_custom" value="custom">
+                                    <input class="form-check-input" type="radio" name="company_type" id="company_custom"
+                                        value="custom">
                                     <label class="form-check-label" for="company_custom">Add Custom</label>
                                 </div>
                             </div>
@@ -75,7 +75,8 @@
                     <div class="row align-items-end job-item mb-3 border p-3 rounded ">
                         <div class="mb-3">
                             <label class="form-label">General Requirements</label>
-                            <textarea name="requirements" class="form-control summernote generalRequirementsSummernote"></textarea>
+                            <textarea name="requirements"
+                                class="form-control summernote generalRequirementsSummernote"></textarea>
                         </div>
                     </div>
                     <!-- Jobs List -->
@@ -125,8 +126,8 @@
                                     </div>
 
                                     <div class="col-md-12 mt-2 text-end">
-                                        <button type="button"
-                                            class="btn btn-outline-danger btn-sm remove-job d-none">✖ Remove</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-job d-none">✖
+                                            Remove</button>
                                     </div>
                                 </div>
 
@@ -172,7 +173,7 @@
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success submitBtn">Save Vacancy</button>
                 </div>
             </form>
@@ -183,7 +184,7 @@
 <script>
     // Toggle existing vs custom company
     document.querySelectorAll('input[name="company_type"]').forEach(radio => {
-        radio.addEventListener('change', function() {
+        radio.addEventListener('change', function () {
             document.getElementById('existingCompanyWrapper').classList.toggle('d-none', this.value !==
                 'existing');
             document.getElementById('customCompanyWrapper').classList.toggle('d-none', this.value !==
@@ -192,10 +193,10 @@
     });
 
     // Dynamically add/remove job rows
-    $(document).ready(function() {
+    $(document).ready(function () {
         let jobIndex = 1;
 
-        $('#addJobBtn').click(function() {
+        $('#addJobBtn').click(function () {
             $('#jobsWrapper').append(`
                 <div class="row align-items-end job-item mb-3 border p-3 rounded bg-light">
                     <div class="col-md-3">
@@ -231,7 +232,7 @@
             jobIndex++;
         });
 
-        $(document).on('click', '.remove-job', function() {
+        $(document).on('click', '.remove-job', function () {
             $(this).closest('.job-item').remove();
         });
     });

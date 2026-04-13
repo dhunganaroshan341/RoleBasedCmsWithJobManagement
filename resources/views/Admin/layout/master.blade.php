@@ -3,6 +3,11 @@
 
 <header>
     @include('Admin.layout.header')
+    <style>
+        input[type="search"] {
+            margin-bottom: 1em;
+        }
+    </style>
 
 </header>
 

@@ -9,9 +9,9 @@
             </div>
 
             <div class="modal-body">
-                <div class="table-responsive">
+                <div class="table-responsive card shadow-sm p-2">
                     <table class="table table-bordered table-striped align-middle text-center"
-                        id = "itinerary-data-album-show">
+                        id="itinerary-data-album-show">
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>

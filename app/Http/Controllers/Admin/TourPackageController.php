@@ -19,101 +19,105 @@ class TourPackageController extends Controller
     /**
      * Display a listing of the resource.
      */
-     protected $latestOrder = 1;
+    protected $latestOrder = 1;
     public function __construct()
     {
         $this->middleware('auth');
         $this->latestOrder = TourPackage::max('order') ?? 0; // Get the maximum order value
         $this->latestOrder++; // Increment it for the next user
     }
-public function index(Request $request)
-{
-    $countries = OurCountry::all();
+    public function index(Request $request)
+    {
+        $countries = OurCountry::all();
 
-    if ($request->ajax()) {
-        $search = $request->input('search.value');
-        $columns = $request->input('columns');
-        $pageSize = $request->input('length');
-        $order = $request->input('order')[0];
-        $orderColumnIndex = $order['column'];
-        $orderBy = strtolower($order['dir']) === 'desc' ? 'desc' : 'asc'; // sanitize order direction
-        $start = $request->input('start');
-        $orderColumn = $columns[$orderColumnIndex]['data'] ?? 'title';
+        if ($request->ajax()) {
+            $search = $request->input('search.value');
+            $columns = $request->input('columns');
+            $pageSize = $request->input('length');
+            $order = $request->input('order')[0];
+            $orderColumnIndex = $order['column'];
+            $orderBy = strtolower($order['dir']) === 'desc' ? 'desc' : 'asc'; // sanitize order direction
+            $start = $request->input('start');
+            $orderColumn = $columns[$orderColumnIndex]['data'] ?? 'title';
 
-        // Base query without parent join
-        $query = TourPackage::leftJoin('our_countries', 'tour_packages.our_country_id', '=', 'our_countries.id')
-            ->select(
-                'tour_packages.*',
-                'our_countries.name as country_name'
-            )
-            ->with('country')
-            ->withCount('images');
+            // Base query without parent join
+            $query = TourPackage::leftJoin('our_countries', 'tour_packages.our_country_id', '=', 'our_countries.id')
+                ->select(
+                    'tour_packages.*',
+                    'our_countries.name as country_name'
+                )
+                ->with('country')
+                ->withCount('images');
 
-        $total = $query->count();
+            $total = $query->count();
 
-        $country = $request->input('country');
-        $type = $request->input('type');
-        $headPackage = $request->input('head_package');
+            $country = $request->input('country');
+            $type = $request->input('type');
+            $headPackage = $request->input('head_package');
 
-        // Apply filter with precedence chaining
-        $filtered = $query;
+            // Apply filter with precedence chaining
+            $filtered = $query;
 
-if ($country && $country !== 'all') {
-    // Apply only country filter, reset type and head package filters
-    $filtered = $query->where('our_countries.id', $country);
-} elseif ($type && $type !== 'all') {
-    // Apply only type filter, reset head package filter
-    $filtered = $query->where('tour_packages.type', $type);
-} elseif ($headPackage && $headPackage !== 'all') {
-    // Apply only head package filter
-    $filtered = $query->where('tour_packages.parent_id', $headPackage);
-}
-// else no filters
+            if ($country && $country !== 'all') {
+                // Apply only country filter, reset type and head package filters
+                $filtered = $query->where('our_countries.id', $country);
+            } elseif ($type && $type !== 'all') {
+                // Apply only type filter, reset head package filter
+                $filtered = $query->where('tour_packages.type', $type);
+            } elseif ($headPackage && $headPackage !== 'all') {
+                // Apply only head package filter
+                $filtered = $query->where('tour_packages.parent_id', $headPackage);
+            }
+            // else no filters
 
-// Apply search on $filtered if exists
-if ($search) {
-    $filtered = $filtered->where(function ($q) use ($search) {
-        $q->where('tour_packages.title', 'LIKE', "%$search%")
-          ->orWhere('tour_packages.slug', 'LIKE', "%$search%")
-          ->orWhere('tour_packages.duration', 'LIKE', "%$search%")
-          ->orWhere('tour_packages.difficulty', 'LIKE', "%$search%")
-          ->orWhere('our_countries.name', 'LIKE', "%$search%");
-    });
-}
+            // Apply search on $filtered if exists
+            if ($search) {
+                $filtered = $filtered->where(function ($q) use ($search) {
+                    $q->where('tour_packages.title', 'LIKE', "%$search%")
+                        ->orWhere('tour_packages.slug', 'LIKE', "%$search%")
+                        ->orWhere('tour_packages.duration', 'LIKE', "%$search%")
+                        ->orWhere('tour_packages.difficulty', 'LIKE', "%$search%")
+                        ->orWhere('our_countries.name', 'LIKE', "%$search%");
+                });
+            }
 
-        $filteredCount = $filtered->count();
+            $filteredCount = $filtered->count();
 
-        // Allowed columns for ordering
-        $allowedOrderColumns = [
-            'title', 'duration', 'country', 'type', 'status'
-        ];
+            // Allowed columns for ordering
+            $allowedOrderColumns = [
+                'title',
+                'duration',
+                'country',
+                'type',
+                'status'
+            ];
 
-        if (!in_array($orderColumn, $allowedOrderColumns)) {
-            $orderColumn = 'title'; // fallback
-        }
+            if (!in_array($orderColumn, $allowedOrderColumns)) {
+                $orderColumn = 'title'; // fallback
+            }
 
-        $orderColumnMap = [
-            'title' => 'tour_packages.title',
-            'duration' => 'tour_packages.duration',
-            'country' => 'our_countries.name',
-            'type' => 'tour_packages.type',
-            'status' => 'tour_packages.status',
-        ];
+            $orderColumnMap = [
+                'title' => 'tour_packages.title',
+                'duration' => 'tour_packages.duration',
+                'country' => 'our_countries.name',
+                'type' => 'tour_packages.type',
+                'status' => 'tour_packages.status',
+            ];
 
-        // Remove existing order and apply new order
-        $filtered->getQuery()->orders = null;
-        $orderByColumn = $orderColumnMap[$orderColumn] ?? 'tour_packages.title';
-        $filtered->orderBy($orderByColumn, $orderBy);
+            // Remove existing order and apply new order
+            $filtered->getQuery()->orders = null;
+            $orderByColumn = $orderColumnMap[$orderColumn] ?? 'tour_packages.title';
+            $filtered->orderBy($orderByColumn, $orderBy);
 
-        // Pagination
-        $data = $filtered->offset($start)->limit($pageSize)->get();
+            // Pagination
+            $data = $filtered->offset($start)->limit($pageSize)->get();
 
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('country', fn($item) => $item->country->name ?? '-')
-            ->addColumn('itinerary', function ($item) {
-                $totalItineraries = $item->itineraries()->count();
-                return '
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('country', fn($item) => $item->country->name ?? '-')
+                ->addColumn('itinerary', function ($item) {
+                    $totalItineraries = $item->itineraries()->count();
+                    return '
                     <a href="javascript:void(0);" class="addItineraryBtn me-2" data-id="' . $item->id . '" title="Add Itinerary">
                         <i class="fas fa-plus text-success"></i>
                     </a>
@@ -121,10 +125,10 @@ if ($search) {
                     <a href="javascript:void(0);" class="viewItineraryBtn ms-2" data-id="' . $item->id . '" title="View Itinerary">
                         <i class="fas fa-eye text-primary"></i>
                     </a>';
-            })
-            ->addColumn('batches', function ($item) {
-                $totalBatches = $item->batches()->count();
-                return '
+                })
+                ->addColumn('batches', function ($item) {
+                    $totalBatches = $item->batches()->count();
+                    return '
                     <a href="javascript:void(0);" class="addTourBatchBtn me-2" data-id="' . $item->id . '" title="Add Batch">
                         <i class="fas fa-plus text-success"></i>
                     </a>
@@ -132,11 +136,11 @@ if ($search) {
                     <a href="javascript:void(0);" class="viewTourBatchBtn ms-2" data-id="' . $item->id . '" title="View Batches">
                         <i class="fas fa-eye text-info"></i>
                     </a>';
-            })
-            ->addColumn('package_includes', function ($item) {
-                $totalIncludes = $item->priceIncludes()->count();
-                $packageName = e($item->title);
-                return '
+                })
+                ->addColumn('package_includes', function ($item) {
+                    $totalIncludes = $item->priceIncludes()->count();
+                    $packageName = e($item->title);
+                    return '
                     <a href="javascript:void(0);" class="addPriceIncludeBtn me-2" data-id="' . $item->id . '" title="Add Price Include">
                         <i class="fas fa-plus text-success"></i>
                     </a>
@@ -144,71 +148,71 @@ if ($search) {
                     <a href="javascript:void(0);" class="viewPriceIncludeBtn ms-2" data-package_name="' . $packageName . '" data-id="' . $item->id . '" title="View Price Includes">
                         <i class="fas fa-eye text-info"></i>
                     </a>';
-            })
-            ->addColumn('images', function ($item) {
-                $imageCount = $item->images_count ?? 0;
-                return '
+                })
+                ->addColumn('images', function ($item) {
+                    $imageCount = $item->images_count ?? 0;
+                    return '
                     <a href="javascript:void(0);" class="imageListPopup" data-id="' . $item->id . '" title="View Images">
                         <span class="badge bg-info">' . $imageCount . ' <i class="fas fa-images ms-1"></i></span>
                     </a>
                     <a href="javascript:void(0);" class="editUploads" data-id="' . $item->id . '" title="Edit Uploads">
-                        <i class="fas fa-pencil-alt text-warning"></i>
+                        <i class="fas fa-pencil-alt text-light"></i>
                     </a>';
-            })
-            ->addColumn('status', function ($item) {
-                $checked = strtolower($item->status) === 'active' ? 'checked' : '';
-                return '<div class="form-check form-switch">
+                })
+                ->addColumn('status', function ($item) {
+                    $checked = strtolower($item->status) === 'active' ? 'checked' : '';
+                    return '<div class="form-check form-switch">
                             <input class="form-check-input statusToggle" type="checkbox" data-id="' . $item->id . '" ' . $checked . '>
                         </div>';
-            })
-            ->addColumn('top_deal', fn($item) => '<input type="checkbox" class="form-check-input topDealToggle" data-id="' . $item->id . '" ' . ($item->top_deal ? 'checked' : '') . '>')
-            ->addColumn('favourite_destination', fn($item) => '<input type="checkbox" class="form-check-input favouriteToggle" data-id="' . $item->id . '" ' . ($item->favourite_destination ? 'checked' : '') . '>')
-            ->addColumn('action', fn($item) => view('Admin.Button.button', ['data' => $item])->render())
-            ->addColumn('short_description', fn($item) => \Illuminate\Support\Str::limit(strip_tags($item->short_description), 30))
-            ->rawColumns([
-                'top_deal',
-                'favourite_destination',
-                'country',
-                'batches',
-                'package_includes',
-                'images',
-                'itinerary',
-                'status',
-                'action'
-            ])
-            ->with([
-                'recordsTotal' => $total,
-                'recordsFiltered' => $filteredCount,
-            ])
-            ->make(true);
+                })
+                ->addColumn('top_deal', fn($item) => '<input type="checkbox" class="form-check-input topDealToggle" data-id="' . $item->id . '" ' . ($item->top_deal ? 'checked' : '') . '>')
+                ->addColumn('favourite_destination', fn($item) => '<input type="checkbox" class="form-check-input favouriteToggle" data-id="' . $item->id . '" ' . ($item->favourite_destination ? 'checked' : '') . '>')
+                ->addColumn('action', fn($item) => view('Admin.Button.button', ['data' => $item])->render())
+                ->addColumn('short_description', fn($item) => \Illuminate\Support\Str::limit(strip_tags($item->short_description), 30))
+                ->rawColumns([
+                    'top_deal',
+                    'favourite_destination',
+                    'country',
+                    'batches',
+                    'package_includes',
+                    'images',
+                    'itinerary',
+                    'status',
+                    'action'
+                ])
+                ->with([
+                    'recordsTotal' => $total,
+                    'recordsFiltered' => $filteredCount,
+                ])
+                ->make(true);
+        }
+
+        // If not ajax, load normal page view with necessary data
+        $extraJs = array_merge(
+            config('js-map.admin.datatable.script'),
+            config('js-map.admin.summernote.script'),
+            config('js-map.admin.dropzone.script'),
+            config('js-map.admin.buttons.script')
+        );
+
+        $extraCs = array_merge(
+            config('js-map.admin.datatable.style'),
+            config('js-map.admin.summernote.style'),
+            config('js-map.admin.dropzone.style'),
+            config('js-map.admin.buttons.style')
+        );
+
+        $packages = TourPackage::where('status', 'Active')->get();
+        $parentPackages = TourPackage::has('children')->get();
+
+        return view('Admin.pages.TourPackage.tourPackage', [
+            'extraJs' => $extraJs,
+            'extraCs' => $extraCs,
+            'countries' => $countries,
+            'packages' => $packages,
+            'parentPackages' => $parentPackages,
+        ]);
     }
-
-    // If not ajax, load normal page view with necessary data
-    $extraJs = array_merge(
-        config('js-map.admin.datatable.script'),
-        config('js-map.admin.summernote.script'),
-        config('js-map.admin.dropzone.script'),
-        config('js-map.admin.buttons.script')
-    );
-
-    $extraCs = array_merge(
-        config('js-map.admin.datatable.style'),
-        config('js-map.admin.summernote.style'),
-        config('js-map.admin.dropzone.style'),
-        config('js-map.admin.buttons.style')
-    );
-
-    $packages = TourPackage::where('status', 'Active')->get();
-    $parentPackages = TourPackage::has('children')->get();
-
-    return view('Admin.pages.TourPackage.tourPackage', [
-        'extraJs' => $extraJs,
-        'extraCs' => $extraCs,
-        'countries' => $countries,
-        'packages' => $packages,
-        'parentPackages' => $parentPackages,
-    ]);
-}
 
 
 
@@ -228,7 +232,7 @@ if ($search) {
     }
 
 
-   public function statusToggle($id)
+    public function statusToggle($id)
     {
         try {
             $data = TourPackage::find($id);
@@ -259,7 +263,8 @@ if ($search) {
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-    }  public function favDestination($id)
+    }
+    public function favDestination($id)
     {
         try {
             $data = TourPackage::find($id);
@@ -281,35 +286,50 @@ if ($search) {
     /**
      * Store a newly created resource in storage.
      */
-public function store(TourPackageRequest $request)
-{
-    DB::beginTransaction();
-    try {
-        $data = $request->only([
-            'title', 'short_description', 'long_description','price','top_deal','favourite_destination',
-            'duration', 'difficulty', 'max_elevation', 'best_season','parent_id',
-            'start_point', 'end_point', 'our_country_id', 'status','package_type','pickup','drop'
-        ]);
+    public function store(TourPackageRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->only([
+                'title',
+                'short_description',
+                'long_description',
+                'price',
+                'top_deal',
+                'favourite_destination',
+                'duration',
+                'difficulty',
+                'max_elevation',
+                'best_season',
+                'parent_id',
+                'start_point',
+                'end_point',
+                'our_country_id',
+                'status',
+                'package_type',
+                'pickup',
+                'drop'
+            ]);
 
-        // Dynamically generate slug from title
-        $data['slug'] = TourPackage::generateSlug($request->title);
+            // Dynamically generate slug from title
+            $data['slug'] = TourPackage::generateSlug($request->title);
 
-        if ($request->hasFile('image')) {
-            $path = '/images/TourPackage/';
-            $imagename = time() . '.' . $request->image->extension();
-            $path = $request->image->storeAs($path, $imagename, 'public');
-            $data['image'] = $path;
+            if ($request->hasFile('image')) {
+                $path = '/images/TourPackage/';
+                $imagename = time() . '.' . $request->image->extension();
+                $path = $request->image->storeAs($path, $imagename, 'public');
+                $data['image'] = $path;
+            }
+
+            TourPackage::create($data);
+
+            DB::commit();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-
-        TourPackage::create($data);
-
-        DB::commit();
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => $e->getMessage()]);
     }
-}
 
 
 
@@ -318,10 +338,10 @@ public function store(TourPackageRequest $request)
      */
 
 
-     public function show(string $id)
+    public function show(string $id)
     {
         try {
-             $data = TourPackage::with('images')->findOrFail($id);
+            $data = TourPackage::with('images')->findOrFail($id);
             return response()->json(['success' => true, 'message' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -331,44 +351,44 @@ public function store(TourPackageRequest $request)
     /**
      * Update the specified resource in storage.
      */
-public function update(TourPackageRequest $request, $id)
-{
-    DB::beginTransaction();
-    try {
-        $album = TourPackage::findOrFail($id);
-        $validated = $request->validated();
+    public function update(TourPackageRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $album = TourPackage::findOrFail($id);
+            $validated = $request->validated();
 
-        // $validated['top_deal'] = $request->has('top_deal') ? 1 : 0;
-        // $validated['favourite_destination'] = $request->has('favourite_destination') ? 1 : 0;
+            // $validated['top_deal'] = $request->has('top_deal') ? 1 : 0;
+            // $validated['favourite_destination'] = $request->has('favourite_destination') ? 1 : 0;
 
-        // Regenerate slug only if title has changed
-        if ($request->has('title') && $request->title !== $album->title) {
-            $validated['slug'] = TourPackage::generateSlug($request->title, $id);
-        }
-
-        $album->update($validated);
-
-        if ($request->hasFile('image_path')) {
-            foreach ($request->media_path as $key => $value) {
-                $file = $request->file('image_path')[$key];
-                $filename = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images/tour-packages'), $filename);
-                $image = 'images/tour-packages/' . $filename;
-
-                TourPackageImage::create([
-                    'tour_package_id' => $album->id,
-                    'image_path' => $image,
-                ]);
+            // Regenerate slug only if title has changed
+            if ($request->has('title') && $request->title !== $album->title) {
+                $validated['slug'] = TourPackage::generateSlug($request->title, $id);
             }
-        }
 
-        DB::commit();
-        return response()->json(['success' => true, 'message' => $request->validated()]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            $album->update($validated);
+
+            if ($request->hasFile('image_path')) {
+                foreach ($request->media_path as $key => $value) {
+                    $file = $request->file('image_path')[$key];
+                    $filename = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('images/tour-packages'), $filename);
+                    $image = 'images/tour-packages/' . $filename;
+
+                    TourPackageImage::create([
+                        'tour_package_id' => $album->id,
+                        'image_path' => $image,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => $request->validated()]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
-}
 
 
     /**
@@ -394,10 +414,10 @@ public function update(TourPackageRequest $request, $id)
     public function uploadImages(Request $request)
     {
         $request->validate([
-        'tour_package_id' => 'required|exists:tour_packages,id',
-        'images' => 'required|array',
-        'images.*' => 'image|max:5120', // each image max 5MB
-    ]);
+            'tour_package_id' => 'required|exists:tour_packages,id',
+            'images' => 'required|array',
+            'images.*' => 'image|max:5120', // each image max 5MB
+        ]);
 
 
         $tourPackageId = $request->tour_package_id;
@@ -470,7 +490,8 @@ public function update(TourPackageRequest $request, $id)
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
-    }public function packageByType($type)
+    }
+    public function packageByType($type)
     {
         try {
             $tourPackages = TourPackage::whereHas('country', function ($query) use ($type) {
@@ -487,32 +508,31 @@ public function update(TourPackageRequest $request, $id)
         }
     }
     public function deleteImages(string $id)
-{
-    // Find the image record
-    $image = TourPackageImage::find($id);
+    {
+        // Find the image record
+        $image = TourPackageImage::find($id);
 
-    if (!$image) {
-        return response()->json(['error' => 'Image not found'], 404);
+        if (!$image) {
+            return response()->json(['error' => 'Image not found'], 404);
+        }
+
+        // Assuming the image path is stored in a column, e.g., 'filepath' or 'image_path'
+        $filePath = $image->image_path; // replace 'filepath' with your actual column name
+
+        // Delete the file from storage (e.g., 'public' disk)
+        if (Storage::disk('public')->exists($filePath)) {
+            Storage::disk('public')->delete($filePath);
+        }
+
+        // Delete the database record
+        $image->delete();
+
+        return response()->json(['success' => 'Image deleted successfully']);
     }
+    public function showImages($tour_package_id)
+    {
+        $images = TourPackageImage::where('tour_package_id', $tour_package_id)->get();
 
-    // Assuming the image path is stored in a column, e.g., 'filepath' or 'image_path'
-    $filePath = $image->image_path; // replace 'filepath' with your actual column name
-
-    // Delete the file from storage (e.g., 'public' disk)
-    if (Storage::disk('public')->exists($filePath)) {
-        Storage::disk('public')->delete($filePath);
+        return response()->json($images);
     }
-
-    // Delete the database record
-    $image->delete();
-
-    return response()->json(['success' => 'Image deleted successfully']);
-}
-public function showImages($tour_package_id)
-{
-    $images = TourPackageImage::where('tour_package_id', $tour_package_id)->get();
-
-    return response()->json($images);
-}
-
 }

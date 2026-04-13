@@ -3,9 +3,9 @@
 <div class="container-fluid">
     <button class="btn btn-dark addPostBtn mb-4">Add Post</button>
     @include('Admin.pages.Post.postModal')
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped custom-table" id="data-post-show">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Image</th>

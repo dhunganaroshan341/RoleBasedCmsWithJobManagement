@@ -12,9 +12,9 @@
     <button class="btn btn-dark  mb-4 mt-4">Page Banners</button>
     @include('Admin.pages.PageBanner.pageBannerModal')
 
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped" id="show-page-banner-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Page</th>

@@ -4,9 +4,9 @@
     <button class="btn btn-dark addServiceBtn mb-4 mt-4">Add Services</button>
     @include('Admin.pages.Services.servicemodal')
 
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped" id="show-testimonial-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Image</th>

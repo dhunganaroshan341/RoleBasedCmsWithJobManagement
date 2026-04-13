@@ -4,10 +4,10 @@
         <h2>Job <span>Listings</span></h2>
     </div>
     <div class="mb-5">
-        <div class="table-responsive">
+        <div class="table-responsive card shadow-sm p-2">
             <table id="jobsTable" class="table table-bordered text-center align-middle"
                 style="border-color: var(--secondary-color); width: 100%;">
-                <thead>
+                <thead class="table-light">
                     <tr>
                         <th>Country</th>
                         <th>Company</th>

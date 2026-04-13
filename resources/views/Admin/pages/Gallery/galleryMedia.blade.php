@@ -2,9 +2,9 @@
 @section('content')
 <div class="container-fluid">
     <button class="btn btn-dark addBtn mb-4">Add Media</button>
-    <div class="table-responsive">
+    <div class="table-responsive card shadow-sm p-2">
         <table class="table table-striped custom-table" id="data-media-show">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">media</th>

@@ -5,7 +5,7 @@
     @include('Admin.pages.Notice.noticeModal')
     <div class="table-responsive mt-4">
         <table class="table table-bordered table-striped" id="fetch-notice-data">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th scope="col">S.N</th>
                     <th scope="col">Title</th>

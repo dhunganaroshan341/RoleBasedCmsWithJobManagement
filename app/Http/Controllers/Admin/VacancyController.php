@@ -24,7 +24,6 @@ class VacancyController extends Controller
 
         $vacancies = $query->latest()->get();
         // $vacancies = Vacancy::with('company')->withCount('jobs')->latest()->get();
-        // dd($vacancies);
         return view('Admin.pages.Vacancy.index', compact('vacancies'));
     }
     public function create()

@@ -10,7 +10,7 @@
             </div>
 
             <div class="modal-body">
-                <div class="table-responsive">
+                <div class="table-responsive card shadow-sm p-2">
                     <table class="table table-bordered table-striped align-middle text-center"
                         id="price-include-data-show">
 

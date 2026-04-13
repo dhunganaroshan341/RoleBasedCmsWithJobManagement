@@ -75,25 +75,46 @@
 
                         <td>{{ $job->female_opening ?? 0 }}</td>
 
-                        <td class="d-flex gap-1">
+                        <td class="text-center">
 
-                            {{-- Edit --}}
-                            <a href="{{ route('admin.vacancies.jobs.edit', [$vacancy->id, $job->id]) }}"
-                                class="btn btn-sm text-dark" title="Edit Job">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
+                            <div class="dropdown d-inline-block">
 
-                            {{-- Delete --}}
-                            <form action="{{ route('admin.vacancies.jobs.destroy', [$vacancy->id, $job->id]) }}"
-                                method="POST" onsubmit="return confirm('Delete this job?')">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button class="btn btn-sm text-danger" title="Delete Job">
-                                    <i class="bi bi-trash"></i>
+                                {{-- 3 dots button --}}
+                                <button class="btn p-0 m-0 bg-transparent border-0" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                            </form>
+
+                                {{-- dropdown menu --}}
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    {{-- Edit --}}
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('admin.vacancies.jobs.edit', [$vacancy->id, $job->id]) }}">
+                                            <i class="fas fa-edit me-2"></i> Edit
+                                        </a>
+                                    </li>
+
+                                    {{-- Delete --}}
+                                    <li>
+                                        <form
+                                            action="{{ route('admin.vacancies.jobs.destroy', [$vacancy->id, $job->id]) }}"
+                                            method="POST" onsubmit="return confirm('Delete this job?')">
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-trash me-2"></i> Delete
+                                            </button>
+
+                                        </form>
+                                    </li>
+
+                                </ul>
+
+                            </div>
 
                         </td>
                     </tr>

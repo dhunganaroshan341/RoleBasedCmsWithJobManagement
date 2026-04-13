@@ -2,8 +2,7 @@
     aria-labelledby="jobModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content shadow-lg rounded-4 border-0">
-            <form id="jobForm" class="form" method="POST" enctype="multipart/form-data"
-                data-id="{{ $job->id ?? '' }}">
+            <form id="jobForm" class="form" method="POST" enctype="multipart/form-data" data-id="{{ $job->id ?? '' }}">
                 @csrf
                 @csrf
                 <div class="modal-header bg-primary text-white rounded-top-4">
@@ -26,8 +25,8 @@
                         {{-- Job Code --}}
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Job Code <span class="text-danger">*</span></label>
-                            <input type="text" name="job_code" id="job_code"
-                                class="form-control rounded-3 shadow-sm" placeholder="Enter job code" required>
+                            <input type="text" name="job_code" id="job_code" class="form-control rounded-3 shadow-sm"
+                                placeholder="Enter job code" required>
                         </div>
 
                         {{-- Job Title --}}
@@ -51,7 +50,7 @@
                                 required>
                                 <option value="" selected>-- Select Country --</option>
                                 @foreach (\App\Models\OurCountry::all() as $country)
-                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                <option value="{{ $country->id }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -62,7 +61,7 @@
                             <select name="category_ids[]" id="category_ids" class="form-select rounded-3 shadow-sm"
                                 multiple>
                                 @foreach (\App\Models\JobCategory::all() as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -118,20 +117,22 @@
                         {{-- Description --}}
                         <div class="col-md-12">
                             <label class="form-label fw-semibold">Description</label>
-                            <textarea name="description" id="description" class="form-control summernote rounded-3 shadow-sm" rows="4"></textarea>
+                            <textarea name="description" id="description"
+                                class="form-control summernote rounded-3 shadow-sm" rows="4"></textarea>
                         </div>
 
                         {{-- Requirements --}}
                         <div class="col-md-12">
                             <label class="form-label fw-semibold">Requirements</label>
-                            <textarea name="requirements" id="requirements" class="form-control rounded-3 shadow-sm" rows="4"></textarea>
+                            <textarea name="requirements" id="requirements" class="form-control rounded-3 shadow-sm"
+                                rows="4"></textarea>
                         </div>
 
                         {{-- Link & Icon --}}
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Link</label>
-                            <input type="url" name="link" id="link"
-                                class="form-control rounded-3 shadow-sm" placeholder="Enter link">
+                            <input type="url" name="link" id="link" class="form-control rounded-3 shadow-sm"
+                                placeholder="Enter link">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Icon Class</label>
@@ -161,7 +162,7 @@
                         data-bs-dismiss="modal">Close</button>
                     <div>
                         <button type="submit" class="btn btn-success rounded-3 submitBtn">Submit</button>
-                        <button type="submit" class="btn btn-warning rounded-3 updateBtn">Update</button>
+                        <button type="submit" class="btn btn-light rounded-3 updateBtn">Update</button>
                     </div>
                 </div>
             </form>
@@ -169,74 +170,74 @@
     </div>
 </div>
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const openingsMode = document.getElementById('openingsMode');
-            const totalWrapper = document.getElementById('totalOpeningsWrapper');
-            const maleFemaleWrapper = document.getElementById('maleFemaleWrapper');
-            const hiddenOpeningsMode = document.getElementById('openings_mode');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const openingsMode = document.getElementById('openingsMode');
+        const totalWrapper = document.getElementById('totalOpeningsWrapper');
+        const maleFemaleWrapper = document.getElementById('maleFemaleWrapper');
+        const hiddenOpeningsMode = document.getElementById('openings_mode');
 
-            openingsMode.addEventListener('change', function() {
-                hiddenOpeningsMode.value = this.value;
-                if (this.value === 'male-female') {
-                    totalWrapper.classList.add('d-none');
-                    maleFemaleWrapper.classList.remove('d-none');
-                } else {
-                    totalWrapper.classList.remove('d-none');
-                    maleFemaleWrapper.classList.add('d-none');
-                }
-            });
+        openingsMode.addEventListener('change', function () {
+            hiddenOpeningsMode.value = this.value;
+            if (this.value === 'male-female') {
+                totalWrapper.classList.add('d-none');
+                maleFemaleWrapper.classList.remove('d-none');
+            } else {
+                totalWrapper.classList.remove('d-none');
+                maleFemaleWrapper.classList.add('d-none');
+            }
+        });
 
 
 
-            const jobForm = document.getElementById('jobForm');
+        const jobForm = document.getElementById('jobForm');
 
-            jobForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+        jobForm.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-                const formData = new FormData(this);
-                const jobId = this.dataset.id; // job ID from data attribute
+            const formData = new FormData(this);
+            const jobId = this.dataset.id; // job ID from data attribute
 
-                fetch(`/jobs/${jobId}/apply`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
-                        },
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Application Submitted!',
-                                text: data.message,
-                                confirmButtonColor: '#3085d6'
-                            });
-                            jobForm.reset(); // clear form
-                            const modal = bootstrap.Modal.getInstance(document.getElementById(
-                                'JobFormModal'));
-                            modal.hide();
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops!',
-                                text: data.message || 'Something went wrong',
-                                confirmButtonColor: '#d33'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
+            fetch(`/jobs/${jobId}/apply`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Application Submitted!',
+                            text: data.message,
+                            confirmButtonColor: '#3085d6'
+                        });
+                        jobForm.reset(); // clear form
+                        const modal = bootstrap.Modal.getInstance(document.getElementById(
+                            'JobFormModal'));
+                        modal.hide();
+                    } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error',
-                            text: 'Server error. Try again later.',
+                            title: 'Oops!',
+                            text: data.message || 'Something went wrong',
                             confirmButtonColor: '#d33'
                         });
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Server error. Try again later.',
+                        confirmButtonColor: '#d33'
                     });
-            });
+                });
         });
-    </script>
+    });
+</script>
 @endpush

@@ -29,7 +29,8 @@
 
                         <div class="col-md-12 mt-3">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control summernote" id="jobCategoryDescription" name="description" rows="4"></textarea>
+                            <textarea class="form-control summernote" id="jobCategoryDescription" name="description"
+                                rows="4"></textarea>
                         </div>
 
                         <div class="col-md-12 mt-3">
@@ -40,7 +41,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success submitBtn">Submit</button>
                     <button type="submit" class="btn btn-success updateBtn" style="display:none;">Update Job
                         Category</button>

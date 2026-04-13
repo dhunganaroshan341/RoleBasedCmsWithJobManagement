@@ -118,7 +118,7 @@ $query->where('title', 'like', '%' . request('search') . '%');
                                 @csrf
                                 @method('DELETE')
 
-                                <button class="btn btn-sm btn-danger" title="Delete Vacancy">
+                                <button class="btn btn-sm text-danger" title="Delete Vacancy">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>

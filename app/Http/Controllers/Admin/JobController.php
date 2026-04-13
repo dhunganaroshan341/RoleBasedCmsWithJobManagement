@@ -18,7 +18,7 @@ class JobController extends Controller
      */
     public function index(Request $request)
     {
-        dd(Application::all()->toArray());
+        // dd(Application::all()->toArray());
         if ($request->ajax()) {
 
             $jobs = Job::with([

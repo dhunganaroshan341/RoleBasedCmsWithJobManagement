@@ -4,13 +4,17 @@
 
 <div class="container mt-4">
     {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>{{ $job ? 'Edit Job' : 'Create Job' }}</h4>
+    @push('breadcrumb')
+    <h4>{{ $job ? 'Edit Job' : 'Create Job' }}</h4>
 
-        <a href="{{ route('admin.vacancies.jobs.index', $vacancy->id ?? 1) }}" class="btn btn-secondary">
-            ⬅ Back
-        </a>
-    </div>
+    @endpush
+    @push('button')
+    <a href="{{ route('admin.vacancies.jobs.index', $vacancy->id ?? 1) }}" class="btn btn-dark">
+        <i class="fas fa-arrow-left me-1"></i> Back
+    </a>
+    @endpush
+
+    @include('components.admin-bread-crumb-empty-slot')
     <x-session-message />
 
     <form method="POST" action="{{ $job 
