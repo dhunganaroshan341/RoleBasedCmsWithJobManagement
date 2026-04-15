@@ -36,10 +36,8 @@ $css =
     }
 
     .custom-nice-select {
-
-        /* width: 35% !important; */
-        padding: 0px 0.5em !important;
-
+        width: 200px !important;
+        padding: 4px 0.5em !important;
     }
 
     .nice-select:before {
