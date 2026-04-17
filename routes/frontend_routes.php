@@ -46,9 +46,6 @@ Route::post('/contact', [UserFrontendController::class, 'storeContactUs'])
     ->middleware('throttle:form-submission')
     ->name('contact.store');
 
-Route::post('/hire-us', [UserFrontendController::class, 'storeHireUs'])
-    // ->middleware('throttle:form-submission')
-    ->name('hire.store');
 //  job
 Route::prefix('pages')->group(function () {
     Route::prefix('job')->group(function () {
