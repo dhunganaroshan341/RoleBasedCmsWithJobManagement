@@ -19,7 +19,6 @@ $css =
 
 @section('content')
 <!-- job-form-section -->
-<x-session-success-table-message />
 <section class="job-form-section pt_120 pb_120">
     <div class="auto-container">
         <div class="sec-title centred pb_70 light sec-title-animation animation-style2">
@@ -28,8 +27,10 @@ $css =
             <p class="title-animation">Fill out the form below and let us help you find the right candidates for your
                 company.</p>
         </div>
-
-        <form id="hireForm" method="POST" action="{{ route('hire.store') }}">
+        <div class="card p-2 mb-2">
+            <x-session-message />
+        </div>
+        <form id="hireForm" method="POST" action="{{ route('hire.submit') }}">
             @csrf
             <div class="row clearfix">
 

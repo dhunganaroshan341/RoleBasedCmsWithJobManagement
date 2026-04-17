@@ -18,6 +18,7 @@ class HireWorker extends Model
         'position',
         'openings',
         'salary_range',
+        'salary_range_to',
         'job_description',
         'status'
     ];
