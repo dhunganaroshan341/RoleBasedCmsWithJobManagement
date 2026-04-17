@@ -45,10 +45,25 @@
                         </div>
                         <div class="widget-content">
                             <ul class="links-list clearfix">
+
+                                @if(!empty($latestVacancies) && $latestVacancies->count())
+
+                                @foreach($latestVacancies as $vacancy)
+                                <li>
+                                    <a href="{{ route('jobs.show', $vacancy->id) }}">
+                                        {{ $vacancy->title }}
+                                    </a>
+                                </li>
+                                @endforeach
+
+                                @else
+                                <!-- Fallback -->
                                 <li><a href="#">Vacancy in Qatar</a></li>
                                 <li><a href="#">Vacancy in UAE</a></li>
                                 <li><a href="#">Vacancy in Malaysia</a></li>
                                 <li><a href="#">Vacancy in Japan</a></li>
+                                @endif
+
                             </ul>
                         </div>
                     </div>
@@ -60,21 +75,35 @@
     <!-- Footer Bottom -->
     <div class="footer-bottom">
         <div class="auto-container">
-            <div class="bottom-inner d-flex justify-content-between align-items-center">
-                <div class="copyright">
-                    <p>Copyright &copy; 2025 <a href="{{ route('index') }}">Aurora</a>. All rights reserved. |
-                        developed by <a href="https://realminfotek.com/">Realminfotech pvt. ltd</a>
-                    </p>
+            <div class="row align-items-center">
+                <!-- Social Links -->
+                <div class="col-lg-5 col-md-5 col-sm-12">
+                    <div class="social-links text-center text-md-end">
+                        <ul class="d-inline-flex flex-wrap align-items-center gap-2">
+                            <li>
+                                <h5 class="mb-0">Follow Us On:</h5>
+                            </li>
+                            <li><a href="{{ $facebook??'#' }}"><i class="icon-22"></i></a></li>
+                            <li><a href="{{ $twitter??'#' }}"><i class="icon-23"></i></a></li>
+                            <li><a href="{{ $instagram??'#' }}"><i class="icon-24"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
-                <ul class="social-links d-flex">
-                    <li>
-                        <h5>Follow Us On:</h5>
-                    </li>
-                    <li><a href="#"><i class="icon-22"></i></a></li>
-                    <li><a href="#"><i class="icon-23"></i></a></li>
-                    <li><a href="#"><i class="icon-24"></i></a></li>
-                    {{-- <li><a href="#"><i class="icon-25"></i></a></li> --}}
-                </ul>
+                <!-- Copyright -->
+                <div class="col-lg-7 col-md-7 col-sm-12 mb-2 mb-md-0">
+                    <div class="copyright text-center text-md-start">
+                        <p>
+                            Copyright &copy; 2025
+                            <a href="{{ route('index') }}">Aurora</a>.
+                            All rights reserved. |
+                            developed by
+                            <a href="https://realminfotek.com/">Realminfotech pvt. ltd</a>
+                        </p>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>

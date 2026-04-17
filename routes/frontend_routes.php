@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DynamicPageController;
 use App\Http\Controllers\EmployerJobRequestController;
@@ -10,6 +8,7 @@ use App\Http\Controllers\UserFrontendController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\JobApplyController;
 use App\Http\Controllers\Frontend\PagesController;
 use App\Http\Controllers\Frontend\SolutionsController;
 
@@ -68,11 +67,11 @@ Route::controller(PagesController::class)->group(function () {
 
     Route::get('/hire', 'job')->name('hire');
 });
-Route::post('/jobs/{id}/apply', [JobApplicationController::class, 'manualApply'])
+Route::post('/jobs/{id}/apply', [JobApplyController::class, 'manualApply'])
     ->name('jobseeker.mannualApply');
 
 // Smart/auto apply route (for logged-in users)
-Route::post('/jobs/{id}/smart-apply', [JobApplicationController::class, 'smartApply'])
+Route::post('/jobs/{id}/smart-apply', [JobApplyController::class, 'smartApply'])
     ->name('jobseeker.smartApply')
     ->middleware('auth'); // Only authenticated users
 
@@ -95,17 +94,7 @@ Route::prefix('pages')->group(function () {
     });
 
     //  portfoliyo
-    Route::prefix('solutions')->group(function () {
-        Route::controller(SolutionsController::class)->group(function () {
-            Route::get('/service', 'service')->name('service');
-            Route::get('/service-details', 'serviceDetails')->name('serviceDetails');
-            Route::get('/service-details-2', 'serviceDetails2')->name('serviceDetails2');
-            Route::get('/service-details-3', 'serviceDetails3')->name('serviceDetails3');
-            Route::get('/service-details-4', 'serviceDetails4')->name('serviceDetails4');
-            Route::get('/service-details-5', 'serviceDetails5')->name('serviceDetails5');
-            Route::get('/service-details-6', 'serviceDetails6')->name('serviceDetails6');
-        });
-    });
+
 });
 Route::get('/cv-upload', [JobSeekerProfileController::class, 'create'])
     ->middleware('guest')       // only guests can access

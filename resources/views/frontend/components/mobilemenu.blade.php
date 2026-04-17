@@ -1,26 +1,63 @@
 <div class="mobile-menu">
     <div class="menu-backdrop"></div>
-    <div class="close-btn"><i class="fas fa-times"></i></div>
-    <nav class="menu-box">
-        <div class="nav-logo"><a href="{{ route('index') }}"><img src="{{ asset('assets/images/logo-2.png') }}"
-                    alt="" title=""></a></div>
-        <div class="menu-outer"><!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--></div>
-        <div class="contact-info">
-            <h4>Contact Info</h4>
-            <ul>
-                <li>Chicago 12, Melborne City, USA</li>
-                <li><a href="tel:+8801682648101">+88 01682648101</a></li>
-                <li><a href="mailto:info@example.com">info@example.com</a></li>
+
+    <!-- Close Button -->
+    <div class="close-btn text-end p-3">
+        <i class="fas fa-times fs-4"></i>
+    </div>
+
+    <nav class="menu-box p-3">
+
+        <!-- Logo -->
+        <div class="nav-logo text-center mb-4">
+            <a href="{{ route('index') }}">
+                <img src="{{ asset('assets/images/logo-2.png') }}" alt="Logo" class="img-fluid"
+                    style="max-height: 50px;">
+            </a>
+        </div>
+
+        <!-- Menu -->
+        <div class="menu-outer mb-4">
+            <!-- JS injected menu -->
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-info mb-4">
+            <h5 class="mb-3">Contact Info</h5>
+            <ul class="list-unstyled small">
+                <li class="mb-2">
+                    📍 {{ $email ?? 'Kupandol-10, Lalitpur, Nepal' }}
+                </li>
+                <li class="mb-2">
+                    📞
+                    <a href="tel:+977{{ $contact ?? '01682648101' }}">
+                        +977 {{ $contact ?? '01682648101' }}
+                    </a>
+                </li>
+                <li>
+                    ✉️
+                    <a href="mailto:info@example.com">info@example.com</a>
+                </li>
             </ul>
         </div>
-        <div class="social-links">
-            <ul class="clearfix">
-                <li><a href="{{ route('index') }}"><span class="fab fa-twitter"></span></a></li>
-                <li><a href="{{ route('index') }}"><span class="fab fa-facebook-square"></span></a></li>
-                <li><a href="{{ route('index') }}"><span class="fab fa-pinterest-p"></span></a></li>
-                <li><a href="{{ route('index') }}"><span class="fab fa-instagram"></span></a></li>
-                <li><a href="{{ route('index') }}"><span class="fab fa-youtube"></span></a></li>
+
+        <!-- Social Links -->
+        <div class="social-links text-center">
+            <ul class="list-inline mb-0">
+                <li class="list-inline-item mx-2">
+                    <a href="{{ route('index') }}"><i class="fab fa-twitter"></i></a>
+                </li>
+                <li class="list-inline-item mx-2">
+                    <a href="{{ route('index') }}"><i class="fab fa-facebook-square"></i></a>
+                </li>
+                <li class="list-inline-item mx-2">
+                    <a href="{{ route('index') }}"><i class="fab fa-instagram"></i></a>
+                </li>
+                <li class="list-inline-item mx-2">
+                    <a href="{{ route('index') }}"><i class="fab fa-youtube"></i></a>
+                </li>
             </ul>
         </div>
+
     </nav>
 </div>
