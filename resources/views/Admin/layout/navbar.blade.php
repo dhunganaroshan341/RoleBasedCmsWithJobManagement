@@ -44,7 +44,8 @@
 
                 <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="mdi mdi-calendar-check"></i>
                         Job Seekers</a></li> -->
-                <li class="nav-item"><a class="nav-link" href="#"><i class="mdi mdi-calendar-check"></i>
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.applicatiions.index') }}"><i
+                            class="mdi mdi-calendar-check"></i>
                         Applications</a></li>
             </ul>
         </div>
