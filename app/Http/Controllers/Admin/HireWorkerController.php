@@ -16,33 +16,75 @@ class HireWorkerController extends Controller
         if ($request->ajax()) {
 
             $data = HireWorker::query();
-            dd($data);
+
             return DataTables::of($data)
                 ->addIndexColumn()
 
+                // Full name from form
                 ->addColumn('name', function ($row) {
                     return $row->fname . ' ' . $row->lname;
                 })
 
-                ->addColumn('position', function ($row) {
-                    return Str::limit($row->position, 30);
+                // Contact info
+                ->addColumn('contact', function ($row) {
+                    return $row->email . '<br><small>' . $row->country_code . ' ' . $row->phone . '</small>';
                 })
 
-                ->addColumn('company_name', function ($row) {
-                    return Str::limit($row->company_name, 30);
+                // Company block
+                ->addColumn('company', function ($row) {
+                    return '
+                    <strong>' . e($row->company_name) . '</strong><br>
+                    <small>' . e($row->industry) . '</small><br>
+                    <small>' . e($row->location) . '</small>
+                ';
                 })
 
+                // Job info block
+                ->addColumn('job', function ($row) {
+                    return '
+                    <strong>' . e($row->position) . '</strong><br>
+                    <small>Openings: ' . $row->openings . '</small><br>
+                    <small>' . $row->currency . ' ' . $row->salary_range . ' - ' . $row->salary_range_to . '</small>
+                ';
+                })
+
+                // Description
+                ->addColumn('description', function ($row) {
+                    return Str::limit($row->job_description, 50);
+                })
+
+                // Actions dropdown (clean UI)
                 ->addColumn('action', function ($row) {
                     return '
-                        <button class="btn btn-dark viewHireBtn" data-id="' . $row->id . '">View</button>
-                        <button class="btn btn-danger deleteHireBtn" data-id="' . $row->id . '">Delete</button>
-                    ';
+                    <div class="dropdown">
+                        <button class="btn btn-sm text-dark dropdown-toggle" data-bs-toggle="dropdown">
+                           ...
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+                                <button class="dropdown-item viewHireBtn" data-id="' . $row->id . '">
+                                    <i class="bi bi-eye me-2"></i> View
+                                </button>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <button class="dropdown-item text-danger deleteHireBtn" data-id="' . $row->id . '">
+                                    <i class="bi bi-trash me-2"></i> Delete
+                                </button>
+                            </li>
+
+                        </ul>
+                    </div>
+                ';
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['contact', 'company', 'job', 'action'])
                 ->make(true);
         }
-
         $extraJs = array_merge(
             config('js-map.admin.datatable.script')
         );

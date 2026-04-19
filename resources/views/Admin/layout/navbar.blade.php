@@ -42,8 +42,8 @@
                             class="mdi mdi-briefcase-outline"></i>
                         Job List</a></li>
 
-                <li class="nav-item"><a class="nav-link" href="#"><i class="mdi mdi-calendar-check"></i>
-                        Job Seekers</a></li>
+                <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="mdi mdi-calendar-check"></i>
+                        Job Seekers</a></li> -->
                 <li class="nav-item"><a class="nav-link" href="#"><i class="mdi mdi-calendar-check"></i>
                         Applications</a></li>
             </ul>
@@ -51,14 +51,14 @@
     </li>
 
     {{-- === CONTENT MANAGEMENT === --}}
-    <li class="nav-item nav-category">Content Management</li>
-    <li class="nav-item">
+    <!-- <li class="nav-item nav-category">Content Management</li> -->
+    <!-- <li class="nav-item">
         <a class="nav-link" href="{{ route('admin.pages.index') }}">
             <i class="mdi mdi-file-document-outline menu-icon"></i>
             <span class="menu-title">Pages & Sections</span>
         </a>
-    </li>
-    <li class="nav-item">
+    </li> -->
+    <!-- <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#sectionMenu" role="button" aria-expanded="false"
             aria-controls="sectionMenu">
             <i class="mdi mdi-view-list menu-icon"></i>
@@ -73,10 +73,10 @@
                             class="mdi mdi-format-list-bulleted"></i> Section Content</a></li>
             </ul>
         </div>
-    </li>
+    </li> -->
 
     {{-- === BANNERS === --}}
-    <li class="nav-item nav-category">Banners</li>
+    <!-- <li class="nav-item nav-category">Banners</li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#bannerMenu" role="button" aria-expanded="false"
             aria-controls="bannerMenu">
@@ -94,7 +94,7 @@
                             class="mdi mdi-bullhorn-outline"></i> CTA Banner</a></li>
             </ul>
         </div>
-    </li>
+    </li> -->
 
     {{-- === SERVICES & TESTIMONIALS === --}}
     <li class="nav-item nav-category">Services & Social Proof</li>

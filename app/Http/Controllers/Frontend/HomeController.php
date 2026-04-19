@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -19,6 +20,10 @@ class HomeController extends Controller
     public function index()
     {
         $posts = Post::with('categories')->where('status', 'Active')->latest()->take(3)->get();
-        return view('frontend.home/index', compact('posts'));
+        $testimonials = Testimonial::where('status', 'Active')->get();
+
+        // dd($testimonials->toArray());
+
+        return view('frontend.home/index', compact('posts', 'testimonials'));
     }
 }

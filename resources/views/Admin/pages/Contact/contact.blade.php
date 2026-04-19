@@ -1,6 +1,8 @@
 @extends('Admin.layout.master')
 @section('content')
 <div class="container-fluid">
+    <x-admin-bread-crumb-no-button />
+
     <div class="table-responsive card shadow-sm p-2">
         <table class="table align-middle table-striped table-bordered table-hover" id="fetch-contact-data">
             <thead class="table-light">
@@ -8,7 +10,7 @@
                     <th>S.N</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Subject</th>
+                    <!-- <th>Subject</th> -->
                     <th>Message</th>
                     <th>Action</th>
                 </tr>

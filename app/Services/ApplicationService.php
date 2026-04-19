@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\Job;
 use App\Models\JobApplication;
+use Illuminate\Support\Facades\Optional;
 
 class ApplicationService
 {
-    public function getApplications($job = null)
+    public function getApplications(Job $job = null)
     {
         $query = JobApplication::with(['job', 'jobSeekerProfile']);
 
@@ -17,7 +19,7 @@ class ApplicationService
         return $query->latest()->get()->map(function ($app) {
 
             $profile = $app->jobSeekerProfile;
-            dd($profile->toArray());
+
             return [
                 'id' => $app->id,
 
@@ -35,5 +37,10 @@ class ApplicationService
                 ],
             ];
         });
+    }
+
+    public function deleteApplication(JobApplication $application)
+    {
+        return $application->delete();
     }
 }

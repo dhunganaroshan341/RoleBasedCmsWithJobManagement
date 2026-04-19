@@ -31,6 +31,7 @@ class JobSeekerProfileController extends Controller
 
     public function store(Request $request, Job $job = null)
     {
+
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
@@ -91,7 +92,9 @@ class JobSeekerProfileController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Something went wrong. Please try again.'
+                'error' => 'Something went wrong. Please try again.',
+                'message' => $e->getMessage(),
+
             ])->withInput();
         }
     }

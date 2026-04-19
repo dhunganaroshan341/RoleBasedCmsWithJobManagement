@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\frontend;
 use App\Models\Itinerary;
 use App\Models\Service;
+use App\Models\Testimonial;
 use App\Models\Vacancy;
 use App\Models\WorkingDay;
 use Illuminate\Pagination\Paginator;

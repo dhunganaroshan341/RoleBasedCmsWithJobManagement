@@ -75,7 +75,6 @@ class PagesController extends Controller
 
         $jobCategories = JobCategory::all();
         $vacancies     = Vacancy::latest()->get();
-        // dd($jobs->toArray());
         return view('frontend.pages.job.job3', compact(
             'latestJobs',
             'categoryJobs',

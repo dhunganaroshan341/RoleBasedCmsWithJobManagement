@@ -74,7 +74,7 @@ class AuthController extends Controller
             return redirect()->url('/')
                 ->with(['success' => 'Login Successfully']);
         } catch (\Exception $e) {
-            return back()->with(['error' => 'Something Went Wrong']);
+            return back()->with(['error' => 'Something Went Wrong' . $e->getMessage()]);
         }
     }
 

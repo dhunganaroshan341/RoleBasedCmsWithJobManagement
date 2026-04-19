@@ -1,28 +1,44 @@
 $(document).ready(function () {
 
     // Data table
-    var table = $("#fetch-contact-data").DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/admin/contact/get-data", // Route to fetch data
-            type: "GET",
-            cache: false
-        },
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, 'All']],
-        order: [[1, "asc"]], // Default ordering on the "name" column
-        columns: [
-            { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false },
-            { data: "name", name: "name" },
-            { data: "email", name: "email" },
-            { data: "subject", name: "subject" },
-            { data: "message", name: "message", orderable: false, searchable: false },
-            { data: "action", name: "action", orderable: false, searchable: false }
-        ],
-        language: {
-            emptyTable: "No data available"
-        }
+    $(document).ready(function () {
+
+        var table = $("#fetch-contact-data").DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/admin/hire-workers",
+                type: "GET",
+                cache: false
+            },
+
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],
+
+            order: [[1, "desc"]],
+
+            columns: [
+                { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false },
+
+                { data: "name", name: "fname" },
+
+                { data: "contact", name: "email", orderable: false },
+
+                { data: "company", name: "company_name", orderable: false },
+
+                { data: "job", name: "position", orderable: false },
+
+                { data: "description", name: "job_description", orderable: false },
+
+                { data: "action", name: "action", orderable: false, searchable: false }
+            ],
+
+            language: {
+                emptyTable: "No hire requests available"
+            }
+        });
+
     });
+
 
 
 
@@ -41,7 +57,7 @@ $(document).ready(function () {
         })
     });
 
-    $(document).on("click", ".contactDeleteBtn", function () {
+    $(document).on("click", ".deleteHireBtn", function () {
         let id = $(this).attr("data-id");
         Swal.fire({
             icon: "warning",

@@ -21,12 +21,75 @@ class JobApplicationController extends Controller
 
     public function index(Request $request, Job $job = null)
     {
-        $applications = $this->applicationService->getApplications($job);
-        // dd($applications->toArray());
-        return response()->json([
-            'success' => true,
-            'data' => $applications
-        ]);
+        if ($request->ajax()) {
+
+            $applications = $this->applicationService->getApplications($job);
+
+            return DataTables::of($applications)
+                ->addIndexColumn()
+
+                ->addColumn('name', function ($row) {
+                    return $row['name'];
+                })
+
+                ->addColumn('email', function ($row) {
+                    return $row['email'];
+                })
+
+                ->addColumn('phone', function ($row) {
+                    return $row['phone'];
+                })
+
+                ->addColumn('job', function ($row) {
+                    return $row['job']['title'] ?? 'N/A';
+                })
+
+                ->addColumn('status', function ($row) {
+                    return '<span class="badge bg-info">' . ucfirst($row['status']) . '</span>';
+                })
+
+                ->addColumn('action', function ($row) {
+                    return '
+                    <div class="dropdown">
+
+                        <button class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+                                <button class="dropdown-item viewApplicationBtn" data-id="' . $row['id'] . '">
+                                    <i class="bi bi-eye me-2"></i> View
+                                </button>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <button class="dropdown-item text-danger deleteApplicationBtn" data-id="' . $row['id'] . '">
+                                    <i class="bi bi-trash me-2"></i> Delete
+                                </button>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                ';
+                })
+
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+        $extraJs = array_merge(
+            config('js-map.admin.datatable.script')
+        );
+
+        $extraCs = array_merge(
+            config('js-map.admin.datatable.style')
+        );
+
+        return view('Admin.pages.JobApplicationDatatable.index', compact('extraCs', 'extraJs'));
     }
 
     /*
@@ -80,11 +143,9 @@ class JobApplicationController extends Controller
     */
     public function destroy(Job $job = null, $id)
     {
-        $application = $job
-            ? $job->applications()->findOrFail($id)
-            : JobApplication::findOrFail($id);
+        $application = JobApplication::findOrFail($id);
 
-        $application->delete();
+        $this->applicationService->deleteApplication($application);
 
         return response()->json([
             'success' => true,

@@ -1,15 +1,17 @@
 @extends('Admin.layout.master')
 @section('content')
 <div class="container-fluid">
+    <x-admin-bread-crumb-no-button />
     <div class="table-responsive card shadow-sm p-2">
-        <table class="table align-middle table-striped table-bordered table-hover" id="fetch-contact-data">
-            <thead class="table-light">
+        <table id="fetch-contact-data" class="table table-bordered">
+            <thead>
                 <tr>
-                    <th>S.N</th>
+                    <th>#</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Subject</th>
-                    <th>Message</th>
+                    <th>Contact</th>
+                    <th>Company</th>
+                    <th>Job</th>
+                    <th>Description</th>
                     <th>Action</th>
                 </tr>
             </thead>

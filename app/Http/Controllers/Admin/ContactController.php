@@ -26,6 +26,7 @@ class ContactController extends Controller
 
     public function getContact(Request $request)
     {
+        // dd($request->toArray());
         if ($request->ajax()) {
             $search = $request->input('search.value'); // Search term
             $columns = $request->input('columns'); // Column definitions
@@ -61,7 +62,7 @@ class ContactController extends Controller
                 ])
                 ->addIndexColumn() // Add DT_RowIndex column for numbering
                 ->addColumn('action', function ($item) {
-                    return '<button class="btn btn-danger newsletterDeleteBtn" type="button" data-id="' . $item->id . '">Delete</button>';
+                    return '<button class="btn  contactDeleteBtn" type="button" data-id="' . $item->id . '"><i class ="fas fa-trash"/></button>';
                 })
                 ->addColumn('title', function ($tit) {
                     return Str::limit($tit->title, 20);
@@ -70,7 +71,7 @@ class ContactController extends Controller
                     return Str::limit($sub->subject, 50); // Limit subject length
                 })
                 ->addColumn('message', function ($mess) {
-                    return '<button class="btn btn-dark messageBtn" type="button" data-id="' . $mess->id . '">View Message</button>';
+                    return '<button class="btn  messageBtn" type="button" data-id="' . $mess->id . '"><i class ="fas fa-eye"/></button>';
                 })
                 ->rawColumns(['action', 'message']) // Ensure HTML is rendered
                 ->make(true);

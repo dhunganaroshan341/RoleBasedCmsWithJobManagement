@@ -144,18 +144,19 @@ class UserFrontendController extends Controller
             // Save to DB
             $contact = Contact::create($request->validated());
 
-            // Send to Gmail
-            Mail::to('dhunganaroshan341@gmail.com')->send(new ContactFormMail($contact->toArray()));
+            // Optional: Send email
+            // Mail::to('dhunganaroshan341@gmail.com')->send(new ContactFormMail($contact->toArray()));
 
-
-            return response()->json(['status' => true, 'message' => 'Message has been submitted & emailed successfully']);
+            return redirect()
+                ->back()
+                ->with('success', 'Message has been submitted successfully');
         } catch (\Exception $e) {
             Log::error('Contact form error: ' . $e->getMessage());
-            return response()->json([
-                'status' => false,
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage()  // <-- Add this line temporarily
-            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Something went wrong');
         }
     }
 }

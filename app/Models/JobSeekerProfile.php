@@ -7,13 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class JobSeekerProfile extends Model
 {
-    protected $fillable = ['user_id','bio','skills','experience','education','resume_file'];
+    protected $fillable = [
+        'user_id',
 
-    public function user() {
+        'full_name',
+        'email',
+        'contact_no',
+        'address',
+
+        'bio',
+
+        'education',
+        'experience',
+
+        'resume_file',
+    ];
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function applications() {
+    public function applications()
+    {
         return $this->hasMany(Application::class, 'job_seeker_id');
     }
 }

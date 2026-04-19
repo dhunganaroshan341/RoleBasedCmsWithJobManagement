@@ -14,8 +14,10 @@ class JobApplyController extends Controller
     | SMART APPLY (AUTH USER)
     |--------------------------------------------------------------------------
     */
-    public function smartApply(Job $job)
+    public function smartApply($id)
     {
+        $job = Job::find($id);
+        // dd($job->toArray()); 
         $user = auth()->user();
 
         if (!$user) {
@@ -48,7 +50,7 @@ class JobApplyController extends Controller
         $application = JobApplication::create([
             'job_id' => $job->id,
             'job_seeker_profile_id' => $profile->id,
-            'status' => 'applied',
+            'status' => 'Pending',
         ]);
 
         return response()->json([
@@ -85,7 +87,7 @@ class JobApplyController extends Controller
             'desired_role' => $request->desired_role,
             'bio' => $request->bio,
             'resume_file' => $resumePath,
-            'status' => 'applied',
+            'status' => 'Pending',
         ]);
 
         return response()->json([

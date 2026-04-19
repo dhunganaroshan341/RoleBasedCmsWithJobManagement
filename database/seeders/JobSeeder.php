@@ -3,20 +3,19 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Vacancy;
 use App\Models\Job;
 use App\Models\JobCategory;
 use Illuminate\Support\Str;
 
 class JobSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $categories = JobCategory::all();
+
         if ($categories->count() === 0) {
-            $this->command->warn('⚠️ No categories found. Please run JobCategorySeeder first.');
+            $this->command->warn('⚠️ No categories found. Run JobCategorySeeder first.');
             return;
         }
 
@@ -31,47 +30,70 @@ class JobSeeder extends Seeder
             'Waiter / Waitress',
             'Forklift Operator',
             'Crane Operator',
-            'Quantity Surveyor',
-            'Site Safety Officer',
-            'Plant Operator',
-            'Housekeeping Staff',
-            'Front Desk Receptionist',
-            'Factory Worker',
-            'Civil Foreman',
-            'Excavator Operator',
-            'Production Supervisor',
-            'Marketing Executive',
         ];
 
         foreach ($titles as $title) {
-            $job = Job::create([
-                'custom_company_name' => fake()->company(),
-                'vacancy_id'          => null,
-                'male_opening'        => rand(1, 10),
-                'female_opening'      => rand(1, 10),
-                'total_openings'      => rand(2, 20),
-                'title'               => $title,
-                'description'         => fake()->paragraph(3),
-                'requirements'        => fake()->sentence(10),
-                'interview_date'      => now()->addDays(rand(5, 25)),
-                'location'            => fake()->city(),
-                'salary'              => 'NPR ' . rand(15000, 60000),
-                'status'              => 'Active',
-                'job_code'            => strtoupper(Str::random(6)),
-                'slug'                => Str::slug($title),
-                'image'               => null,
-                'pdf'                 => null,
-                'link'                => null,
-                'icon_class'          => 'fa-solid fa-briefcase',
-                'our_country_id'      => rand(1, 72),
+
+            // ✅ Create Vacancy
+            $vacancy = Vacancy::create([
+                'company_id'              => null,
+                'custom_company_name'     => fake()->company(),
+                'custom_company_country'  => fake()->country(),
+                'title'                   => $title . ' Hiring',
+                'currency'                => 'NPR',
+                'interview_date'          => now()->addDays(rand(5, 20)),
+                'general_requirements'    => fake()->sentence(10),
+                'vacancy_image'           => 'default.png',
+                'description'             => fake()->paragraph(3),
+                'status'                  => 'Active',
             ]);
 
-            // Randomly attach 1–3 categories to each job
-            $job->categories()->attach(
-                $categories->random(rand(1, 3))->pluck('id')->toArray()
+            // ✅ Attach Categories to Vacancy
+            $selectedCategories = $categories->random(rand(1, 3));
+
+            $vacancy->categories()->attach(
+                $selectedCategories->pluck('id')->toArray()
             );
+
+            // ✅ Create multiple jobs under this vacancy
+            $jobCount = rand(2, 5);
+
+            for ($i = 0; $i < $jobCount; $i++) {
+
+                $job = Job::create([
+                    'vacancy_id'     => $vacancy->id,
+                    'custom_company_name' => $vacancy->custom_company_name,
+
+                    'male_opening'   => rand(1, 10),
+                    'female_opening' => rand(1, 10),
+                    'total_openings' => rand(2, 20),
+
+                    'title'          => $title,
+                    'description'    => fake()->paragraph(2),
+                    'requirements'   => fake()->sentence(8),
+
+                    'interview_date' => $vacancy->interview_date,
+                    'location'       => fake()->city(),
+
+                    'salary'         => 'NPR ' . rand(15000, 60000),
+                    'status'         => 'Active',
+                    'job_code'       => strtoupper(Str::random(6)),
+                    'slug'           => Str::slug($title . '-' . Str::random(3)),
+
+                    'image'          => null,
+                    'pdf'            => null,
+                    'link'           => null,
+                    'icon_class'     => 'fa-solid fa-briefcase',
+                    'our_country_id' => rand(1, 72),
+                ]);
+
+                // ✅ Optional: also attach categories to job (if still needed)
+                $job->categories()->attach(
+                    $selectedCategories->pluck('id')->toArray()
+                );
+            }
         }
 
-        $this->command->info('✅ 20 sample jobs created successfully!');
+        $this->command->info('✅ Vacancies with jobs created successfully!');
     }
 }

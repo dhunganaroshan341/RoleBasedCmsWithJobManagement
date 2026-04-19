@@ -43,7 +43,7 @@ Route::prefix('home')->group(function () {
     });
 });
 Route::post('/contact', [UserFrontendController::class, 'storeContactUs'])
-    ->middleware('throttle:form-submission')
+    ->middleware(['form.protect', 'throttle:form-submission'])
     ->name('contact.store');
 
 //  job
@@ -70,8 +70,7 @@ Route::post('/jobs/{id}/apply', [JobApplyController::class, 'manualApply'])
 // Smart/auto apply route (for logged-in users)
 Route::post('/jobs/{id}/smart-apply', [JobApplyController::class, 'smartApply'])
     ->name('jobseeker.smartApply')
-    ->middleware('auth'); // Only authenticated users
-
+    ->middleware('auth');
 Route::post('/hire', [EmployerJobRequestController::class, 'store'])->name('hire.submit');
 //  portfoliyo
 
@@ -113,5 +112,5 @@ Route::get('/recruitment-process', [DynamicPageController::class, 'recruitmentPr
 // Route::get('/categories', [DynamicPageController::class,'categories'])->name('dynamic-categories');
 Route::get('/categories', [PagesController::class, 'categories'])->name('dynamic-categories');
 // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('login', [AuthController::class, 'userLogin'])->name('front.login');
+Route::get('/login', [AuthController::class, 'userLogin'])->name('front.login');
 Route::post('front/login/store', [AuthController::class, 'storeUserLogin'])->name('front.login.store');
