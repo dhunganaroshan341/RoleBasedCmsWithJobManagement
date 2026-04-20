@@ -58,9 +58,12 @@ class AppServiceProvider extends ServiceProvider
         View::composer($views, function ($view) {
             $setting = Setting::first();
             $services = Service::where('status', 1)->latest()->take(4)->get();
-            $latestVacancies = Vacancy::withCount('jobs')
-                ->having('jobs_count', '>', 0)
-                ->distinct('custom_company_country')
+            $latestVacancies = Vacancy::whereHas('jobs') // ensures at least 1 job
+                ->whereIn('id', function ($query) {
+                    $query->selectRaw('MAX(id)')
+                        ->from('vacancies')
+                        ->groupBy('custom_company_country');
+                })
                 ->latest()
                 ->take(5)
                 ->get();
