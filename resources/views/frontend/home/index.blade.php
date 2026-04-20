@@ -304,16 +304,26 @@ $subTitle = '';
         <div class="title-text">
             <h3>Latest Vacancies</h3>
         </div>
-
         <div class="clients-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
 
             @foreach($latestVacancies as $vacancy)
-            <div class="sec-title pb_20 sec-title-animation animation-style2">
+
+            <div class="btn-box mb-2">
+
+
+
+
+                <a style="box-shadow: 3px 3px 3px 3px rgba(128, 128, 128, 0.126);" href="{{ url('jobs') }}"
+                    class=" theme-btn banner-btn"> {{ $vacancy->custom_company_country }}{{'('.
+                    $vacancy->jobs_count.')' }}</a>
+
+            </div>
+            <!-- <div class="sec-title pb_20 sec-title-animation animation-style2">
                 <span style="padding:1.6em !important" class="sub-title mb_10 title- text-aurora-red">{{
                     $vacancy->custom_company_country }}- {{
                     $vacancy->jobs_count }}</span>
 
-            </div>
+            </div> -->
 
             @endforeach
 
