@@ -58,7 +58,11 @@ class AppServiceProvider extends ServiceProvider
         View::composer($views, function ($view) {
             $setting = Setting::first();
             $services = Service::where('status', 1)->latest()->take(4)->get();
-            $latestVacancies = Vacancy::withCount('jobs')->latest()->take(5)->get();
+            $latestVacancies = Vacancy::withCount('jobs')
+                ->having('jobs_count', '>', 0)
+                ->latest()
+                ->take(5)
+                ->get();
             $view->with([
                 'email' => $setting->email ?? '',
                 'title' => $setting->title ?? '',
