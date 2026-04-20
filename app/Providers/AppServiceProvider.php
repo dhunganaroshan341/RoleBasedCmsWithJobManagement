@@ -60,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
             $services = Service::where('status', 1)->latest()->take(4)->get();
             $latestVacancies = Vacancy::withCount('jobs')
                 ->having('jobs_count', '>', 0)
+                ->distinct('custom_company_country')
                 ->latest()
                 ->take(5)
                 ->get();
