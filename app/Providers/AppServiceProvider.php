@@ -38,8 +38,10 @@ class AppServiceProvider extends ServiceProvider
         // Itinerary::observe(ItineraryObserver::class);
         $this->composeFrontendViews([
             'frontend.layout.main',
+            // 'frontend.layouts.layout',
             'frontend.layout.footer',
-            'frontend.contact'
+            'frontend.contact',
+            'frontend.home.index', // 👈 ADD THIS
         ]);
 
         $this->composeFrontendViews([
@@ -77,8 +79,8 @@ class AppServiceProvider extends ServiceProvider
                 'services' => $services,
                 'latestVacancies' => $latestVacancies,
                 'latestNewsTitle' => Str::words(frontend::latest()->first()->title ?? '', 4),
-                'homeSectionOneVideos' => VideoSection::where('section', 'home_section_one')->first(),
-                'homeSectionTwoVideos' => VideoSection::where('section', 'home_section_one')->first(),
+                'homeSectionOneVideos' => VideoSection::where('section', 'home_1')->first(),
+                'homeSectionTwoVideos' => VideoSection::where('section', 'home_2')->first(),
 
             ]);
         });

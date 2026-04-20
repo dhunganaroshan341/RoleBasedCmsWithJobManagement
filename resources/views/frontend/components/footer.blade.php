@@ -50,7 +50,7 @@
 
                                 @foreach($latestVacancies as $vacancy)
                                 <li>
-                                    <a href="{{ route('jobs.show', $vacancy->id) }}">
+                                    <a href="{{ route('jobById', $vacancy->id) }}">
                                         {{ $vacancy->title }}
                                     </a>
                                 </li>

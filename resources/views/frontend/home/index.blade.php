@@ -308,12 +308,13 @@ $subTitle = '';
         <div class="clients-carousel owl-carousel owl-theme owl-dots-none owl-nav-none">
 
             @foreach($latestVacancies as $vacancy)
-            <div class="clients-logo">
-                <a href="#">
-                    <h4>{{ $vacancy->country }}</h4>
-                    <p>{{ $vacancy->jobs_count }} Jobs</p>
-                </a>
+            <div class="sec-title pb_20 sec-title-animation animation-style2">
+                <span style="padding:1.6em !important" class="sub-title mb_10 title- text-aurora-red">{{
+                    $vacancy->custom_company_country }}- {{
+                    $vacancy->jobs_count }}</span>
+
             </div>
+
             @endforeach
 
         </div>
@@ -360,16 +361,16 @@ $subTitle = '';
                     </div>
                 </div>
             </div>
+
             @php
             $video = $homeSectionOneVideos?->video_urls[0] ?? null;
             @endphp
-
             <div class="col-lg-6 col-md-12 col-sm-12 video-column">
                 <div class="video_block_two">
                     <div class="video-box t_120 z_1 p_relative ml_40 mr_60 centred">
 
                         <div class="video-inner"
-                            style="background-image: url('{{ $video['thumbnail_url'] ?? asset('assets/images/resource/video-4.jpg') }}')">
+                            style="background-image: url('{{'uploads/'. $video['thumbnail'] ?? asset('assets/images/resource/video-4.jpg') }}')">
 
                             <div class="video-content">
 
@@ -456,9 +457,6 @@ $subTitle = '';
 </section>
 <!-- chooseus-section end -->
 
-<!-- services-style -->
-<x-home-service-section />
-<!-- services-style end -->
 
 
 <!-- dueal-section -->
@@ -638,7 +636,9 @@ $subTitle = '';
 <!-- dueal-section end -->
 
 <!-- training-section -->
-<x-training-section />
+<!-- services-style -->
+<x-training-section :videos="$homeSectionTwoVideos" />
+<!-- services-style end -->
 
 
 <!-- testimonial-section -->
