@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AchievementController;
 use  App\Http\Controllers\Admin\BannerSliderVideoController;
+use  App\Http\Controllers\Admin\VideoSectionController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\CallToActionController;
 use App\Http\Controllers\Admin\HireWorkerController;
@@ -127,7 +128,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/home-slide/status/{id}', [HomeSliderController::class, 'statusToggle'])->name('homeslide.status');
 
 
-
+    Route::resource('video-sections', VideoSectionController::class);
     Route::get('/banner/video', [BannerSliderVideoController::class, 'index'])->name('banner.video.index');
     Route::post('/banner/video', [BannerSliderVideoController::class, 'store'])->name('banner.video.store');
 
@@ -260,7 +261,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Route::apiResource('jobs', JobControllerV2::class);
     Route::resource('vacancies', VacancyController::class);
     Route::resource('vacancies.jobs', VacancyJobController::class);
-    Route::resource('jobs.applications', JobApplicationController::class);
+    // Route::resource('jobs.applications', JobApplicationController::class);
     Route::resource('applications', JobApplicationController::class);
 
     Route::get('/jobs/status/{id}', [JobController::class, 'toggleStatus'])->name('job.status');

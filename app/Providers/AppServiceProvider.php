@@ -8,6 +8,7 @@ use App\Models\Itinerary;
 use App\Models\Service;
 use App\Models\Testimonial;
 use App\Models\Vacancy;
+use App\Models\VideoSection;
 use App\Models\WorkingDay;
 use Illuminate\Pagination\Paginator;
 // use Illuminate\Routing\Route;
@@ -76,6 +77,9 @@ class AppServiceProvider extends ServiceProvider
                 'services' => $services,
                 'latestVacancies' => $latestVacancies,
                 'latestNewsTitle' => Str::words(frontend::latest()->first()->title ?? '', 4),
+                'homeSectionOneVideos' => VideoSection::where('section', 'home_section_one')->first(),
+                'homeSectionTwoVideos' => VideoSection::where('section', 'home_section_one')->first(),
+
             ]);
         });
     }

@@ -100,18 +100,24 @@
                 </div>
 
                 <div class="menu-right-content">
-                    @auth
-                    <div class="link-box mr_20">
-                        Hello, {{ auth()->user()->full_name }}
-                    </div>
-                    @else
+
+                    <!-- Always visible -->
                     <div class="link-box mr_20">
                         <a href="{{ route('jobseeker.create') }}">Upload CV</a>
                     </div>
-                    @endauth
 
-                    <div class="btn-box"><a href="{{ route('contact') }}" class="theme-btn btn-one">Contact Us</a>
+                    @guest
+                    <!-- Only when NOT logged in -->
+                    <div class="link-box mr_20">
+                        <a href="{{ route('front.login') }}">Login</a>
                     </div>
+                    @endguest
+
+                    <!-- Always visible -->
+                    <div class="btn-box">
+                        <a href="{{ route('contact') }}" class="theme-btn btn-one">Contact Us</a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -132,12 +138,17 @@
                     </nav>
                 </div>
                 <div class="menu-right-content">
-                    <div class="search-btn mr_20">
-                        <button class="search-toggler"><i class="icon-1"></i></button>
+                    @auth
+                    <div class="link-box mr_20">
+                        Hello, {{ auth()->user()->full_name }}
                     </div>
-                    <!-- Always show Upload CV -->
-                    <div class="link-box mr_20"><a href="{{ route('jobseeker.create') }}">Upload CV</a></div>
-                    <div class="btn-box"><a href="{{ route('contact') }}" class="theme-btn btn-one">Contact us</a>
+                    @else
+                    <div class="link-box mr_20">
+                        <a href="{{ route('jobseeker.create') }}">Upload CV</a>
+                    </div>
+                    @endauth
+
+                    <div class="btn-box"><a href="{{ route('contact') }}" class="theme-btn btn-one">Contact Us</a>
                     </div>
                 </div>
             </div>

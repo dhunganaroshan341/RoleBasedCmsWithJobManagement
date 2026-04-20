@@ -19,6 +19,33 @@
         <!-- Menu -->
         <div class="menu-outer mb-4">
             <!-- JS injected menu -->
+            <!-- Action Buttons -->
+            <div class="mobile-actions mb-4">
+
+                <!-- Always visible -->
+                <div class="mb-2">
+                    <a href="{{ route('jobseeker.create') }}" class="btn btn-outline-light w-100">
+                        Upload CV
+                    </a>
+                </div>
+
+                @guest
+                <!-- Only when NOT logged in -->
+                <div class="mb-2">
+                    <a href="{{ route('front.login') }}" class="btn btn-outline-light w-100">
+                        Login
+                    </a>
+                </div>
+                @endguest
+
+                <!-- Always visible -->
+                <div>
+                    <a href="{{ route('contact') }}" class="btn btn-light w-100">
+                        Contact Us
+                    </a>
+                </div>
+
+            </div>
         </div>
 
         <!-- Contact Info -->

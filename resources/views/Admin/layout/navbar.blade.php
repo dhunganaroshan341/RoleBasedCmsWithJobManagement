@@ -1,3 +1,6 @@
+<button id="sidebarToggle" class="btn btn-dark d-lg-none">
+    <i class="fas fa-solid fa-x"></i>
+</button>
 <ul class="nav">
 
     {{-- === CORE SETTINGS === --}}
@@ -44,7 +47,7 @@
 
                 <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="mdi mdi-calendar-check"></i>
                         Job Seekers</a></li> -->
-                <li class="nav-item"><a class="nav-link" href="{{ route('admin.applicatiions.index') }}"><i
+                <li class="nav-item"><a class="nav-link" href="{{ route('admin.applications.index') }}"><i
                             class="mdi mdi-calendar-check"></i>
                         Applications</a></li>
             </ul>
@@ -52,13 +55,23 @@
     </li>
 
     {{-- === CONTENT MANAGEMENT === --}}
-    <!-- <li class="nav-item nav-category">Content Management</li> -->
-    <!-- <li class="nav-item">
+    <li class="nav-item nav-category">Content Management</li>
+
+    {{-- PAGES --}}
+    <li class="nav-item">
         <a class="nav-link" href="{{ route('admin.pages.index') }}">
             <i class="mdi mdi-file-document-outline menu-icon"></i>
-            <span class="menu-title">Pages & Sections</span>
+            <span class="menu-title">Pages</span>
         </a>
-    </li> -->
+    </li>
+
+    {{-- VIDEO SECTIONS --}}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.video-sections.index') }}">
+            <i class="mdi mdi-video-outline menu-icon"></i>
+            <span class="menu-title">Video Sections</span>
+        </a>
+    </li>
     <!-- <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#sectionMenu" role="button" aria-expanded="false"
             aria-controls="sectionMenu">
@@ -77,7 +90,7 @@
     </li> -->
 
     {{-- === BANNERS === --}}
-    <!-- <li class="nav-item nav-category">Banners</li>
+    <li class="nav-item nav-category">Banners</li>
     <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#bannerMenu" role="button" aria-expanded="false"
             aria-controls="bannerMenu">
@@ -95,7 +108,7 @@
                             class="mdi mdi-bullhorn-outline"></i> CTA Banner</a></li>
             </ul>
         </div>
-    </li> -->
+    </li>
 
     {{-- === SERVICES & TESTIMONIALS === --}}
     <li class="nav-item nav-category">Services & Social Proof</li>
@@ -181,3 +194,4 @@
         </a>
     </li>
 </ul>
+<div id="sidebarOverlay" class="sidebar-overlay"></div>

@@ -360,21 +360,40 @@ $subTitle = '';
                     </div>
                 </div>
             </div>
+            @php
+            $video = $homeSectionOneVideos?->video_urls[0] ?? null;
+            @endphp
+
             <div class="col-lg-6 col-md-12 col-sm-12 video-column">
                 <div class="video_block_two">
                     <div class="video-box t_120 z_1 p_relative ml_40 mr_60 centred">
+
                         <div class="video-inner"
-                            style="background-image: url('{{ asset('assets/images/resource/video-4.jpg') }}')">
+                            style="background-image: url('{{ $video['thumbnail_url'] ?? asset('assets/images/resource/video-4.jpg') }}')">
+
                             <div class="video-content">
+
                                 <div class="curve-text">
                                     <span class="curved-circle">
                                         watch&nbsp;&nbsp;the&nbsp;&nbsp;video&nbsp;&nbsp;right&nbsp;&nbsp;now&nbsp;&nbsp;
                                     </span>
                                 </div>
-                                <a href="https://www.youtube.com/watch?v=nfP5N9Yc72A&amp;t=28s"
-                                    class="lightbox-image video-btn" data-caption=""><i class="icon-8"></i></a>
+
+                                @if(!empty($video['url']))
+                                <a href="{{ $video['url'] }}" class="lightbox-image video-btn" data-caption="">
+                                    <i class="icon-8"></i>
+                                </a>
+                                @else
+                                <a href="https://www.youtube.com/watch?v=nfP5N9Yc72A&t=28s"
+                                    class="lightbox-image video-btn" data-caption="">
+                                    <i class="icon-8"></i>
+                                </a>
+                                @endif
+
                             </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
