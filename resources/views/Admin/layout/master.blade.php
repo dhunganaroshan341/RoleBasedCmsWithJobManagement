@@ -89,7 +89,7 @@
             toggleBtn.addEventListener('click', function () {
                 sidebar.classList.toggle('active');
             });
-
+            // new
         });
     </script>
 </body>
